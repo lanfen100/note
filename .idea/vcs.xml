@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/BKDocTest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/BlueKingDocsTest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/python_develop" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/update-doc/update-doc" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/文档" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/文档/bkdoctest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/文档/更新/BKDocTest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/文档更新路线/BKDocTest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/文档更新路线/BlueKingDocsTest" vcs="Git" />
+  </component>
+</project>

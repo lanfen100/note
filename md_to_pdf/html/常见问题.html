@@ -1,0 +1,2737 @@
+
+    <html lang="zh-cn">
+    <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <link href="F:\bkdoc\md_to_pdf/default.css" rel="stylesheet">
+    </head>
+    <body>
+    <h1 id="_1">常见问题说明</h1>
+<p>蓝鲸社区版，是蓝鲸智云提供的面向社区用户的基于 PaaS 的运维技术解决方案套件。
+它永久免费，支持公有云环境、私有环境的独立搭建部署。</p>
+<p>本 FAQ 文档主要介绍蓝鲸社区版的在日常安装部署、维护、更新升级中遇到的常见问题及故障排查等运维相关的内容。</p>
+<p>关于蓝鲸各大平台、SaaS 应用的相关使用说明，请参考蓝鲸社区版产品白皮书。</p><h1 id="_1">部署常见问题</h1>
+<h2 id="cmdb">部署 CMDB 常见问题</h2>
+<h3 id="prot-31001-start-failedplease-check-cmdb">prot 31001 start failed，please check 先检查 cmdb 服务状态</h3>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/cmdb-31001.png" /></p>
+<div class="codehilite"><pre><span></span><span class="c1"># 若服务装状态都是 RUNNING 则 </span>
+./bkcec status cmdb 
+<span class="c1"># 查看能否解析（非单机部署） dig 服务名 .service.consul 解析异常处理方法：</span>
+dig zk.service.consul 
+</pre></div>
+
+
+<ul>
+<li>
+<p>检查内部域名解析，运行 dig 域名 @127.0.0.1 看是否能解析，如果不能解析，说明 consul 有问题 </p>
+</li>
+<li>
+<p>检查 consul 服务是否正常</p>
+</li>
+<li>
+<p>检查三台服务器 resolv.conf  首行是否有配置 <code>nameserver 127.0.0.1</code>，如无，请添加</p>
+</li>
+<li>
+<p>重启或重装 consul 服务</p>
+</li>
+</ul>
+<div class="codehilite"><pre><span></span>./bkcec stop consul  <span class="c1">#(或在 consul 服务所在的三台主机，ps -ef |grep consul | awk &#39;{print $2}&#39;  |xargs kill -9)</span>
+./bkcec install consul <span class="m">1</span>
+./bkcec start consul
+</pre></div>
+
+
+<h3 id="consul">若安装 consul 报错</h3>
+<p>检查 <code>/data/src/service/consul/</code> 是否有这两个文件夹 <code>bin ，conf</code>；<code>bin</code> 文件夹下是否有文件</p>
+<ul>
+<li>
+<p>备份一下 src 下的<code>.pip/pip.conf</code> 文件，然后重新解压一下<code>bkce_src</code> 安装包，继续检查是否有文件，如果还没有</p>
+</li>
+<li>
+<p>解压时直接用 tar xf 包名，不要加 -C，还没有文件去官网下载新包重新解压</p>
+</li>
+<li>
+<p>对比包的 md5 是否和官网一致</p>
+</li>
+<li>
+<p>检查防火墙端口是否有开（8300，8301，8302）</p>
+</li>
+<li>
+<p>查看日志，登录所在机器的路径：<code>/data/bkce/logs</code></p>
+</li>
+</ul>
+<p><code>cmdb-adminserver</code> 服务状态 failed </p>
+<p>检查依赖服务是否正常 <code>redis mongodb nginx gse zk</code> </p>
+<p>3.2.查看<code>cmdb_adminserver</code> 日志（/data/bkce/logs/cmdb/）</p>
+<h3 id="cmdb_1">检查 cmdb 服务进程，参照下图</h3>
+<div class="codehilite"><pre><span></span>./bkcec status cmdb
+</pre></div>
+
+
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/cmdb-faq.png" /></p>
+<h3 id="cmdb-nginx-failed">cmdb-nginx 服务状态 failed</h3>
+<p>检查 <code>yum info nginx</code> </p>
+<p>安装 epel yum 源, 重装 cmdb</p>
+<div class="codehilite"><pre><span></span>./bkcec stop cmdb 
+./bkcec install cmdb <span class="m">1</span> 
+./bkcec start cmdb 
+./bkcec initdata cmdb
+</pre></div>
+
+
+<p>三台机器的 yum 源都更新一致，确保 yum 源能安装 nginx</p>
+<p>其他进程状态 EXIT，请前往 cmdb 所在服务器</p>
+<p><code>/data/bkce/logs/cmdb/</code> 目录下查看相应的日志</p>
+<h2 id="app_mgr">部署 App_mgr 常见问题</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/saas-faq.png" /></p>
+<p>该报错是激活 paas_agent 失败，需要查看的是 appo 服务还是 appt 服务</p>
+<div class="codehilite"><pre><span></span>./bkcec status appo
+./bkcec status appt 
+</pre></div>
+
+
+<p>若是异常重启进程，启动失败需要查看日志详情 <code>/data/bkce/logs/paas_agent/</code></p>
+<p>进程正常启动后再激活</p>
+<div class="codehilite"><pre><span></span>./bkcec activate appo
+./bkcec activate appt
+</pre></div>
+
+
+<h2 id="bkdata">部署 BKDATA 常见问题</h2>
+<p><code>./bk_install bkdata</code> 报错</p>
+<div class="codehilite"><pre><span></span>failed with error code <span class="m">1</span> in /tmp/pip-build-8g97ci/MySQL-python/
+install python package <span class="k">for</span> bdata<span class="o">(</span>monitor<span class="o">)</span> failed pip optin: --no-index --find-links<span class="o">=</span>/data/src/bkdata/support-fileds/pkgs
+</pre></div>
+
+
+<h3 id="mysql-python">MySQL-python 安装失败</h3>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/bkdata-faq1.png" /></p>
+<ul>
+<li>
+<p>解决方案：</p>
+</li>
+<li>
+<p>确保 mysql-devel 已经安装</p>
+</li>
+</ul>
+<p>可用 which mysql-devel 来确认</p>
+<ol>
+<li>建立软连接</li>
+</ol>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/bkdata-faq2.png" /></p>
+<div class="codehilite"><pre><span></span>ln -s /usr/lib64/mysql/libmysqlclient_r.so /usr/lib/libmysqlclient_r
+ln -s /usr/lib64/mysql/libmysqlclient.so /usr/lib/libmysqlclient.so
+ln -s /usr/lib64/mysql/libmysqlclient.so.18 /usr/lib/libmysqlclient.so.18
+ln -s /usr/lib64/mysql/libmysqlclient.so.18.0.0 /usr/lib/libmysqlclient.so.18.0.0
+</pre></div>
+
+
+<p>重新执行命令部署 bkdata 即可恢复</p>
+<h3 id="python-snappy">安装 python-snappy 包失败</h3>
+<p>原因是缺少 snappy-c.h 导致 pip 安装 python-snappy 包失败</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/bkdata-faq3.png" /></p>
+<ul>
+<li>
+<p>解决方案：</p>
+<p>通过安装 snappy-devel 解决,<code>yum install -y snappy-devel</code></p>
+</li>
+</ul>
+<h3 id="dataapiserviceconsul-start-failed-error-init_snapshot_config">启动报 "dataapi.service.consul start failed ERROR： init_snapshot_config"</h3>
+<p>启动 bkdata 报错：<code>dataapi.service.consul start failed ERROR： init_snapshot_config (databus.tests.DatabusHealthTestCase)</code></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/bkdata-faq4.png" /></p>
+<ul>
+<li>解决方案</li>
+</ul>
+<p>登陆到<code>bkdata</code>机器（社区版 5.1 登陆到 <code>databus</code> 所在机器）查看 <code>consul</code> 配置是否生成 <code>databus.json</code> 配置。</p>
+<div class="codehilite"><pre><span></span><span class="o">```</span><span class="n">bash</span>
+<span class="n">ls</span> <span class="o">/</span><span class="k">data</span><span class="o">/</span><span class="n">bkce</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">consul</span><span class="p">.</span><span class="n">d</span><span class="o">/</span><span class="n">bkdata</span><span class="p">.</span><span class="n">json</span>
+<span class="o">#</span> <span class="err">若无则重装</span> <span class="n">consul</span>
+<span class="p">.</span><span class="o">/</span><span class="n">bkcec</span> <span class="n">stop</span> <span class="n">consul</span>
+<span class="p">.</span><span class="o">/</span><span class="n">bkcec</span> <span class="n">install</span> <span class="n">consul</span> <span class="mi">1</span>
+<span class="p">.</span><span class="o">/</span><span class="n">bkcec</span> <span class="k">start</span> <span class="n">consul</span>
+<span class="p">.</span><span class="o">/</span><span class="n">bkcec</span> <span class="n">status</span> <span class="n">consul</span>
+
+<span class="o">#</span> <span class="err">登陆到</span> <span class="n">databus</span> <span class="err">所在机器查看是否生成</span> <span class="n">bkdata</span><span class="p">.</span><span class="n">json</span><span class="err">（社区版</span> <span class="mi">5</span><span class="p">.</span><span class="mi">1</span> <span class="err">为</span> <span class="n">bkdata</span><span class="o">-</span><span class="n">databus</span><span class="p">.</span><span class="n">json</span><span class="err">，</span><span class="n">bkdata</span><span class="o">-</span><span class="n">dataapi</span><span class="p">.</span><span class="n">jsonbkdata</span><span class="o">-</span><span class="n">monitor</span><span class="p">.</span><span class="n">json</span><span class="err">）</span>
+<span class="n">ls</span> <span class="o">/</span><span class="k">data</span><span class="o">/</span><span class="n">bkce</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">consul</span><span class="p">.</span><span class="n">d</span><span class="o">/</span><span class="n">bkdata</span><span class="p">.</span><span class="n">json</span>
+
+<span class="o">#</span> <span class="err">启动</span> <span class="n">bkdata</span>
+<span class="p">.</span><span class="o">/</span><span class="n">bkcec</span> <span class="k">start</span> <span class="n">bkdata</span>
+</pre></div>
+
+
+<p>```</p>
+<h2 id="saas">部署 SaaS 常见问题</h2>
+<p><strong>安装 saas-o 报错 KeyError: "name='bk_csrftoken', domain=None, path=None"</strong></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/saas-key.png" /></p>
+<ul>
+<li>解决方案</li>
+</ul>
+<p>确认是否是在 PaaS 页面个人信息重置了密码后，但是 <code>globals.env</code> 文件没同步更新。 请在 <code>globals.env</code> 文件中更新重置后的密码后确认是否恢复正常。
+同步配置信息</p>
+<div class="codehilite"><pre><span></span>./bkcec sync common
+</pre></div><h1 id="paas">PaaS 登陆无响应</h1>
+<p><strong>校验登陆接口</strong></p>
+<ul>
+<li>登陆<code>open_paas</code>服务器，进入日志目录(<code>cd /data/bkce/logs/open_paas</code>)，并运行命令<code>tail -f *login*</code></li>
+<li>点击浏览器出错的平台链接，观察日志是否滚动，请求到，且有<code>is_login</code>字样</li>
+<li>通过查看日志中的<code>is_login</code>接口调用日志对应的域名来确认调用登录校验接口的方式，是直接调用 login 还是通过 ESB 调用。</li>
+<li>在服务器上用 curl 模拟调用<code>is_login</code>方法看是否 OK <code>curl -v http://xxxx/is_login?bk_cookie=xxxxxxxx</code></li>
+<li>查看 logs/open_paas/login 相关日志特别是 login_uwsgi 的日志，看是否有请求到</li>
+</ul>
+<p>常见原因：</p>
+<ol>
+<li>其他机器到 paas 请求时有 http 代理被劫持。</li>
+<li>浏览器 cookie 缓存等问题（换 chrome 无痕，或者其他浏览器）</li>
+</ol>
+<p><strong>请求到了 PaaS 但校验失败</strong></p>
+<p>应用日志里提示"Login validity is illegal"</p>
+<p>这种常出现在蓝鲸 server 机器之间的时间不同步。表现为有时候可以正常登陆，有时候不能。 原因是，A 机器生成的 cookie，到 B 机器校验时间时，因为时间间隔大于默认的 1 分钟，会 判断为过期，导致失败</p>
+<p>解决方法：</p>
+<ul>
+<li>调整蓝鲸 server 服务器时间，保持同步。</li>
+<li>
+<p>若客观原因导致没法同步时间，可以通过 <code>open_paas/login/conf/default.py</code> 中的 <code>BK_TOKEN_OFFSET_ERROR_TIME</code> 配置修改默认容忍的时间间隔。</p>
+</li>
+<li>
+<p>因没有正确修改 <code>/data/install/globals.env</code> 下的域名配置。
+    <code>bash
+    vim /data/install/globals.env
+    # 域名信息
+    export BK_DOMAIN="bk.com"            # 蓝鲸根域名(不含主机名)
+    export PAAS_FQDN="paas.$BK_DOMAIN"       # PAAS 完整域名
+    export CMDB_FQDN="cmdb.$BK_DOMAIN"       # CMDB 完整域名
+    export JOB_FQDN="job.$BK_DOMAIN"         # JOB 完整域名
+    export DOCS_FQDN="docs.$BK_DOMAIN"       # 私有文档准备
+    export APPO_FQDN="o.$BK_DOMAIN"          # 正式环境完整域名
+    export APPT_FQDN="t.$BK_DOMAIN"          # 测试环境完整域名</code>
+    如上 PAAS CMDB JOB 完整域名格式 “.” 这个连接符一定是在变量 <code>$BK_DOMAIN</code> 前面，<code>$BK_DOMAIN</code> 变量不可修改为实际值，保留变量格式。</p>
+</li>
+</ul><h1 id="paas-fatal-exited-too-quickly">PaaS 启动提示 FATAL Exited too quickly</h1>
+<p><strong>表象</strong>：此问题多为正常状态情况下，supervisord.sock 被清理，用 stop paas 提示可以停掉，status paas 时也显示 EXIT，实际的进程还是异常的</p>
+<div class="codehilite"><pre><span></span><span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span> open_paas    appengine                        FATAL     Exited too quickly <span class="o">(</span>process log may have details<span class="o">)</span>
+<span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span> open_paas    esb                              FATAL     Exited too quickly <span class="o">(</span>process log may have details<span class="o">)</span>
+<span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span> open_paas    login                            FATAL     Exited too quickly <span class="o">(</span>process log may have details<span class="o">)</span>
+<span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span> open_paas    paas                             FATAL     Exited too quickly <span class="o">(</span>process log may have details<span class="o">)</span>
+<span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span><span class="c1"># ./bkcec stop paas</span>
+<span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span><span class="m">20180730</span>-094141 <span class="m">117</span>   stopping open_paas<span class="o">(</span>ALL<span class="o">)</span> on host: <span class="m">10</span>.X.X.X
+Shut down
+<span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span><span class="c1"># ./bkcec status paas</span>
+---------------------------------------------------------------------------------------------------------
+<span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span> open_paas: EXIT
+
+<span class="o">[</span>root@paas-1 /root<span class="o">]</span><span class="c1"># ps auxf|grep open_paas</span>
+root     <span class="m">28606</span>  <span class="m">0</span>.0  <span class="m">0</span>.6 <span class="m">534188</span> <span class="m">54916</span> ?        Sl   Jul27   <span class="m">0</span>:42 /data/bkce/.envs/paas/bin/uwsgi --ini /data/bkce/etc/uwsgi-open_paas-paas.ini
+root     <span class="m">28676</span>  <span class="m">0</span>.0  <span class="m">0</span>.4 <span class="m">534188</span> <span class="m">37572</span> ?        S    Jul27   <span class="m">0</span>:00  <span class="se">\_</span> /data/bkce/.envs/paas/bin/uwsgi --ini /data/bkce/etc/uwsgi-open_paas-paas.ini
+</pre></div>
+
+
+<p><strong>思路方法</strong>：解决办法，杀掉已经不正常的进程（此情况 rabbitmq 在异常时，也可以杀掉 epmd 及 beam）</p>
+<div class="codehilite"><pre><span></span><span class="c1"># 可选</span>
+<span class="o">[</span>root@paas-1 /root<span class="o">]</span><span class="c1"># /data/bkce/.envs/open_paas/bin/python /data/bkce/.envs/open_paas/bin/supervisorctl -c /data/bkce/etc/supervisor-open_paas.conf shutdown</span>
+<span class="c1"># 可尝试删掉supervisor.sock文件，再重新创建，但需注意赋权，设置为srwx------</span>
+<span class="o">[</span>root@paas-1 /data/bkce/logs/open_paas<span class="o">]</span><span class="c1"># chown o+s supervisor.sock</span>
+<span class="c1"># 可选</span>
+<span class="o">[</span>root@paas-1 /root<span class="o">]</span><span class="c1"># /data/bkce/.envs/open_paas/bin/python /data/bkce/.envs/open_paas/bin/supervisord -c /data/bkce/etc/supervisor-open_paas.conf</span>
+<span class="o">[</span>root@paas-1 /root<span class="o">]</span><span class="c1"># for x in `ps auxf|grep open_paas|awk &#39;{print $2}&#39;`;do kill -9 $x;done</span>
+-bash: kill: <span class="o">(</span><span class="m">8230</span><span class="o">)</span> - 没有那个进程
+<span class="o">[</span>root@paas-1 /root<span class="o">]</span><span class="c1"># ps auxf|grep open_paas</span>
+root      <span class="m">8269</span>  <span class="m">0</span>.0  <span class="m">0</span>.0 <span class="m">115748</span>   <span class="m">720</span> pts/0    S+   <span class="m">09</span>:47   <span class="m">0</span>:00          <span class="se">\_</span> grep --color<span class="o">=</span>auto open_paas
+</pre></div>
+
+
+<p>再重新启动</p>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span><span class="c1"># ./bkcec start paas</span>
+<span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span><span class="m">20180730</span>-094728 <span class="m">78</span>   starting open_paas<span class="o">(</span>ALL<span class="o">)</span> on host: <span class="m">10</span>.178.138.39
+<span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span><span class="c1"># ./bkcec status paas</span>
+---------------------------------------------------------------------------------------------------------
+<span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span> open_paas    appengine                        RUNNING   pid <span class="m">9803</span>, uptime <span class="m">0</span>:00:06
+<span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span> open_paas    esb                              RUNNING   pid <span class="m">9802</span>, uptime <span class="m">0</span>:00:06
+<span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span> open_paas    login                            RUNNING   pid <span class="m">9801</span>, uptime <span class="m">0</span>:00:06
+<span class="o">[</span><span class="m">10</span>.X.X.X<span class="o">]</span> open_paas    paas                             RUNNING   pid <span class="m">9800</span>, uptime <span class="m">0</span>:00:06
+</pre></div><h1 id="paas">PaaS 重置访问密码</h1>
+<div class="codehilite"><pre><span></span><span class="c1"># admin密码修改错误后，无法登陆。如何后台重置密码？  </span>
+<span class="nb">source</span> /data/install/utils.fc
+
+ssh <span class="nv">$PAAS_IP</span>
+workon login
+<span class="nb">export</span> <span class="nv">BK_ENV</span><span class="o">=</span><span class="s1">&#39;production&#39;</span>
+python manage.py shell
+<span class="c1"># 看到python终端后输入, 密码&#39;xxxxxx&#39;改为自己要重置的内容</span>
+from bkaccount.models import BkUser
+<span class="nv">password</span> <span class="o">=</span> <span class="s1">&#39;xxxxx&#39;</span>
+<span class="nv">all_user</span> <span class="o">=</span> BkUser.objects.filter<span class="o">(</span><span class="nv">username</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="o">)</span>
+<span class="k">for</span> user in all_user:
+    user.set_password<span class="o">(</span>password<span class="o">)</span>
+    user.save<span class="o">()</span>
+<span class="c1"># 然后退出终端</span>
+<span class="nb">unset</span> BK_ENV
+</pre></div>
+
+
+<h1 id="paas-502-bad-gateway">PaaS 登陆提示 502 Bad GateWay</h1>
+<p>访问<code>集成平台</code>（open_paas）容易出现 502，原因比较多</p>
+<ul>
+<li>确认 open_paas 4 个 web 服务启动正常，且可以访问（最可能的原因），注意如果端口被占用，web 访问将启动失败；</li>
+<li>确认防火墙策略，即 nginx 所在服务器能够请求到<code>open_paas</code>所在机器的对应服务<code>curl http://{open_paas_ip}:8000</code></li>
+<li>确认 nginx 中 paas.conf-server{listen 80;}，如果此时 502，可能是 nginx 部署机器多块网卡，而 listen 使用的网卡和访问域名配置的网卡不同导致的，变更 server{listen{网卡}:80}</li>
+</ul>
+<h1 id="appt-502-bad-gateway">appt 访问报 502 bad gateway</h1>
+<ul>
+<li><code>http://{PAAS_DOMAIN}/t/bk_framework/</code>访问报 502 错误，确认实际访问路径</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># 在paas.conf查到对应访问请求路径</span>
+    location ~ ^/t/ <span class="o">{</span>
+        proxy_pass http://PAAS_AGENT_TEST<span class="p">;</span>
+
+<span class="c1"># 真实访问服务器及端口</span>
+upstream PAAS_AGENT_TEST <span class="o">{</span>
+    server <span class="m">10</span>.x.x.x:8010 <span class="nv">max_fails</span><span class="o">=</span><span class="m">1</span>  <span class="nv">fail_timeout</span><span class="o">=</span>30s<span class="p">;</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>在 paas 服务器上进行测试<code>curl http://10.x.x.x:8010</code></li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@nginx-1 /data/bkee/etc/nginx<span class="o">]</span><span class="c1"># curl http://10.x.x.x:8010</span>
+curl: <span class="o">(</span><span class="m">7</span><span class="o">)</span> Failed connect to <span class="m">10</span>.x.x.x:8010<span class="p">;</span> 拒绝连接
+</pre></div>
+
+
+<ul>
+<li>在 appt 上进行确认</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># 8010未监听起来</span>
+<span class="o">[</span>root@rbtnode2 /data/bkee/etc/nginx<span class="o">]</span><span class="c1"># netstat -lnpt|grep 8010</span>
+<span class="o">[</span>root@rbtnode2 /data/bkee/etc/nginx<span class="o">]</span><span class="c1">#</span>
+
+<span class="c1"># 确认nginx的路径</span>
+<span class="o">[</span>root@rbtnode2 /data/bkee/etc/nginx<span class="o">]</span><span class="c1"># ps -ef|grep nginx</span>
+root     <span class="m">17847</span> <span class="m">26444</span>  <span class="m">0</span> <span class="m">12</span>:12 pts/1    <span class="m">00</span>:00:00 grep --color<span class="o">=</span>auto nginx
+root     <span class="m">20934</span>     <span class="m">1</span>  <span class="m">0</span> Jul18 ?        <span class="m">00</span>:00:00 nginx: master process nginx
+<span class="o">[</span>root@rbtnode2 /data/bkee/etc/nginx<span class="o">]</span><span class="c1"># ll /proc/20934/|grep exe</span>
+
+<span class="c1"># 重新reloadnginx，8010起来</span>
+<span class="o">[</span>root@rbtnode2 /data/bkee/etc/nginx<span class="o">]</span><span class="c1"># /usr/sbin/nginx -s reload</span>
+<span class="o">[</span>root@rbtnode2 /data/bkee/etc/nginx<span class="o">]</span><span class="c1"># netstat -lnpt|grep 8010</span>
+tcp        <span class="m">0</span>      <span class="m">0</span> <span class="m">0</span>.0.0.0:8010            <span class="m">0</span>.0.0.0:*               LISTEN      <span class="m">20934</span>/nginx: master
+</pre></div>
+
+
+<ul>
+<li>重新测试，<code>http://{PAAS_DOMAIN}/t/bk_framework/</code>访问 OK</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@nginx-1 ~<span class="o">]</span><span class="c1"># curl http://10.X.X.X:8010</span>
+&lt;!DOCTYPE html PUBLIC <span class="s2">&quot;-//W3C//DTD XHTML 1.1//EN&quot;</span> <span class="s2">&quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;</span>&gt;
+
+&lt;html <span class="nv">xmlns</span><span class="o">=</span><span class="s2">&quot;http://www.w3.org/1999/xhtml&quot;</span> xml:lang<span class="o">=</span><span class="s2">&quot;en&quot;</span>&gt;
+    &lt;head&gt;
+        &lt;title&gt;Test Page <span class="k">for</span> the Nginx HTTP Server on Fedora&lt;/title&gt;
+        &lt;meta http-equiv<span class="o">=</span><span class="s2">&quot;Content-Type&quot;</span> <span class="nv">content</span><span class="o">=</span><span class="s2">&quot;text/html; charset=UTF-8&quot;</span> /&gt;
+        &lt;style <span class="nv">type</span><span class="o">=</span><span class="s2">&quot;text/css&quot;</span>&gt;
+            /*&lt;!<span class="o">[</span>CDATA<span class="o">[</span>*/
+</pre></div>
+
+
+<h1 id="saas">SaaS 部署的超时时间可以自行配置</h1>
+<p>蓝鲸智云 PaaS 平台部署应用时, 存在一个超时时间, 当应用部署超过超时时间后, 系统主动将部署任务设置为失败.</p>
+<p>当前存在两个地方的配置:</p>
+<ul>
+<li>PaaSAgent 默认超时时间: <code>300s</code>, 当部署作业执行超过 300s 时, 设置任务状态为失败</li>
+<li>PaaS 部署默认超时时间: <code>360s</code>, 注意一定要大于 PaaSAgent 设置的超时时间; 某些情况下网络超时或 PaaSAgent 失联, 确保部署任务不会卡在<code>正在部署</code>状态</li>
+</ul>
+<p>如果要变更超时时间:</p>
+<h2 id="1-paas-agent">1. PaaS Agent 变更</h2>
+<ul>
+<li>登录 PaaSAgent 服务器(APPO/APPT)</li>
+<li>编辑<code>paas_agent_config.yaml</code>, 修改 <code>EXECUTE_TIME_LIMIT</code> 字段值</li>
+<li>重启 PaaSAgent</li>
+</ul>
+<h2 id="2-paas">2. PaaS 变更</h2>
+<ul>
+<li>登录 PaaS 服务器</li>
+<li>编辑 <code>/data/bkce/open_paas/paas/conf/default.py</code> 中的<code>EVENT_STATE_EXPIRE_SECONDS</code>值</li>
+<li>重启 PaaS</li>
+</ul>
+<h3 id="paas_1">如何确认 PaaS 部署正常</h3>
+<p>首先 <code>ping {PAAS_DOMAIN}</code> 确定通域名通</p>
+<p>其次 确认所有 healthz 接口正常:</p>
+<ul>
+<li>http://{PAAS_DOMAIN}/healthz/ 开发者中心</li>
+<li>http://{PAAS_DOMAIN}/login/healthz/ 登录服务</li>
+<li>http://{PAAS_DOMAIN}/api/healthz/ esb 接口</li>
+<li>http://{PAAS_DOMAIN}/console/healthz/ 桌面</li>
+<li>http://{PAAS_DOMAIN}/v1/healthz/  appengine</li>
+</ul>
+<p>healthz 接口会检查服务本身及其所有外部依赖, 若服务不可用或依赖有问题则非 200 并提示错误</p>
+<p>如果有问题, 根据相应错误处理  </p>
+<h3 id="_1">在开发者中心无法查看日志</h3>
+<ul>
+<li>确认 es 服务正常, 且 PaaS 中配置的 es 地址正确</li>
+<li>确认在 appo/appt 服务器上均部署了 <code>paas_plugins/log_agent</code></li>
+<li>确认部署了 <code>paas_plugins/log_parser</code></li>
+<li>确认 <code>log_agent</code>及<code>log_parser</code>的 redis 配置一致</li>
+<li>确认所有机器的时区及时间一致(<strong>重要</strong>)</li>
+</ul><p>(1)蓝鲸 DevOps 技能有培训教程吗？</p>
+<p>答：蓝鲸为社区用户准备了在线视频教程，可以免费观看。（链接：<a href="https://cloud.tencent.com/developer/edu/major-100008">https://cloud.tencent.com/developer/edu/major-100008</a>）</p>
+<p>(2)学习蓝鲸 DevOps 技能过程中遇到问题怎么办？</p>
+<p>答：学习过程中，任何疑问可咨询蓝鲸 QQ <a href="http://wpa.b.qq.com/cgi/wpa.php?ln=1&amp;key=XzgwMDgwMjAwMV80NDMwOTZfODAwODAyMDAxXzJf">在线客服</a>，除此之外，蓝鲸为社区用户准备了交流 QQ 群：<a href="https://jq.qq.com/?_wv=1027&amp;k=4BcXfIr">蓝鲸社区版交流 1 群</a>495299374，群内的社区用户和蓝鲸助手会热心为大家提供咨询服务。</p>
+<p>(3)如何将蓝鲸体系的用户体系对接到企业内已有的 OA 系统？</p>
+<p>答：蓝鲸提供了登录 API 接口，可以对接普通的账户 Vs 密码形式的 OA 账号，可参考 <a href="5.1/开发指南/扩展开发/对接企业登录体系/flow_chart.md">企业内部登录对接蓝鲸智云统一登录指南</a> 完成对接，更多对接的功能在持续开发中。</p><h1 id="_1">配置平台常见问题</h1>
+<h2 id="cmdb">CMDB 无快照数据</h2>
+<blockquote>
+<p>此文档描述 4.0至5.0的社区版的问题排查</p>
+<p>Windows 主机暂不支持快照数据</p>
+</blockquote>
+<p><strong>表象</strong>：配置管理系统的实时状态显示<code>当前主机没有安装Agent或者Agent已经离线</code></p>
+<p><strong>原因</strong></p>
+<ol>
+<li>gse 及 gse_agent 状态不正常</li>
+<li>bkdata 的快照数据任务不存在</li>
+<li>kafka 内节点或 topic 数据异常</li>
+</ol>
+<p><strong>思路方法</strong></p>
+<ul>
+<li><strong>检查模块状态</strong></li>
+<li>确定 cmdb，gse，gse_agent，zk，kafka 模块的状态是否正常，可以使用<code>./bkcec status XXX模块</code>来确认</li>
+<li><strong>检查 cmdb 日志</strong></li>
+</ul>
+<div class="codehilite"><pre><span></span>检查<span class="o">/</span><span class="nv">data</span><span class="o">/</span><span class="nv">bkce</span><span class="o">/</span><span class="nv">log</span><span class="o">/</span><span class="nv">cmdb</span><span class="o">/</span><span class="nv">cmdb_datacollection</span>.<span class="nv">INFO</span>文件
+出现<span class="nv">ccapi</span>.<span class="nv">go93</span>] <span class="nv">fail</span> <span class="nv">to</span> <span class="nv">get</span> <span class="nv">configure</span>, <span class="nv">will</span> <span class="nv">get</span> <span class="nv">again</span>，表示不正常
+返回<span class="nv">hostsnap</span>.<span class="nv">go</span>:<span class="nv">xxx</span>] <span class="nv">master</span> <span class="nv">check</span> : <span class="nv">iam</span> <span class="nv">still</span> <span class="nv">master</span>，表示正常
+检查<span class="nv">cmdb_datacollection</span>.<span class="nv">ERROR</span>文件，确认是否出现<span class="nv">err</span>:<span class="nv">fail</span> <span class="nv">to</span> <span class="k">connect</span> <span class="nv">zookeeper</span>. <span class="nv">err</span>：<span class="nv">lookup</span> <span class="nv">zk</span>.<span class="nv">service</span>.<span class="nv">consul</span>等
+如果日志出现“<span class="nv">subcribing</span> <span class="nv">channel</span> <span class="mi">2</span><span class="nv">_snapshot</span>”后没有<span class="nv">subChan</span> <span class="nv">Close</span>，那么表明收数据协程正常工作
+如果上述条都正常，但没有“<span class="nv">handle</span> <span class="nv">xx</span> <span class="nv">num</span> <span class="nv">mesg</span>, <span class="nv">routines</span> <span class="nv">xx</span>”，说明通道里没数据，请到<span class="nv">redis</span>里 <span class="nv">subscribe</span> ${<span class="nv">biz</span>}<span class="nv">_snapshot</span> 确认通道是否没数据，参考如下检查<span class="nv">redis</span>数据方法
+</pre></div>
+
+
+<ul>
+<li><strong>gse agent 采集端排查</strong></li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># 检查进程是否存在，basereport进程存在且唯一</span>
+Linux： ps -ef <span class="p">|</span> grep basereport
+Windows: tasklist <span class="p">|</span> findstr basereport
+
+<span class="c1"># 若进程不存在，手动启动，检查启动失败的原因</span>
+Linux: <span class="nb">cd</span> /usr/local/gse/plugins/bin <span class="o">&amp;&amp;</span> ./basereport -c ../etc/basereport.conf
+Windows<span class="o">(</span>cygwin<span class="o">)</span>: <span class="nb">cd</span> /cygdrive/c/gse/plugins/bin/ <span class="o">&amp;&amp;</span> ./basereport -c ../etc/basereport.conf
+Windows<span class="o">(</span>无cygwin<span class="o">)</span> : <span class="nb">cd</span> C:/gse/plugins/bin/ <span class="o">&amp;&amp;</span> start.bat basereport
+
+<span class="c1"># 检查数据上报连接，有正常ESTABLISHED的链接则ok</span>
+<span class="c1"># 若存在proxy，登陆proxy机器：检测58625端口同上</span>
+Linux netstat -antp <span class="p">|</span> grep <span class="m">58625</span> <span class="p">|</span> grep ESTABLISHED
+Windows netstat -ano <span class="p">|</span> grep <span class="m">58625</span>
+</pre></div>
+
+
+<ul>
+<li><strong>gse 服务端排查</strong></li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># 登陆 GSE后台服务器，检测 gse_data 是否连上9092端口:</span>
+Linux: lsof -nP -c dataWorker <span class="p">|</span> grep :9092
+Windows: netstat -ano <span class="p">|</span> grep <span class="m">9092</span>
+
+<span class="c1"># 看有没有 gse_data 的pid 开头命名的日志。 若有，tail查看日志内容</span>
+<span class="nv">datapid</span><span class="o">=</span><span class="k">$(</span>pgrep -x dataWorker<span class="k">)</span>
+ls -l /data/bkce/public/gse/data/<span class="si">${</span><span class="nv">datapid</span><span class="si">}</span>*
+</pre></div>
+
+
+<ul>
+<li><strong>检查 kafka</strong><ul>
+<li>登陆任意 KAFKA 机器：查看 KAFKA 最新数据，等待 1 分钟查看是否有数据。 如果有数据，在最后一行命令后加上<code>| grep $ip</code> $ip 用无快照数据的 ip 替换， 再次查看是否有数据</li>
+</ul>
+</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># 登录到kafka所在的机器上</span>
+$ <span class="nb">source</span> /data/install/utils.fc
+/data/bkce/service/zk/bin/zkCli.sh -server zk.service.consul:2181 get /gse/config/etc/dataserver/data/1001
+<span class="c1"># 确认存在topic</span>
+<span class="nv">zkaddr</span><span class="o">=</span><span class="sb">`</span>cat /data/bkce/service/kafka/config/server.properties <span class="p">|</span> grep common_kafka <span class="p">|</span> cut -d <span class="s1">&#39;=&#39;</span> -f <span class="m">2</span><span class="sb">`</span>
+<span class="nv">topic</span><span class="o">=</span><span class="sb">`</span>bash /data/bkce/service/kafka/bin/kafka-topics.sh --list --zookeeper <span class="nv">$zkaddr</span><span class="p">|</span>grep ^snap<span class="sb">`</span>
+
+<span class="c1"># 查看topic中的最新数据</span>
+bash /data/bkce/service/kafka/bin/kafka-console-consumer.sh --zookeeper <span class="nv">$zkaddr</span> --topic <span class="nv">$topic</span>
+<span class="c1"># 每隔一分钟会上报数据，有数据上报侧表示正常</span>
+</pre></div>
+
+
+<ul>
+<li><strong>检查 bkdata</strong></li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># 快照数据对应bkdata，databus的redis任务，需确认databus状态下的redis任务是否存在</span>
+$ bash /data/bkce/bkdata/dataapi/bin/check_databus_status.sh
+<span class="c1"># 检查是否存在如下redis任务</span>
+<span class="o">===========</span><span class="nv">REDIS</span><span class="o">===============</span>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<span class="m">100</span>    <span class="m">25</span>  <span class="m">100</span>    <span class="m">25</span>    <span class="m">0</span>     <span class="m">0</span>    <span class="m">142</span>      <span class="m">0</span> --:--:-- --:--:-- --:--:--   <span class="m">142</span>
+redis_1001_2_snapshot
+<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;redis_1001_2_snapshot&quot;</span>,<span class="s2">&quot;connector&quot;</span>:<span class="o">{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;x.x.x.x:10053&quot;</span><span class="o">}</span>,<span class="s2">&quot;tasks&quot;</span>:<span class="o">[{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;id&quot;</span>:0,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;x.x.x.x:10053&quot;</span><span class="o">}]}</span>
+<span class="o">==========================</span>
+
+<span class="c1"># 若上述任务不存在，可能在初始化bkdata数据时异常，可以采用如下方法重新创建，先确认init_bkdata_snapshot是否存在</span>
+$ ll /data/bkce/.init_bkdata_snapshot
+$ rm -f /data/bkce/.init_bkdata_snapshot
+$ deactivate
+$ <span class="nb">source</span> /data/install/utils.fc
+$ init_bkdata_snapshot
+<span class="c1"># 再根据上面的重新确认是否有redis任务</span>
+</pre></div>
+
+
+<ul>
+<li><strong>检查 redis 通道</strong></li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># 此步主要检查redis内是否有快照数据，在redis服务器上</span>
+<span class="nb">source</span> /data/install/utils.fc
+$ redis-cli -h <span class="nv">$REDIS_IP</span> -p <span class="nv">$REDIS_PORT</span> -a <span class="nv">$REDIS_PASS</span>
+<span class="m">10</span>.X.X.X:6379&gt; AUTH <span class="s2">&quot;REDIS密码&quot;</span>
+OK
+<span class="m">10</span>.X.X.X:6379&gt; SUBSCRIBE 2_snapshot
+Reading messages... <span class="o">(</span>press Ctrl-C to quit<span class="o">)</span>
+<span class="m">1</span><span class="o">)</span> <span class="s2">&quot;subscribe&quot;</span>
+<span class="m">2</span><span class="o">)</span> <span class="s2">&quot;2_snapshot&quot;</span>
+<span class="m">3</span><span class="o">)</span> <span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+<span class="m">1</span><span class="o">)</span> <span class="s2">&quot;message&quot;</span>
+<span class="m">2</span><span class="o">)</span> <span class="s2">&quot;2_snapshot&quot;</span>
+<span class="m">3</span><span class="o">)</span> <span class="s2">&quot;{\&quot;localTime\&quot;: \&quot;2018-08-15 11:18:00\&quot;, \&quot;data\&quot;: \&quot;{\\\&quot;beat\\\&quot;:{\\\&quot;address\\\&quot;:</span>
+</pre></div>
+
+
+<h2 id="cmdb_1">CMDB 无主机信息</h2>
+<p><strong>表象</strong>：CMDB 内主机自动发现信息为空</p>
+<p><strong>原因</strong></p>
+<ol>
+<li>gse 安装异常或 gse 数据初始化不对</li>
+<li>gse_agent 安装异常</li>
+</ol>
+<p><strong>思路办法</strong></p>
+<p>1：参考 GSE 数据初始化失败解决方法，需要更新 GSE 版本中的初始化程序文件 on_migrate 和 parse_bizid，路径<code>/data/bkce/gse/server/bin/</code></p>
+<p>2：重装 gse_agent</p><h1 id="_1">作业平台常见问题</h1>
+<h2 id="job">JOB 启动失败</h2>
+<p>job 启动失败常见原因：</p>
+<ul>
+<li>若有日志，根据日志定位<ul>
+<li>证书是否匹配</li>
+<li>RabbitMQ 连接是否失败</li>
+<li>Redis 连接是否失败</li>
+<li>Mysql 连接是否失败</li>
+<li>确定 IP/密码/用户名是否存在及正确</li>
+</ul>
+</li>
+<li>consul 是否路由正确</li>
+<li>端口问题<code>/data/bkce/etc/job.conf</code>配置项内的端口是否有冲突</li>
+<li>环境问题导致没有日志，打开<code>/data/bkce/job/job/bin/jo.sh</code>的<code>NOHUPLOG=job_jvm_console.log</code>配置，再重启确认 job 的日志目录下的日志文件 job_jvm_console.log 进行确认</li>
+<li>确认 License 合法及可以连接</li>
+</ul>
+<h2 id="job_1">JOB 作业一直等待执行</h2>
+<p>在执行作业时，步骤状态一直为等待执行，解决方法如下：</p>
+<ul>
+<li>RabbitMQ 连接异常，作业启动信息收不到，请检查 RabbitMQ，并重启 Job 进程尝试恢复</li>
+<li>检查项：ijobs.amqp.addresses，ijobs.amqp.username，ijobs.amqp.password。其中 ijobs.amqp.username，ijobs.amqp.password 与 app.code 和 app.secret 配置项相同，并且 RabbitMQ 会在创建帐号后并授权 vhost 名为 bk_job 的使用权限</li>
+</ul>
+<h2 id="job_2">JOB 一直跳转登陆页面</h2>
+<p>此问题一般为 PaaS 登陆接口通信失败，解决方法如下：</p>
+<ul>
+<li>检查<code>/data/bkce/etc/job.conf</code>中 bk.paas.host 配置项，确认地址是否可以连通，并确认 PaaS 是否正常</li>
+<li>检查<code>/data/bkce/etc/job.conf</code>中 bk.paas.host 配置项 app.code 和 app.secret 配置是否正确，否则访问 PaaS 接口会鉴权试下而无法登录</li>
+</ul>
+<h2 id="job_3">JOB 无执行日志</h2>
+<p>在排除用户的脚本本身就不输出日志的正常情况，JOB 出现无日志的情况有很多种，第一种是 Job 本身问题，与 GSE 无关，当 error.log 出现 Table has no partition for value xxxx  这种错，就是 Job 本身的问题，原因：</p>
+<p>JOB 对日志数据库表进行表分区， 并且要求 MYSQL 中启动事件调度功能，JOB 默认会在版本升级时自动启用这个功能，在 JOB 的版本 1.2.49 之前，蓝鲸出厂默认的 MySQL 配置中没有开启这个功能，所以在 MySQL 被重启后，这个事件功能被关闭，随着时间流转，分区不够用了，会出现这个错误 。</p>
+<p>解决办法可根据情况选择：</p>
+<p>1.不想升级蓝鲸版本</p>
+<p>•在 Mysql 配置文件 my.cnf 中的[mysqld]部分添加以下内容 event_scheduler=ON   并重启 MySQL</p>
+<p>•请联系蓝鲸人员提供一个 Job 的临时启用 event 的 SQL</p>
+<p>2.升级蓝鲸到最新版本。</p>
+<h2 id="job-execution-result-log-always">JOB 耗时时间长并无执行日志：Execution result log always</h2>
+<p>此问题出现在 job.log 文件内，并一直打印<code>redis reply is not string</code>这种情况，原因如下：</p>
+<ul>
+<li>此情况属于 GSE 的任务管道或者 Agent 的原因导致的无日志，这种情况需要排查 GSE 服务是否正常，以及执行机器 Agent 进程是否正常，有可能在执行中被杀掉，导致长时间无上报执行日志给服务器</li>
+<li>最终结果为 JOB 的作业执行日志出现<code>Execution result log always</code>，这个是在脚本作业的超时时间范围内如果连接 10 分钟内一直没有收到任何日志信息，JOB 会触发保护，强制终止作业并返回上述信息给用户</li>
+</ul>
+<h2 id="job-script-log-timed-out">JOB 脚本耗时长并失败：Script log timed out</h2>
+<p>出现此问题可能两种原因：</p>
+<ul>
+<li>用户业务脚本问题：执行过于耗时的脚本，并且超过了设置的脚本超时时间，一般默认是 1000 秒，在此时间基础上多 1-10%以内是正常的。若因为此原因，解决方法：修改耗时脚本或者修改脚本超时时间</li>
+<li>GSE Agent 的问题：作业最终超时时间是在用户设置的超时时间再+20%，若用户设置了 1000 秒超时，但脚本最终在 1200 秒以上出现超时，则表示这个任务是因为 Agent 原因导致长时间无响应，最终 JOB 容错了 20%的时间（1000+200 秒）而强行触发终止。解决方法：重启 GSE Agent 再重试</li>
+</ul>
+<h2 id="job-gse">JOB 连接 GSE 失败</h2>
+<p>这种报错，说明 job 连接 gse_task 异常 可能的原因如下：</p>
+<ul>
+<li>gse_task 进程异常，48669 端口（task 提供给 job 通信的端口）未监听</li>
+<li>job 配置文件<code>etc/job.conf</code>里配置的 gse.taskserver.ip 的值无法连通</li>
+<li>证书问题，会爆出 ssl 字样的错误信息</li>
+</ul>
+<h2 id="job-agent">JOB 无法发现 Agent</h2>
+<p>这类报错说明 job 连接 task 是正常，但是 agent 状态异常</p>
+<ul>
+<li>agent 安装问题，失败，进程未正常启动</li>
+<li>agent 到 gse_task 的 48533 端口未建立 tcp 连接</li>
+<li>agent 证书和 gse_task 的不匹配，会爆 ssl 字样错误信息</li>
+<li>云区域 ID 不匹配</li>
+</ul>
+<h2 id="redis-no-result-found">分发文件，执行历史报 "redis no result found"</h2>
+<ul>
+<li>问题现象</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/file.jpg" /></p>
+<ul>
+<li>
+<p>解决方案</p>
+<p>1.gse 或者 redis 进程状态异常。</p>
+<p>gse或者redis 异常查看相应日志文件。/data/bkce/logs/gse/、/data/bkce/logs/redis。</p>
+<p>2.登陆至 gse server 模块所在机器上，<code>ps -ef |grep gse_agent</code> 确认该机器上成对出现 gse_agent 进程。如无，执行 <code>/usr/local/gse/agent/bin/gsectl start</code> 手动拉起 gse_agent。</p>
+<p>3.gse 和 redis 需要同在一台机器上部署。</p>
+<p>4.蓝鲸server端agent需确保正常
+  <code>ps -ef |grep gse_agent</code> 进程成对出现（gse所在机器）
+ <code>bash
+ root     19467     1  0 Nov04 ?        00:00:00 ./gse_agent -f /usr/local/gse/agent/etc/agent.conf
+ root     19469 19467  0 Nov04 ?        00:08:05 ./gse_agent -f /usr/local/gse/agent/etc/agent.conf</code></p>
+</li>
+</ul>
+<h2 id="job_4">JOB 平台错误代码</h2>
+<table>
+<thead>
+<tr>
+<th>错误码</th>
+<th>源</th>
+<th>目标</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1210001</td>
+<td>JOB</td>
+<td>GSE</td>
+<td>GSE TaskServer 不可用</td>
+</tr>
+<tr>
+<td>1210101</td>
+<td>JOB</td>
+<td>GSE</td>
+<td>当前证书服务不可用，请检查 license_server！</td>
+</tr>
+<tr>
+<td>1250001</td>
+<td>JOB</td>
+<td>Redis</td>
+<td>Redis 服务不可：IP 不对或者配置错误</td>
+</tr>
+<tr>
+<td>1250002</td>
+<td>JOB</td>
+<td>Redis</td>
+<td>Redis 服务内存满或者其他问题：内存不足</td>
+</tr>
+<tr>
+<td>1259001</td>
+<td>JOB</td>
+<td>NFS</td>
+<td>NFS 存储不可用</td>
+</tr>
+<tr>
+<td>1252001</td>
+<td>JOB</td>
+<td>MYSQL</td>
+<td>数据库异常</td>
+</tr>
+<tr>
+<td>1255001</td>
+<td>JOB</td>
+<td>MQ</td>
+<td>Rabbit MQ 不可用或者连接不上</td>
+</tr>
+<tr>
+<td>1211001</td>
+<td>JOB</td>
+<td>CMDB</td>
+<td>CMDB 服务状态不可达：地址配置错误</td>
+</tr>
+<tr>
+<td>1211002</td>
+<td>JOB</td>
+<td>CMDB</td>
+<td>CMDB 接口返回数据结构异常。一般是被网关防火墙重定向返回非 JSON 协议内容</td>
+</tr>
+<tr>
+<td>1211121</td>
+<td>JOB</td>
+<td>CMDB</td>
+<td>蓝鲸业务下的 Git 模块没有 IP（包管理）</td>
+</tr>
+<tr>
+<td>1213001</td>
+<td>JOB</td>
+<td>PAAS</td>
+<td>PAAS 服务不可达 - 地址配置错误或者地址无法正确解析</td>
+</tr>
+<tr>
+<td>1213002</td>
+<td>JOB</td>
+<td>PAAS</td>
+<td>PaaS 接口返回数据结构异常。一般是被网关防火墙重定向返回非 JSON 协议内容</td>
+</tr>
+</tbody>
+</table><h1 id="_1">管控平台常见问题</h1>
+<h2 id="gse-initdata">GSE initdata 失败</h2>
+<p><strong>表象</strong>：在<code>./bkcec initdata gse</code>时，会出现如下 2 种报错</p>
+<ol>
+<li><code>parse cc response error</code></li>
+<li><code>parse dataid error</code></li>
+</ol>
+<div class="codehilite"><pre><span></span><span class="c1"># 提示解析CC响应失败，或者解析dataid失败</span>
+$ parse dataid failed, <span class="o">[{</span><span class="s2">&quot;server_id&quot;</span>: -1, <span class="s2">&quot;data_set&quot;</span>: <span class="s2">&quot;snapshot&quot;</span>, <span class="s2">&quot;partition&quot;</span>: <span class="m">1</span>, <span class="s2">&quot;cluster_index&quot;</span>: <span class="m">0</span>, <span class="s2">&quot;biz_id&quot;</span>: <span class="m">2</span>, <span class="s2">&quot;msg_system&quot;</span>: <span class="m">1</span><span class="o">}</span>, <span class="o">{</span><span class="s2">&quot;server_id&quot;</span>: -1, <span class="s2">&quot;data_set&quot;</span>: <span class="s2">&quot;snapshot&quot;</span>, <span class="s2">&quot;partition&quot;</span>: <span class="m">0</span>, <span class="s2">&quot;cluster_index&quot;</span>: <span class="m">1</span>, <span class="s2">&quot;biz_id&quot;</span>: <span class="m">2</span>, <span class="s2">&quot;msg_system&quot;</span>: <span class="m">4</span><span class="o">}]</span>
+migrate failed <span class="k">for</span> gse <span class="o">(</span>server<span class="o">)</span>
+</pre></div>
+
+
+<p><strong>出现版本</strong>：4.1.X</p>
+<p><strong>原因</strong></p>
+<ol>
+<li>
+<p>GSE 对应初始化数据的程序及脚本不正确；</p>
+</li>
+<li>
+<p>cmdb 未正常安装，或 cmdb-nginx 启动不正常/未启动；</p>
+</li>
+</ol>
+<p><strong>解决办法</strong></p>
+<p>原因 1</p>
+<ul>
+<li>
+<p>需要更新 GSE 版本中的初始化程序文件 on_migrate 和 parse_bizid，路径<code>/data/bkce/gse/server/bin</code></p>
+<p><code>bash
+[root@rbtnode1 /data/install]# md5sum /data/bkce/gse/server/bin/on_migrate /data/bkce/gse/server/bin/parse_bizid
+addc6eeec6e72e73cc330cc7fa69e9b4  /data/bkce/gse/server/bin/on_migrate
+7ba79e36b731ef9678a3b8bfb41dc2ef  /data/bkce/gse/server/bin/parse_bizid</code>
+* 用户操作方法：</p>
+</li>
+<li>
+<p>把这 2 个文件放到中控机<code>/data/src/gse/server/bin</code>下面；</p>
+</li>
+<li>
+<p>在中控机，进行如下操作</p>
+<p><code>bash
+ source /data/install/utils.fc
+ cd /data/install
+ ./bkcec sync all
+ ./bkcec stop gse
+ ./bkcec install gse 1
+ ./bkcec initdata gse</code></p>
+</li>
+</ul>
+<p>原因 2</p>
+<ul>
+<li>
+<p>确定 cmdb 上 nginx 是否安装，若没安装，根据用户的设置源，让用户安装 nginx，同时需确认<code>/etc/nginx/nginx.conf</code>配置文件是否包含<code>/data/bkce/etc/nginx/*.conf</code></p>
+</li>
+<li>
+<p>需确认 cmdb 的状态，包括 cmdb-nginx，确定<code>./bkcec status cmdb</code>结果里面<code>cmdb-nginx</code>的状态不是 EXIT</p>
+</li>
+<li>
+<p>测试<code>curl -v http://cmdb.service.consul</code>，是否有<code>502 Bad Gateway</code>错误返回</p>
+</li>
+<li>
+<p>检查失败时，生成在<code>/tmp/gse.tmp</code>的文件， 不能出现有<code>502 bad gateway</code>的错误提示，若出现，注意检查 cmdb 的 8029 端口是否 OK</p>
+</li>
+</ul>
+<h2 id="gse">GSE 启动失败</h2>
+<p><strong>内网 IP 自动获取不对时</strong></p>
+<p>LAN_IP 表示 GSE 服务器真实可用的内网 IP(ip addr 输出查看)，需要根据实际 IP 替换 修改以下配置文件项，新增相关配置，注意 json 格式，逗号问题。</p>
+<ul>
+<li>data.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;datasvrip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+</pre></div>
+
+
+<ul>
+<li>task.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;tasksvrip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+<span class="s2">&quot;tasksvrthirftip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+<span class="s2">&quot;tasksvrtrunkip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+</pre></div>
+
+
+<ul>
+<li>dba.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;servers&quot;</span><span class="err">:</span><span class="p">[{</span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="p">,</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="mi">58817</span><span class="p">}]</span><span class="err">,</span>
+</pre></div>
+
+
+<ul>
+<li>btsvr.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;filesvrthriftip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+<span class="s2">&quot;btServerOuterIP&quot;</span><span class="err">:</span><span class="p">[{</span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="p">,</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="mi">59173</span><span class="p">}]</span><span class="err">,</span>
+<span class="s2">&quot;btServerInnerIP&quot;</span><span class="err">:</span><span class="p">[{</span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="p">,</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="mi">59173</span><span class="p">}]</span><span class="err">,</span>
+<span class="err">Copy</span>
+</pre></div>
+
+
+<ul>
+<li>api.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;cacheApiAddr&quot;</span><span class="err">:</span><span class="p">[{</span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="p">,</span> <span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="mi">59313</span><span class="p">}]</span><span class="err">,</span>
+<span class="err">Copy</span>
+</pre></div>
+
+
+<ul>
+<li>agent.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;agentip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+</pre></div>
+
+
+<h2 id="gse-agent">GSE agent 状态异常</h2>
+<p>节点管理 SaaS 或 Job 显示 agent 状态异常:</p>
+<ol>
+<li>检查对应 ip 机器上的 gse_agent 进程是否正常 <code>ps -ef |grep gse_agent</code></li>
+<li>检查 gse_agent 的 48533 连接是否正常</li>
+<li>检查 gse_agent 与 gse server 的证书是否匹配</li>
+<li>检查该 ip 在 CC 上的业务及云区域 id 是否正确</li>
+<li>检查 gse_api 日志，查看启动时是否有<code>UPDATE_REDIS_FAILED</code>信息，若有则重启 gse_api</li>
+</ol>
+<p><strong>直连的 agent</strong></p>
+<ul>
+<li>查看 agent 机器上的 gse_agent 进程是否成对出现</li>
+</ul>
+<div class="codehilite"><pre><span></span>* 查看是否和gse_task的48533端口建立链接：<span class="sb">`</span>netstat -antp <span class="p">|</span> grep :48533<span class="sb">`</span>
+
+<span class="sb">```</span>bash
+<span class="o">[</span>root@nginx-1 ~<span class="o">]</span><span class="c1"># netstat -antp |grep :48533</span>
+tcp        <span class="m">0</span>      <span class="m">0</span> <span class="m">10</span>.0.1.2:35544          <span class="m">10</span>.0.1.226:48533        ESTABLISHED <span class="m">26714</span>/./gse_agent
+</pre></div>
+
+
+<ul>
+<li>登陆到第一步显示链接的 gse_task 的 IP(10.X.X.X)，继续查看链接：<code>netstat -antp | grep :48533 | grep 10.0.1.2</code> 确认 gse_task 上看到的 ip 和 agent 的 ip 一致。若不一致，可能 agent-&gt;gse_task 时发生了 NAT 转换</li>
+</ul>
+<p><strong>Proxy 下的 agent</strong></p>
+<ul>
+<li>查看 agent 是否和 proxy(gse_agent)的 48533 建立链接：<code>netstat -antp | grep :48533</code></li>
+<li>和直连 agent 的排查同理，到 proxy 上查看建立链接的 ip 是否一致</li>
+</ul>
+<h2 id="gse-ip">GSE 相关组件自动获取 IP 失败</h2>
+<p>下文 <code>__LAN_IP__</code> 均表示 GSE 服务器真实可用的内网 IP</p>
+<p>gse 相关组件默认会自动尝试获取内网网卡 ip 去监听，但是有些网卡复杂的情况下 会监听到不正确的网卡时，可以尝试修改配置文件里的 IP 来解决</p>
+<p>如果配置文件不包含以下配置段，可以自己新增相关配置，要注意配置文件都是 json 格式，留意逗号问题</p>
+<ul>
+<li>GSE 后台服务</li>
+</ul>
+<p>GSE 后台服务的配置文件路径默认在 /data/bkce/etc/gse/ 下</p>
+<p>譬如 gse_task 进程对应的配置是 task.conf ，修改后，使用 <code>cd /data/bkce/gse/server/bin/ &amp;&amp; ./gsectl restart task</code> 来重启。其他进程以此类推。</p>
+<ul>
+<li>data.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;datasvrip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+</pre></div>
+
+
+<ul>
+<li>task.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;tasksvrip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+<span class="s2">&quot;tasksvrthirftip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+<span class="s2">&quot;tasksvrtrunkip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+</pre></div>
+
+
+<ul>
+<li>dba.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;servers&quot;</span><span class="err">:</span><span class="p">[{</span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="p">,</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="mi">58817</span><span class="p">}]</span><span class="err">,</span>
+</pre></div>
+
+
+<ul>
+<li>btsvr.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;filesvrthriftip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+<span class="s2">&quot;btServerOuterIP&quot;</span><span class="err">:</span><span class="p">[{</span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="p">,</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="mi">59173</span><span class="p">}]</span><span class="err">,</span>
+<span class="s2">&quot;btServerInnerIP&quot;</span><span class="err">:</span><span class="p">[{</span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="p">,</span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="mi">59173</span><span class="p">}]</span><span class="err">,</span>
+</pre></div>
+
+
+<ul>
+<li>api.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;cacheApiAddr&quot;</span><span class="err">:</span><span class="p">[{</span><span class="nt">&quot;ip&quot;</span><span class="p">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="p">,</span> <span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="mi">59313</span><span class="p">}]</span><span class="err">,</span>
+</pre></div>
+
+
+<ul>
+<li>Gse Proxy 模块</li>
+</ul>
+<p>proxy 的配置文件在 /usr/local/gse/proxy/etc/ 下，修改配置后使用 <code>cd /usr/local/gse/proxy/bin/ &amp;&amp; ./gsectl restart</code> 来重启。</p>
+<ul>
+<li>agent.conf</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="s2">&quot;agentip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+<span class="s2">&quot;proxylistenip&quot;</span><span class="err">:</span><span class="s2">&quot;LAN_IP&quot;</span><span class="err">,</span>
+</pre></div>
+
+
+<h2 id="_2">日志采集问题排查</h2>
+<h3 id="_3">查看源日志是否有更新</h3>
+<p>确保采集的数据源有日志持续输出 注意：文件内容不可直接清空，文件轮转可采用删除或者移动 MV。</p>
+<h3 id="_4">检测日志采集器进程</h3>
+<div class="codehilite"><pre><span></span>ps -ef <span class="p">|</span> grep unifytlogc
+Copy
+</pre></div>
+
+
+<p>若进程不存在，进入采集器目录，手动尝试启动采集器查看是否有错误信息</p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> /usr/local/gse/plugins/bin/
+./unifytlogc -c ../etc/unifytlogc.conf
+Copy
+</pre></div>
+
+
+<h3 id="_5">检查连接</h3>
+<p>agent 机器：有正常 ESTABLISHED 的链接则 ok</p>
+<ul>
+<li>Linux <code>netstat -antp | grep 58625 | grep ESTABLISHED</code></li>
+<li>Windows <code>netstat -ano | grep 58625</code></li>
+</ul>
+<p>若存在 proxy，登陆 proxy 机器：检测 58625 端口同上。</p>
+<ul>
+<li>Linux <code>netstat -tnp | grep 58625</code></li>
+</ul>
+<p>登陆 GSE 后台服务器，检测 gse_data 是否连上 9092 端口:</p>
+<ul>
+<li>Linux: <code>lsof -nP -c dataWorker | grep :9092</code></li>
+<li>Windows: <code>netstat -ano | grep 9092</code></li>
+</ul>
+<h3 id="_6">检测日志采集配置</h3>
+<div class="codehilite"><pre><span></span>cat /usr/local/gse/plugins/etc/unifytlogc.conf
+Copy
+</pre></div>
+
+
+<p>找到对应任务的 dataid，(在 tlogcfg-&gt;fileds-&gt;dataid)</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;tlogcfg&quot;</span><span class="p">:[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;fileds&quot;</span><span class="p">:[</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;dataid&quot;</span><span class="p">:</span><span class="mi">123</span><span class="p">,</span>
+                    <span class="nt">&quot;condition&quot;</span><span class="p">:[</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;dataid&quot;</span><span class="p">:</span><span class="mi">123</span>
+            <span class="s2">&quot;isNotPack&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;beJson&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+            <span class="nt">&quot;ignore_file_end_with&quot;</span><span class="p">:</span><span class="err">...</span><span class="p">,</span>
+            <span class="nt">&quot;private&quot;</span><span class="p">:{</span>
+                <span class="nt">&quot;_plat_id_&quot;</span><span class="p">:</span><span class="mi">1</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;dataset&quot;</span><span class="p">:</span><span class="s2">&quot;datatest&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;clear_file_cycle&quot;</span><span class="p">:</span><span class="mi">157680000</span><span class="p">,</span>
+            <span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="s2">&quot;/tmp/datatest/ddd.log&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;field_sep&quot;</span><span class="p">:</span><span class="s2">&quot;|&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;log_type&quot;</span><span class="p">:</span><span class="s2">&quot;logbyline&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;ipc_socket&quot;</span><span class="p">:</span><span class="s2">&quot;/var/run/ipc.state.report&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;log_path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/log/gse&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;data_path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/lib/gse&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;pidfile_path&quot;</span><span class="p">:</span><span class="s2">&quot;/var/run/gse/unifytlogc.pid&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;log_level&quot;</span><span class="p">:</span><span class="s2">&quot;ERROR&quot;</span>
+<span class="p">}</span>
+<span class="err">Copy</span>
+</pre></div>
+
+
+<h3 id="zk_ip-dataid-topic">在 ZK_IP 上查看 dataid 对应的 topic</h3>
+<p>$dataid 替换为上一步查询出来的 dataid</p>
+<div class="codehilite"><pre><span></span>/data/bkce/service/zk/bin/zkCli.sh -server zk.service.consul:2181 <span class="o">(</span>ip通常为本机内网IP<span class="o">)</span>
+get /gse/config/etc/dataserver/data/<span class="nv">$dataid</span>
+Copy
+</pre></div>
+
+
+<p>取出 data_set 和 biz_id 两个字段，合并在一起 例如：</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span><span class="nt">&quot;server_id&quot;</span><span class="p">:</span> <span class="mi">-1</span><span class="p">,</span> <span class="nt">&quot;data_set&quot;</span><span class="p">:</span> <span class="s2">&quot;datatest&quot;</span><span class="p">,</span> <span class="nt">&quot;partition&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nt">&quot;cluster_index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nt">&quot;biz_id&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="nt">&quot;msg_system&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="err">Copy</span>
+</pre></div>
+
+
+<p>topic 为 datatest4</p>
+<h3 id="kafka">检测 kafka 数据</h3>
+<p>在 KAFKA 机器上</p>
+<div class="codehilite"><pre><span></span><span class="nb">source</span> /data/install/utils.fc
+<span class="nb">cd</span> /data/bkce/service/kafka
+<span class="nv">topic</span><span class="o">=</span>&lt;上面查询的结果&gt;
+sh bin/kafka-console-consumer.sh --bootstrap-server <span class="nv">$LAN_IP</span>:9092 --topic <span class="nv">$topic</span>
+Copy
+</pre></div>
+
+
+<p>等待有没有新的数据产生</p>
+<h3 id="kafka-gse_data">若 kafka 没有数据，查看 gse_data 日志</h3>
+<p>登陆 GSE Server 的机器，看有没有 gse_data 的 pid 开头命名的日志。 若有，tail 查看日志内容</p>
+<div class="codehilite"><pre><span></span><span class="nv">datapid</span><span class="o">=</span><span class="k">$(</span>pgrep -x dataWorker<span class="k">)</span>
+ls -l /data/bkce/public/gse/data/<span class="si">${</span><span class="nv">datapid</span><span class="si">}</span>*
+Copy
+</pre></div>
+
+
+<h2 id="gse_1">GSE 端口列表</h2>
+<ul>
+<li>直连 agent 和 GSE 之间的互通策略</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>源地址</th>
+<th>目标地址</th>
+<th>协议</th>
+<th>端口</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>agent</td>
+<td>zk</td>
+<td>TCP</td>
+<td>2181</td>
+<td>获取配置</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>gse_task</td>
+<td>TCP</td>
+<td>48533</td>
+<td>任务服务端口</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>gse_data</td>
+<td>TCP</td>
+<td>58625</td>
+<td>数据上报端口</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>gse_btsvr</td>
+<td>TCP</td>
+<td>59173</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>gse_btsvr</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>gse_btsvr</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>agent</td>
+<td>TCP,UDP</td>
+<td>60020-60030</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>gse_btsvr</td>
+<td>TCP</td>
+<td>58930</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>gse_btsvr</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>gse_btsvr</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>agent</td>
+<td>TCP,UDP</td>
+<td>60020-60030</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td></td>
+<td></td>
+<td>监听随机端口</td>
+<td>bt 传输，可不开通</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td></td>
+<td></td>
+<td>监听随机端口</td>
+<td>bt 传输，可不开通</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>proxy 和 GSE 之间的互通策略</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>源地址</th>
+<th>目标地址</th>
+<th>协议</th>
+<th>端口</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>proxy(gse_agent)</td>
+<td>gse_task</td>
+<td>TCP</td>
+<td>48533</td>
+<td>任务服务端口</td>
+</tr>
+<tr>
+<td>proxy(gse_transit)</td>
+<td>gse_data</td>
+<td>TCP</td>
+<td>58625</td>
+<td>数据上报端口</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>gse_btsvr</td>
+<td>TCP</td>
+<td>58930</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>gse_btsvr</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>gse_btsvr</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP</td>
+<td>58930</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>proxy(gse_btsvr)</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP</td>
+<td>58930</td>
+<td>bt 传输（同一子网）</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt 传输（同一子网）</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>proxy(gse_btsvr)</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt 传输（同一子网）</td>
+</tr>
+<tr>
+<td>proxy(gse_opts)</td>
+<td>gse_ops</td>
+<td>TCP</td>
+<td>58725</td>
+<td>ping告警数据上报端口</td>
+</tr>
+<tr>
+<td>proxy(gse_agent)</td>
+<td></td>
+<td></td>
+<td>监听随机端口</td>
+<td>bt 传输，可不开通</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td></td>
+<td></td>
+<td>监听随机端口</td>
+<td>bt 传输，可不开通</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>proxy 下 agent 和 proxy 之间的互通策略</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>源地址</th>
+<th>目标地址</th>
+<th>协议</th>
+<th>端口</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>agent</td>
+<td>proxy(gse_agent)</td>
+<td>TCP</td>
+<td>48533</td>
+<td>任务服务端口</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>proxy(gse_transit)</td>
+<td>TCP</td>
+<td>58625</td>
+<td>数据上报端口</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP</td>
+<td>59173</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>proxy(gse_btsvr)</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>agent</td>
+<td>TCP,UDP</td>
+<td>60020-60030</td>
+<td>bt 传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>agent</td>
+<td>TCP,UDP</td>
+<td>60020-60030</td>
+<td>bt 传输(同一子网)</td>
+</tr>
+<tr>
+<td>agent</td>
+<td></td>
+<td></td>
+<td>监听随机端口</td>
+<td>bt 传输，可不开通</td>
+</tr>
+</tbody>
+</table><h1 id="_1">数据平台常见问题</h1>
+<h2 id="initdata-bkdata">initdata bkdata 失败</h2>
+<p><strong>表象</strong>：在<code>./bkcec initdata bkdata</code>时，会出现类似如下报错</p>
+<div class="codehilite"><pre><span></span>ERROR:init_snapshot_config <span class="o">(</span>databus.tests.DatabusHealthTestCase<span class="o">)</span>
+ConnectionError:HTTPConnectionPool<span class="o">(</span><span class="nv">host</span><span class="o">=</span><span class="s1">&#39;databus.service.consul&#39;</span>, <span class="nv">port</span><span class="o">=</span><span class="m">10052</span><span class="o">)</span>:Max retried exceeded with url: /connectors <span class="o">(</span>Caused by NewConnectionError<span class="o">(</span><span class="s1">&#39;&lt;requests.packages.urllib3.connection.HTTPConnection object at 0x7f90939a7110&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#39;</span>,<span class="o">))</span>
+</pre></div>
+
+
+<p><strong>思路方法</strong></p>
+<blockquote>
+<p>升级用户：确认在升级前，若需要初始化 bkdata 数据，先删除 bkdata 服务器<code>/data/bkce/.dataapi_snaphost</code>和<code>/data/bkce/.init_bkdata_snapshot</code>文件</p>
+<p>注意：如下操作，要求安装路径为/data/bkce，源路径为<code>/data/install</code></p>
+</blockquote>
+<ol>
+<li>确认 databus 日志是否有 Exception 的错误，示例如下</li>
+</ol>
+<p><code>bash
+grep -nE "Exception" /data/bkce/logs/bkdata/databus_etl.log /data/bkce/logs/bkdata/databus_tsdb.log
+199:org.apache.kafka.common.errors.wakeupException
+12:Exception in thread "main" org.apache.kafka.common.config.configException: Invalid value for configuration rest.port: Not a number of type INT</code></p>
+<ol>
+<li>若有 1 的错误存在，确认端口配置，10054 端口是否返回，若为空需要添加上</li>
+</ol>
+<p><code>bash
+grep -nE port /data/bkce/bkdata/databus/conf/tsdb.cluster.properties
+16:cluster.rest.port=10054</code></p>
+<ol>
+<li>
+<p>确认<code>/data/bkce/bkdata/dataapi/bin/check_databus_status.sh</code>状态，不能出现有<code>Failed connect to databus.service.consul:10054; connection refused</code>或者<code>JSON object could be decoded</code>错误输出</p>
+</li>
+<li>
+<p>确认 kafka，若社区版为 3 台部署的，必须返回[1, 2, 3]才正常，示例如下</p>
+<p>若 brokers ids 不为[1, 2, 3]，可能存在<code>/data/bkce/public/kafka/.lock</code>文件，有的话，删除此文件，再重新使用<code>./bkcec stop kafka</code>和<code>./bkcec start kafka</code>重启kafka，重启完再次确认状态</p>
+<p>```bash
+[root@rbtnode1 /data/install]# /data/bkce/service/zk/bin/zkCli.sh -server zk.service.consul:2181 ls /common_kafka/brokers/ids
+Connecting to zk.service.consul:2181
+log4j:WARN No appenders could be found for logger (org.apache.zookeeper.ZooKeeper).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.</p>
+<p>WATCHER::</p>
+<p>WatchedEvent state:SyncConnected type:None path:null
+[1, 2, 3]
+```</p>
+</li>
+<li>
+<p>若上述 1，2，3，4 均 OK，采用如下方法重新进行初始化数据
+    ```bash
+    # 在bkdata机器：
+    rm -rf /data/bkce/.dataapi_snaphost /data/bkce/.init_bkdata_snapshot</p>
+<h1 id="bkdata">在中控机停掉bkdata</h1>
+<p>./bkcec stop bkdata</p>
+<h1 id="bkdataadd-xxx-connector">在中控机重新初始化bkdata，此处正常会等很久，出现很多add xxx connector的输出，若出现的话，等它全部正常结束</h1>
+<p>./bkcec initdata bkdata
+[10.X.X.X]20180821-095319 120   migrate bkdata(dataapi) done
+[10.X.X.X]20180821-095320 78   starting bkdata(ALL) on host: 10.X.X.X
+[10.X.X.X]20180821-095334 85   going to init snapshot data. this may take a while.
+......
+http://databus.service.consul:10052/connectors
+init data of snapshot and components
+add etl connector of 2_uptimecheck_heartbeat
+add etl connector of 2_uptimecheck_http
+add etl connector of 2_redis_cpu
+add etl connector of 2_redis_client
+......
+add tsdb connector of 2_mysql_performance
+add tsdb connector of 2_mysql_rep</p>
+<h1 id="bkdata_1">等待上述完成，再启动bkdata</h1>
+<p>./bkcec start bkdata
+```</p>
+</li>
+</ol>
+<p><strong>如何确认<code>initdata bkdata</code>的结果是正常</strong></p>
+<ol>
+<li>确认在<code>initdata bkdata</code>，最后有如下的正常输出</li>
+</ol>
+<p>```bash
+  update reserved dataids DONE
+  [10.X.X.X]20180821-095319 120   migrate bkdata(dataapi) done
+  [10.X.X.X]20180821-095320 78   starting bkdata(ALL) on host: 10.X.X.X
+  [10.X.X.X]20180821-095334 85   going to init snapshot data. this may take a while.
+  ......
+  http://databus.service.consul:10052/connectors
+  init data of snapshot and components
+  add etl connector of 2_uptimecheck_heartbeat
+  add etl connector of 2_uptimecheck_http
+  add etl connector of 2_redis_cpu
+  add etl connector of 2_redis_client
+  ......
+  add tsdb connector of 2_mysql_performance
+  add tsdb connector of 2_mysql_rep
+  add tsdb connector of 2_apache_net
+  add tsdb connector of 2_apache_performance
+  .</p>
+<hr />
+<p>Ran 1 test in 156.952s</p>
+<p>OK
+  ```</p>
+<ol>
+<li>确认在 bkdata 服务器上，<code>check_databus_status.sh</code>，不能出现有<code>Failed connect to databus.service.consul:10054; connection refused</code>或者<code>JSON object could be decoded</code>错误输出。正常的输出示例如下</li>
+</ol>
+<p>```bash
+  [root@rbtnode1 /data/install]# /data/bkce/bkdata/dataapi/bin/check_databus_status.sh
+  ===========TSDB===============
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+  100   773  100   773    0     0  14599      0 --:--:-- --:--:-- --:--:-- 14865
+  tsdb_2_system_cpu_summary
+  {"name":"tsdb_2_system_cpu_summary","connector":{"state":"RUNNING","worker_id":"10.X.X.X:10054"},"tasks":[{"state":"RUNNING","id":0,"worker_id":"10.X.X.X:10054"}]}</p>
+<p>===========MYSQL===============
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+  100    27  100    27    0     0   1118      0 --:--:-- --:--:-- --:--:--  1125
+  jdbc_2_ja_gse_proc_port
+  {"name":"jdbc_2_ja_gse_proc_port","connector":{"state":"RUNNING","worker_id":"10.X.X.X:10051"},"tasks":[{"state":"RUNNING","id":0,"worker_id":"10.X.X.X:10051"}]}</p>
+<p>===========ETL===============
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+  100  1040  100  1040    0     0   166k      0 --:--:-- --:--:-- --:--:--  169k
+  etl_1001_2_system_cpu_summary
+  {"name":"etl_1001_2_system_cpu_summary","connector":{"state":"RUNNING","worker_id":"10.X.X.X:10052"},"tasks":[{"state":"RUNNING","id":0,"worker_id":"10.X.X.X:10052"}]}
+  ```</p>
+<h2 id="bkdata_2">bkdata 常见问题排查</h2>
+<ul>
+<li>zookeeper 配置错误，数据无法发送</li>
+<li>agent 制定 IP 有误，和 CMDB 无法管理</li>
+<li>crontab 未设置，未启动定时同步 IP 到业务映射，导致监控无数据</li>
+<li>consul 服务异常，导致 kafka 及其他 consul 模块无法解析</li>
+<li>tsdb-proxy 未启动</li>
+<li>RabbitMQ 密码错误，celery 启动失败</li>
+<li>kafka broker 启动失败，或者节点缺失</li>
+<li>cmdb 未启动，初始化 dataapi 失败</li>
+<li>agent机器时间需要和蓝鲸server机器时间同步</li>
+</ul><h1 id="_1">平台其他常见问题</h1>
+<h2 id="_2">变更域名</h2>
+<ul>
+<li>修改 globale.env 中的域名配置信息。</li>
+<li>修改 每台机器上的/etc/hosts 匹配上新的域名</li>
+<li>修改完成后按如下命令顺序执行：</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># V4.0版本及以前的需要执行，V4.1以后的无需执行</span>
+./bkcec clean cron
+
+./bkcec sync common
+<span class="nb">echo</span> fta bkdata job cmdb paas nginx <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec stop
+<span class="nb">echo</span> fta bkdata job cmdb paas nginx <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec render
+<span class="nb">echo</span> nginx paas cmdb job bkdata fta <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec start
+
+<span class="c1"># V4.0版本及以前的需要执行，V4.1以后的无需执行</span>
+./bkcec install cron
+</pre></div>
+
+
+<p>如果有安装 SaaS，到<code>开发者中心-Smart应用-已上线</code>的 SaaS 操作栏里的<strong>部署</strong>按钮，重新一键部署 SaaS</p>
+<h2 id="_3">装蓝鲸后主机名被自动修改了可以改回去吗</h2>
+<p>主机名可以改回去，但是要注意/etc/hosts 里自动添加的 rbtnode1 的映射不能去掉，rabbitmq 组件依赖它解析 NODENAME</p>
+<h2 id="root-mail">root 邮箱每分钟都收到 mail 告警</h2>
+<p>内容包含类似 “xxxx is running” 的信息</p>
+<p>这是因为 crontab 里配置了进程监控，但是没有重定向 STDOUT 和 STDERR，当前版本可以自己手动添加：</p>
+<p>比如将</p>
+<div class="codehilite"><pre><span></span>* * * * * <span class="nb">export</span> <span class="nv">INSTALL_PATH</span><span class="o">=</span>/data/bkce<span class="p">;</span> /data/bkce/bin/process_watch mysql
+</pre></div>
+
+
+<p>改为</p>
+<div class="codehilite"><pre><span></span>* * * * * <span class="nb">export</span> <span class="nv">INSTALL_PATH</span><span class="o">=</span>/data/bkce<span class="p">;</span> /data/bkce/bin/process_watch mysql <span class="p">&amp;</span>&gt;/dev/null
+</pre></div><h1 id="cicdkit">CICDKIT 常见问题</h1>
+<h2 id="cicdkit_1">CICDKit 目前支持哪些开发语言的持续集成</h2>
+<p>CICDKit 内置了 Java 和 C++的构建容器，可以满足标准 Java 项目和 C++项目开箱即用的持续集成。除此之外，通过自定义构建机，理论上任何开发语言的程序，只要可以在构建机上进行编译构建，都可以接入流水线中，完成持续集成和持续发布</p>
+<h2 id="cicdkit_2">CICDKit 可以单独部署吗</h2>
+<p>CICDKit 作为蓝鲸平台的 SaaS 应用，会依赖蓝鲸的部分平台功能和组件，因此在部署 CICDKit 之前，需要先准备好蓝鲸平台，蓝鲸社区版即可集成 CICDKit</p><h1 id="saas">SAAS 部署常见问题</h1>
+<h2 id="saas_1">SaaS 部署提示超时</h2>
+<p>可修改 paas_agent 的 paas_agent_config.yaml，将 EXECUTE_TIME_LIMIT 调大，重启 paas_agent 即可</p>
+<div class="codehilite"><pre><span></span>$ /data/bkce/paas_agent/paas_agent/etc/paas_agent_config.yaml
+EXECUTE_TIME_LIMIT: <span class="m">300</span>
+</pre></div>
+
+
+<h2 id="_1">节点管理部署问题</h2>
+<div class="codehilite"><pre><span></span>------create virtualenv <span class="k">for</span> bk_nodeman------
+------create virtualenv success------
+------Extract app_code <span class="k">for</span> bk_nodeman------
+------Extract app_code success------
+------yum install------
+error: rpmdb: BDB0113 Thread/process <span class="m">3864</span>/139771538343936 failed: BDB1507 Thread died in Berkeley DB library
+error: db5 error<span class="o">(</span>-30973<span class="o">)</span> from dbenv-&gt;failchk: BDB0087 DB_RUNRECOVERY: Fatal error, run database recovery
+error: cannot open Packages index using db5 -  <span class="o">(</span>-30973<span class="o">)</span>
+error: cannot open Packages database in /var/lib/rpm
+CRITICAL:yum.main:
+
+Error: rpmdb open failed
+------yum gcc python-devel openssl-devel libffi libffi-devel fail------
+</pre></div>
+
+
+<p>出现这种问题，原因为 rpm 数据库损坏</p>
+<p>可以尝试重启机器，再使用<code>yum list all</code>，若能够列出软件包则 OK。还有问题参考下面的解决方法</p>
+<div class="codehilite"><pre><span></span>$ yum list all
+已加载插件：fastestmirror
+Loading mirror speeds from cached hostfile
+......
+</pre></div>
+
+
+<p>解决方法（重新构建 rpm 数据库）</p>
+<div class="codehilite"><pre><span></span>$ <span class="nb">cd</span> /var/lib/rpm
+$ ls
+Basenames __db.001 __db.003 Group Name Packages Requirename Sigmd5
+Conflictname __db.002 Dirnames Installtid Obsoletename Providename Sha1header Triggername
+rm -rf __db.*
+$ rpm --rebuilddb
+$ yum clean all
+</pre></div><h1 id="_1">标准运维常见问题</h1>
+<h2 id="it">标准运维原子能否支持用户接入企业内 IT 系统</h2>
+<p>支持，接入方式请参考 <a href="5.1/标准运维/附录/Django.md">附录 3：原子开发</a>。</p>
+<h2 id="_2">标准运维点击开始执行任务后报错</h2>
+<p><code>taskflow[id=1] get status error: node(nodee37e20…c7fb131) does not exist, may have not by executed</code>，并且在任务列表中查看任务状态是“未知”，可能是什么原因？</p>
+<p>标准运维执行引擎依赖于蓝鲸的 RabbitMQ 服务和 App 启动的 celery 进程，请登录服务器确认服务已启动并正常运行，可以查看 App 的 celery.log 日志文件帮助定位问题原因。</p>
+<h2 id="_3">标准运维能执行任务，但是原子节点报错</h2>
+<p><code>Trackback…TypeError:int() argument must be a string or a number,not ‘NoneType’</code>，可能是什么原因？</p>
+<p>标准运维任务流程的执行状态和原子输入、输出等信息缓存依赖 Redis 服务，所以首次部署请务必按照“标准运维部署文档”，配置 Redis 环境变量后重新部署。</p><h1 id="_1">故障自愈常见问题</h1>
+<h2 id="_2">故障自愈的通知渠道有哪些？</h2>
+<p>故障自愈默认有 4 种通知渠道：电话、微信、短信、邮件</p>
+<p>你在接入自愈的过程中，可以设置通知类型</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/14955241327247.jpg" /></p>
+<p>腾讯云版本的故障自愈默认已经打通 4 种通知渠道</p>
+<p>独立部署版本，需要企业对接蓝鲸的 ESB</p>
+<h2 id="_3">故障自愈依赖哪些周边系统？</h2>
+<p>故障自愈依赖蓝鲸的<code>配置平台</code>、<code>作业平台</code></p>
+<p>你需要提前在<code>配置平台</code>上创建一个业务，并且把你的服务器录入到配置平台中</p>
+<h2 id="_4">接入自愈注意事项</h2>
+<p>接入自愈需要注意告警类型必须要和实际告警相匹配</p><h1 id="_1">蓝鲸监控常见问题</h1>
+<blockquote>
+<p>蓝鲸监控问题，多见用户 cmdb 及快照正常，而监控无基础数据上报，或者点击数据上报报错误提示，或者提示正常但实际仍无数据
+</p>
+</blockquote>
+<h2 id="_2">蓝鲸监控无数据上报</h2>
+<p><strong>此问题常见表象</strong></p>
+<ol>
+<li>启动入库任务失败【模块：data】接口结果返回超时</li>
+<li>进程端口下发失败: 0:x.x.x.x 进程协议错误，支持 TCP、UDP, 参数传递协议为, 请检查输入参数和 CMDB 配置</li>
+<li>基础性能接入失败：缺少[bk_biz_id]参数，解析 RT 信息失败：13</li>
+<li>模块：data 接口返回结果错误：参数错误 无 Linux 机器（机器多 IP，CMDB IP 匹配，）</li>
+<li>数据入库失败【模块：data】接口返回结果错误：All Servers failed to process request: [(‘kafka.service.consul’,9092,0)]</li>
+<li>模块：data 接口返回结果错误：调用接口失败 创建 tsdb 库失败（Dataapi 没升级好，把 saas 升级。）</li>
+<li>【模块：data】接口返回结果错误：组件请求第三方系统 DATA 接口 data_component 出错：状态码：404，错误消息：第三方系统不存在此接口（Dataapi 没升级好，确认下版本</li>
+<li>请求 agent 状态数据失败（job 接口，）</li>
+<li>查询失败，原因：【模块：data】接口返回结果错误：SQL 语法错误，请检查语法：06（进程资源无数据 bug，没入库）</li>
+<li>_exporter_url_参数不能为空（自定义组件导入）</li>
+<li>系统信息可上报，组件信息不上报</li>
+<li>启动入库任务失败【模块：data】接口返回结果错误：添加总线任务失败，添加etl任务失败 6_ja_gse_proc_port（）</li>
+<li>config_schema：必须提供_exporter_url_参数的配置</li>
+<li>基础性能接入失败：2：x.x.x.x 下发配置失败</li>
+<li>【模块：data】接口返回结果错误：调用接口失败 gse_push_file：该业务{0}下没有 IP</li>
+</ol>
+<p><strong>可能原因</strong></p>
+<ol>
+<li>nginx未更新安装，<code>install nginx 1</code>后解决</li>
+<li>gse_agent在节点管理，重新安装</li>
+<li>bk_monitor 在 supervisor 缺少 celery 和 beat 配置，重新安装 1.4.63 版本</li>
+<li>bk_monitor 的服务使用错误使用 root 启动，停掉进程，删掉原启动对应 root 的文件，用 apps 用户启动</li>
+<li>influxdb表结构为空，所有<code>system_*</code>的库，<code>show measurements</code>为空</li>
+<li><code>/data/bkce/bkdata/dataapi/bin/check_databus_status.sh</code>检查结果，<code>=====ETL=====</code>发现未更新的，结果类似<code>etl_1004_2_ja_gse_net</code>老的结构，</li>
+<li>databus的<code>tsdb.cluster.properties</code>配置中<code>cluster.rest.port=__CONNECTOR_TSDB_PORT__</code>未替换，为空</li>
+<li><code>./kafka-console-consumer.sh --bootstrap-server kafka.service.consul:9092 --topic snapshot3|grep -P '"ip":".*?"' -o</code>出现<code>"ip":"__EXTERNAL_IP__"</code></li>
+<li>CMDB里面配置进程的时候需要配置网络协议</li>
+</ol>
+<p><strong>排查方法</strong></p>
+<ul>
+<li><strong>检查进程是否正常</strong></li>
+</ul>
+<p>若为 4.1.X 的版本，bk_monitor 有对应 celery 进行异步任务处理，需在 APPO 模块对应机器上，确认 bk_monitor 的进程是否包含<code>uwsgi</code>，<code>celery beat</code>，<code>celery worker</code>3部分，示例如下</p>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span><span class="c1"># ps -ef | grep bk_monitor</span>
+apps      <span class="m">1930</span>     <span class="m">1</span>  <span class="m">0</span> Aug09 ?        <span class="m">00</span>:03:37 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/python /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/supervisord -c /data/bkce/paas_agent/apps/projects/bk_monito//conf/supervisord.conf
+apps      <span class="m">1958</span>  <span class="m">1930</span>  <span class="m">0</span> Aug09 ?        <span class="m">00</span>:00:24 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/uwsgi --ini /data/bkce/paas_agent/apps/projects/bk_monitor/conf/bk_monitor.ini
+apps      <span class="m">1959</span>  <span class="m">1930</span>  <span class="m">0</span> Aug09 ?        <span class="m">00</span>:10:50 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/python /data/bkce/paas_agent/apps/projects/bk_monitor/code/bk_monitor/manage.py celery beat
+apps      <span class="m">1960</span>  <span class="m">1930</span>  <span class="m">0</span> Aug09 ?        <span class="m">00</span>:18:10 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/python /data/bkce/paas_agent/apps/projects/bk_monitor/code/bk_monitor/manage.py celery worker -n bk_monitor -l INFO --autoscale<span class="o">=</span><span class="m">8</span>,1
+root      <span class="m">5315</span> <span class="m">11297</span>  <span class="m">0</span> <span class="m">18</span>:02 pts/5    <span class="m">00</span>:00:00 grep --color<span class="o">=</span>auto bk_monitor
+apps      <span class="m">7480</span>  <span class="m">1958</span>  <span class="m">0</span> <span class="m">16</span>:17 ?        <span class="m">00</span>:00:01 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/uwsgi --ini /data/bkce/paas_agent/apps/projects/bk_monitor/conf/bk_monitor.ini
+apps      <span class="m">7481</span>  <span class="m">1958</span>  <span class="m">0</span> <span class="m">16</span>:17 ?        <span class="m">00</span>:00:01 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/uwsgi --ini /data/bkce/paas_agent/apps/projects/bk_monitor/conf/bk_monitor.ini
+apps     <span class="m">10815</span>  <span class="m">1958</span>  <span class="m">0</span> <span class="m">16</span>:17 ?        <span class="m">00</span>:00:00 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/uwsgi --ini /data/bkce/paas_agent/apps/projects/bk_monitor/conf/bk_monitor.ini
+apps     <span class="m">10816</span>  <span class="m">1958</span>  <span class="m">0</span> <span class="m">16</span>:17 ?        <span class="m">00</span>:00:00 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/uwsgi --ini /data/bkce/paas_agent/apps/projects/bk_monitor/conf/bk_monitor.ini
+apps     <span class="m">22477</span>  <span class="m">1960</span>  <span class="m">0</span> <span class="m">18</span>:00 ?        <span class="m">00</span>:00:00 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/python /data/bkce/paas_agent/apps/projects/bk_monitor/code/bk_monitor/manage.py celery worker -n bk_monitor -l INFO --autoscale<span class="o">=</span><span class="m">8</span>,1
+apps     <span class="m">31585</span>  <span class="m">1960</span>  <span class="m">0</span> <span class="m">18</span>:01 ?        <span class="m">00</span>:00:00 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/python /data/bkce/paas_agent/apps/projects/bk_monitor/code/bk_monitor/manage.py celery worker -n bk_monitor -l INFO --autoscale<span class="o">=</span><span class="m">8</span>,1
+apps     <span class="m">31587</span>  <span class="m">1960</span>  <span class="m">0</span> <span class="m">18</span>:01 ?        <span class="m">00</span>:00:00 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/python /data/bkce/paas_agent/apps/projects/bk_monitor/code/bk_monitor/manage.py celery worker -n bk_monitor -l INFO --autoscale<span class="o">=</span><span class="m">8</span>,1
+apps     <span class="m">31588</span>  <span class="m">1960</span>  <span class="m">0</span> <span class="m">18</span>:01 ?        <span class="m">00</span>:00:00 /data/bkce/paas_agent/apps/Envs/bk_monitor/bin/python /data/bkce/paas_agent/apps/projects/bk_monitor/code/bk_monitor/manage.py celery worker -n bk_monitor -l INFO --autoscale<span class="o">=</span><span class="m">8</span>,1
+</pre></div>
+
+
+<ul>
+<li><strong>检查bkdata日志</strong></li>
+</ul>
+<p>确认 databus 日志<code>/data/bkce/logs/bkdata/databus_etl.log</code>以及<code>/data/bkce/logs/bkdata/databus_tsdb.log</code>是否有 Exception 或者 Error 的错误，示例如下</p>
+<p><code>bash
+grep -nE "Exception|Error" /data/bkce/logs/bkdata/databus_etl.log /data/bkce/logs/bkdata/databus_tsdb.log
+199:org.apache.kafka.common.errors.wakeupException
+12:Exception in thread "main" org.apache.kafka.common.config.configException: Invalid value for configuration rest.port: Not a number of type INT</code></p>
+<ul>
+<li><strong>检查 bkdata databus 任务</strong></li>
+</ul>
+<p>确认在bkdata服务器上，<code>check_databus_status.sh</code>，不能出现有<code>Failed connect to databus.service.consul:10054; connection refused</code>或者<code>JSON object could be decoded</code>错误输出。正常的输出示例如下（若此处有错误，参考<code>initdata bkdata</code>失败的处理方法）</p>
+<p>异常举例</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/1535617300196.png" /></p>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span><span class="c1"># /data/bkce/bkdata/dataapi/bin/check_databus_status.sh</span>
+<span class="o">===========</span><span class="nv">TSDB</span><span class="o">===============</span>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<span class="m">100</span>   <span class="m">773</span>  <span class="m">100</span>   <span class="m">773</span>    <span class="m">0</span>     <span class="m">0</span>  <span class="m">14599</span>      <span class="m">0</span> --:--:-- --:--:-- --:--:-- <span class="m">14865</span>
+tsdb_2_system_cpu_summary
+<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;tsdb_2_system_cpu_summary&quot;</span>,<span class="s2">&quot;connector&quot;</span>:<span class="o">{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10054&quot;</span><span class="o">}</span>,<span class="s2">&quot;tasks&quot;</span>:<span class="o">[{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;id&quot;</span>:0,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10054&quot;</span><span class="o">}]}</span>
+
+<span class="o">===========</span><span class="nv">MYSQL</span><span class="o">===============</span>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<span class="m">100</span>    <span class="m">27</span>  <span class="m">100</span>    <span class="m">27</span>    <span class="m">0</span>     <span class="m">0</span>   <span class="m">1118</span>      <span class="m">0</span> --:--:-- --:--:-- --:--:--  <span class="m">1125</span>
+jdbc_2_ja_gse_proc_port
+<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;jdbc_2_ja_gse_proc_port&quot;</span>,<span class="s2">&quot;connector&quot;</span>:<span class="o">{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10051&quot;</span><span class="o">}</span>,<span class="s2">&quot;tasks&quot;</span>:<span class="o">[{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;id&quot;</span>:0,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10051&quot;</span><span class="o">}]}</span>
+
+<span class="o">===========</span><span class="nv">ETL</span><span class="o">===============</span>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<span class="m">100</span>  <span class="m">1040</span>  <span class="m">100</span>  <span class="m">1040</span>    <span class="m">0</span>     <span class="m">0</span>   166k      <span class="m">0</span> --:--:-- --:--:-- --:--:--  169k
+etl_1001_2_system_cpu_summary
+<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;etl_1001_2_system_cpu_summary&quot;</span>,<span class="s2">&quot;connector&quot;</span>:<span class="o">{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10052&quot;</span><span class="o">}</span>,<span class="s2">&quot;tasks&quot;</span>:<span class="o">[{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;id&quot;</span>:0,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10052&quot;</span><span class="o">}]}</span>
+</pre></div>
+
+
+<ul>
+<li>
+<p><strong>检查 kafka</strong></p>
+</li>
+<li>
+<p>kafka 节点确认</p>
+</li>
+</ul>
+<p>若社区版为 3 台部署的，必须返回[1, 2, 3]才正常，示例如下
+若 brokers ids 不为[1, 2, 3]，存在<code>/data/bkce/public/kafka/.lock</code>文件，有的话，删除此文件，再重新使用<code>./bkcec stop kafka</code>和<code>./bkcec start kafka</code>重启 kafka，重启完再次确认状态</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/1535617328640.png" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/1535617771404.png" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/1535617356225.png" /></p>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span><span class="c1"># /data/bkce/service/zk/bin/zkCli.sh -server zk.service.consul:2181 ls /common_kafka/brokers/ids</span>
+Connecting to zk.service.consul:2181
+log4j:WARN No appenders could be found <span class="k">for</span> logger <span class="o">(</span>org.apache.zookeeper.ZooKeeper<span class="o">)</span>.
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig <span class="k">for</span> more info.
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+<span class="o">[</span><span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span><span class="o">]</span>
+</pre></div>
+
+
+<ol>
+<li>kafka 僵死</li>
+</ol>
+<p>此种情况，确认上面第一点，若节点缺失，可以用<code>./bkcec stop kafka</code>停掉 kafka，再到各台机器上使用<code>jps -l</code>确认是否还存在<code>kafka.kafka</code>没有关闭掉的，这种就是僵死的，可以杀掉僵死进程<code>jps -l | grep kafka | xarge kill -9</code>，再重新在中控机上启动 kafka</p>
+<ol>
+<li>kafka数据确认</li>
+</ol>
+<div class="codehilite"><pre><span></span><span class="c1"># 正常可以显示数据，异常会卡住</span>
+<span class="o">[</span>root@mongodb-1 kafka<span class="o">]</span><span class="c1"># bash /data/bkce/service/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka.service.consul:9092 --topic connect-configs.etl --from-beginning | head</span>
+<span class="o">{</span><span class="s2">&quot;properties&quot;</span>:<span class="o">{</span><span class="s2">&quot;group.id&quot;</span>:<span class="s2">&quot;bk_data_etl&quot;</span>,<span class="s2">&quot;topics&quot;</span>:<span class="s2">&quot;snapshot2&quot;</span>,<span class="s2">&quot;producer.records.in.msg&quot;</span>:<span class="s2">&quot;100&quot;</span>,<span class="s2">&quot;tasks.max&quot;</span>:<span class="s2">&quot;1&quot;</span>,<span class="s2">&quot;producer.topic.badmsg&quot;</span>:<span class="s2">&quot;test_badmsg&quot;</span>,<span class="s2">&quot;producer.max.block.ms&quot;</span>:<span class="s2">&quot;60000&quot;</span>,<span class="s2">&quot;connector.class&quot;</span>:<span class="s2">&quot;com.tencent.bkdata.databus.transform.TransformSinkConnector&quot;</span>,<span class="s2">&quot;db.dataid&quot;</span>:<span class="s2">&quot;1001&quot;</span>,<span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;etl_1001_2_snapshot&quot;</span>,<span class="s2">&quot;producer.acks&quot;</span>:<span class="s2">&quot;1&quot;</span>,<span class="s2">&quot;rt.id&quot;</span>:<span class="s2">&quot;2_snapshot&quot;</span>,<span class="s2">&quot;producer.bootstrap.servers&quot;</span>:<span class="s2">&quot;&quot;</span>,<span class="s2">&quot;producer.request.timeout.ms&quot;</span>:<span class="s2">&quot;60000&quot;</span>,<span class="s2">&quot;producer.retries&quot;</span>:<span class="s2">&quot;5&quot;</span>,<span class="s2">&quot;producer.max.in.flight.requests.per.connection&quot;</span>:<span class="s2">&quot;5&quot;</span><span class="o">}}</span>
+<span class="o">{</span><span class="s2">&quot;properties&quot;</span>:<span class="o">{</span><span class="s2">&quot;connector.class&quot;</span>:<span class="s2">&quot;com.tencent.bkdata.databus.transform.TransformSinkConnector&quot;</span>,<span class="s2">&quot;producer.topic.badmsg&quot;</span>:<span class="s2">&quot;test_badmsg&quot;</span>,<span class="s2">&quot;producer.request.timeout.ms&quot;</span>:<span class="s2">&quot;60000&quot;</span>,<span class="s2">&quot;producer.bootstrap.servers&quot;</span>:<span class="s2">&quot;&quot;</span>,<span class="s2">&quot;topics&quot;</span>:<span class="s2">&quot;snapshot2&quot;</span>,<span class="s2">&quot;tasks.max&quot;</span>:<span class="s2">&quot;1&quot;</span>,<span class="s2">&quot;producer.max.block.ms&quot;</span>:<span class="s2">&quot;60000&quot;</span>,<span class="s2">&quot;group.id&quot;</span>:<span class="s2">&quot;bk_data_etl&quot;</span>,<span class="s2">&quot;producer.retries&quot;</span>:<span class="s2">&quot;5&quot;</span>,<span class="s2">&quot;db.dataid&quot;</span>:<span class="s2">&quot;1001&quot;</span>,<span class="s2">&quot;producer.acks&quot;</span>:<span class="s2">&quot;1&quot;</span>,<span class="s2">&quot;producer.records.in.msg&quot;</span>:<span class="s2">&quot;100&quot;</span>,<span class="s2">&quot;task.class&quot;</span>:<span class="s2">&quot;com.tencent.bkdata.connect.transform.TransformSinkTask&quot;</span>,<span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;etl_1001_2_snapshot&quot;</span>,<span class="s2">&quot;producer.max.in.flight.requests.per.connection&quot;</span>:<span class="s2">&quot;5&quot;</span>,<span class="s2">&quot;rt.id&quot;</span>:<span class="s2">&quot;2_snapshot&quot;</span><span class="o">}}</span>
+<span class="o">{</span><span class="s2">&quot;tasks&quot;</span>:1<span class="o">}</span>
+
+<span class="c1"># 正常可以显示数据，异常会卡住</span>
+<span class="o">[</span>root@localhost install<span class="o">]</span><span class="c1"># bash /data/bkce/service/kafka/bin/kafka-topics.sh --zookeeper zk.service.consul:2181/common_kafka --describe --topic connect-configs.tsdb</span>
+Topic:connect-configs.tsdb      PartitionCount:1        ReplicationFactor:1     Configs:retention.ms<span class="o">=</span><span class="m">315360000000</span>
+        Topic: connect-configs.tsdb     Partition: <span class="m">0</span>    Leader: <span class="m">3</span>       Replicas: <span class="m">3</span>     Isr: <span class="m">3</span>
+
+<span class="o">[</span>root@localhost kafka<span class="o">]</span><span class="c1"># grep configs.tsdb server.log* -H</span>
+server.log.2018-08-14-11:<span class="o">[</span><span class="m">2018</span>-08-14 <span class="m">11</span>:44:13,539<span class="o">]</span> INFO <span class="o">[</span>ReplicaFetcherManager on broker <span class="m">3</span><span class="o">]</span> Removed fetcher <span class="k">for</span> partitions connect-configs.tsdb-0 <span class="o">(</span>kafka.server.ReplicaFetcherManager<span class="o">)</span>
+server.log.2018-08-14-11:<span class="o">[</span><span class="m">2018</span>-08-14 <span class="m">11</span>:44:13,548<span class="o">]</span> INFO Completed load of log connect-configs.tsdb-0 with <span class="m">1</span> log segments and log end offset <span class="m">0</span> in <span class="m">1</span> ms <span class="o">(</span>kafka.log.Log<span class="o">)</span>
+server.log.2018-08-14-11:<span class="o">[</span><span class="m">2018</span>-08-14 <span class="m">11</span>:44:13,582<span class="o">]</span> INFO Created log <span class="k">for</span> partition <span class="o">[</span>connect-configs.tsdb,0<span class="o">]</span> in /data/bkce/public/kafka with properties <span class="o">{</span>compression.type -&gt; producer, message.format.version -&gt; <span class="m">0</span>.10.2-IV0, file.delete.delay.ms -&gt; <span class="m">60000</span>, max.message.bytes -&gt; <span class="m">1000012</span>, min.compaction.lag.ms -&gt; <span class="m">0</span>, message.timestamp.type -&gt; CreateTime, min.insync.replicas -&gt; <span class="m">1</span>, segment.jitter.ms -&gt; <span class="m">0</span>, preallocate -&gt; false, min.cleanable.dirty.ratio -&gt; <span class="m">0</span>.5, index.interval.bytes -&gt; <span class="m">4096</span>, unclean.leader.election.enable -&gt; true, retention.bytes -&gt; -1, delete.retention.ms -&gt; <span class="m">86400000</span>, cleanup.policy -&gt; <span class="o">[</span>delete<span class="o">]</span>, flush.ms -&gt; <span class="m">9223372036854775807</span>, segment.ms -&gt; <span class="m">604800000</span>, segment.bytes -&gt; <span class="m">1073741824</span>, retention.ms -&gt; <span class="m">315360000000</span>, message.timestamp.difference.max.ms -&gt; <span class="m">9223372036854775807</span>, segment.index.bytes -&gt; <span class="m">10485760</span>, flush.messages -&gt; <span class="m">9223372036854775807</span><span class="o">}</span>. <span class="o">(</span>kafka.log.LogManager<span class="o">)</span>
+server.log.2018-08-14-11:<span class="o">[</span><span class="m">2018</span>-08-14 <span class="m">11</span>:44:13,584<span class="o">]</span> INFO Partition <span class="o">[</span>connect-configs.tsdb,0<span class="o">]</span> on broker <span class="m">3</span>: No checkpointed highwatermark is found <span class="k">for</span> partition connect-configs.tsdb-0 <span class="o">(</span>kafka.cluster.Partition<span class="o">)</span>
+
+$ <span class="o">[</span>root@rbtnode1 install<span class="o">]</span><span class="c1"># /data/bkce/service/kafka/bin/kafka-console-consumer.sh --bootstrap-server $LAN_IP:9092 --topic snapshot2</span>
+<span class="o">{</span><span class="s2">&quot;beat&quot;</span>:<span class="o">{</span><span class="s2">&quot;address&quot;</span>:<span class="o">[</span><span class="s2">&quot;192.168.26.132&quot;</span>,<span class="s2">&quot;192.168.26.150&quot;</span>,<span class="s2">&quot;fe80::be16:6e1a:e42f:f329&quot;</span><span class="o">]</span>,<span class="s2">&quot;hostname&quot;</span>:<span class="s2">&quot;paas-1&quot;</span>,<span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;paas-1&quot;</span>,<span class="s2">&quot;version&quot;</span>:<span class="s2">&quot;10.1.0&quot;</span><span class="o">}</span>,<span class="s2">&quot;bizid&quot;</span>:0,<span class="s2">&quot;cloudid&quot;</span>:0,<span class="s2">&quot;data&quot;</span>:<span class="o">{</span><span class="s2">&quot;city&quot;</span>:<span class="s2">&quot;&quot;</span>,<span class="s2">&quot;country&quot;</span>:<span class="s2">&quot;&quot;</span>,<span class="s2">&quot;cpu&quot;</span>:<span class="o">{</span><span class="s2">&quot;cpuinfo&quot;</span>:<span class="o">[{</span><span class="s2">&quot;cacheSize&quot;</span>:20480,<span class="s2">&quot;coreId&quot;</span>:<span class="s2">&quot;0&quot;</span>,<span class="s2">&quot;cores&quot;</span>:1,<span class="s2">&quot;cpu&quot;</span>:0,<span class="s2">&quot;family&quot;</span>:<span class="s2">&quot;6&quot;</span>,<span class="s2">&quot;flags&quot;</span>:<span class="o">[</span><span class="s2">&quot;fpu&quot;</span>,<span class="s2">&quot;vme&quot;</span>,<span class="s2">&quot;de&quot;</span>,<span class="s2">&quot;pse&quot;</span>,<span class="s2">&quot;tsc&quot;</span>,<span class="s2">&quot;msr&quot;</span>,<span class="s2">&quot;pae&quot;</span>,<span class="s2">&quot;mce&quot;</span>,<span class="s2">&quot;cx8&quot;</span>,<span class="s2">&quot;apic&quot;</span>,<span class="s2">&quot;sep&quot;</span>,<span class="s2">&quot;mtrr&quot;</span>,<span class="s2">&quot;pge&quot;</span>,<span class="s2">&quot;mca&quot;</span>,<span class="s2">&quot;cmov&quot;</span>,<span class="s2">&quot;pat&quot;</span>,<span class="s2">&quot;pse36&quot;</span>,<span class="s2">&quot;clflush&quot;</span>,<span class="s2">&quot;dts&quot;</span>,<span class="s2">&quot;mmx&quot;</span>,<span class="s2">&quot;fxsr&quot;</span>,<span class="s2">&quot;sse&quot;</span>,<span class="s2">&quot;sse2&quot;</span>,<span class="s2">&quot;ss&quot;</span>,<span class="s2">&quot;ht&quot;</span>,<span class="s2">&quot;syscall&quot;</span>,<span class="s2">&quot;nx&quot;</span>,<span class="s2">&quot;rdtscp&quot;</span>,<span class="s2">&quot;lm&quot;</span>,<span class="s2">&quot;constant_tsc&quot;</span>,<span class="s2">&quot;arch_perfmon&quot;</span>,<span class="s2">&quot;pebs&quot;</span>,<span class="s2">&quot;bts&quot;</span>,<span class="s2">&quot;nopl&quot;</span>,<span class="s2">&quot;xtopology&quot;</span>,<span class="s2">&quot;tsc_reliable&quot;</span>,<span class="s2">&quot;nonstop_tsc&quot;</span>,<span class="s2">&quot;aperfmperf&quot;</span>,<span class="s2">&quot;eagerfpu&quot;</span>,<span class="s2">&quot;pni&quot;</span>,<span class="s2">&quot;pclmulqdq&quot;</span>,<span class="s2">&quot;vmx&quot;</span>,<span class="s2">&quot;ssse3&quot;</span>,<span class="s2">&quot;fma&quot;</span>,<span class="s2">&quot;cx16&quot;</span>,<span class="s2">&quot;</span>
+
+<span class="s2">/data/bkce/service/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka.service.consul:9092 --topic snapshot2|grep -P &#39;&quot;</span>ip<span class="s2">&quot;:&quot;</span>.*?<span class="s2">&quot;&#39; -o</span>
+</pre></div>
+
+
+<ul>
+<li><strong>检查influxdb</strong></li>
+</ul>
+<p>确认influxdb内的数据库和结构，正常返回如下</p>
+<div class="codehilite"><pre><span></span>$ influx -host <span class="nv">$INFLUXDB_HOST</span> -port <span class="nv">$INFLUXDB_PORT</span> -execute <span class="s1">&#39;show databases&#39;</span>
+name: databases
+name
+----
+_internal
+system_2
+
+$ influx -host <span class="nv">$INFLUXDB_HOST</span> -port <span class="nv">$INFLUXDB_PORT</span> -database system_2 -execute <span class="s1">&#39;show measurements&#39;</span>
+name: measurements
+name
+----
+system_cpu_detail_2
+system_cpu_summary_2
+system_disk_2
+system_env_2
+system_inode_2
+system_io_2
+system_load_2
+system_mem_2
+system_net_2
+system_netstat_2
+system_proc_2
+system_swap_2
+</pre></div>
+
+
+<ul>
+<li><strong>检查cron任务</strong></li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># 确认是否存在update_cc_cache crontab任务</span>
+crontab -l <span class="p">|</span> grep update_cc_cache
+*/10 * * * * /data/bkce/bkdata/dataapi/bin/update_cc_cache.sh
+
+<span class="c1"># 手动运行update_cc_cache.sh</span>
+/data/bkce/bkdata/dataapi/bin/update_cc_cache.sh
+
+<span class="c1"># 检查crontab是否在运行，若没有运行，可采用service crond start或者/etc/init.d/cron start来启动</span>
+ps -ef <span class="p">|</span> grep crond <span class="p">|</span> grep -v grep
+root     <span class="m">27979</span>     <span class="m">1</span>  <span class="m">0</span> 7月26 ?       <span class="m">00</span>:01:23 /usr/sbin/crond -n
+
+<span class="c1"># 检查crontab是否正常运行，确认crontab的日志</span>
+tail /var/log/cron
+</pre></div>
+
+
+<p>如果 CMDB 有快照数据，监控没有，或者部分没有时，检查下 bkdata 所在机器的 crontab 是否包含 update_cc_cache.sh 的定时任务：</p>
+<p>如果没有，应该安装时漏执行，或者执行过<code>./bkcec clean cron</code>后忘记加回来。可在中控机执行 <code>./bkcec install cron</code> 重新安装上 cron 任务检查 bkdata 的 cron 任务</p>
+<h2 id="_3">部分有监控数据，部分没有</h2>
+<p>若蓝鲸平台的监控 OK，而新增加的 Agent 监控没有，点击数据上报，提示 10-20 分钟会有新数据，实际一直没有数据，可能为 crontab 的 updata_cc_cache 未正常运行，导致 cache 未更新，新的机器未添加进来</p>
+<ul>
+<li><strong>检查 cron 任务</strong></li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># 确认是否存在update_cc_cache crontab任务</span>
+crontab -l <span class="p">|</span> grep update_cc_cache
+*/10 * * * * /data/bkce/bkdata/dataapi/bin/update_cc_cache.sh
+
+<span class="c1"># 检查crontab是否在运行，若没有运行，可采用service crond start或者/etc/init.d/cron start来启动</span>
+ps -ef <span class="p">|</span> grep crond <span class="p">|</span> grep -v grep
+root     <span class="m">27979</span>     <span class="m">1</span>  <span class="m">0</span> 7月26 ?       <span class="m">00</span>:01:23 /usr/sbin/crond -n
+
+<span class="c1"># 检查crontab是否正常运行，确认crontab的日志</span>
+tail /var/log/cron
+</pre></div>
+
+
+<p>如果 CMDB 有快照数据，监控没有，或者部分没有时，检查下 bkdata 所在机器的 crontab 是否包含 update_cc_cache.sh 的定时任务：</p>
+<p>如果没有，应该安装时漏执行，或者执行过<code>./bkcec clean cron</code>后忘记加回来。可在中控机执行 <code>./bkcec install cron</code> 重新安装上 cron 任务检查 bkdata 的 cron 任务</p>
+<ul>
+<li><strong>手动运行update_cc_cache.sh</strong></li>
+</ul>
+<div class="codehilite"><pre><span></span>$ /data/bkce/bkdata/dataapi/bin/update_cc_cache.sh
+</pre></div>
+
+
+<ul>
+<li>确认无数据上报机器的时间和部署蓝鲸server机器的时间是否同步。</li>
+<li>确认无数据的机器上是否有basereport进程采集器<ul>
+<li>若无可尝试手动拉起  <code>/usr/local/gse/plugins/bin/start.sh  basereport</code></li>
+<li>若采集器进程存在则查看采集器日志 <code>/var/log/gse/basereport</code> (日志为 error 级别，有进程无日志说明采集器进程正常)。</li>
+</ul>
+</li>
+</ul>
+<h2 id="_4">组件没有监控数据</h2>
+<ul>
+<li>到 cmdb 里面，主机管理-&gt;进程管理，搜索组件名称，类似搜索 nginx，然后把 common_nginx 改名为 nginx</li>
+<li>到蓝鲸监控里面，勾选这个 nginx 对应的主机，批量采集上报</li>
+</ul>
+<h2 id="_5">缺少操作系统类型</h2>
+<p>在 cc 上，确认所选主机操作系统类型是否为空</p>
+<h2 id="exited-too-quickly-process-log-may-have-detail">后台：Exited too quickly (process log may have detail)</h2>
+<p><strong>问题表象</strong>：</p>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@rbtnode1 <span class="o">]</span><span class="c1"># supervisorctl -c /data/bkce/etc/supervisor-bkdata-monitor.conf status common:scheduler</span>
+common:scheduler      FATAL     Exited too quickly <span class="o">(</span>process log may have details<span class="o">)</span>
+</pre></div>
+
+
+<p><strong>思路方法</strong>：
+- 确认有问题的进程名</p>
+<div class="codehilite"><pre><span></span>supervisorctl  -c /data/bkee/etc/supervisor-bkdata-monitor.conf status all
+</pre></div>
+
+
+<ul>
+<li>找到有问题的进程名。例如上图中显示为：common:scheduler，其中common是group， scheduler是进程名
+找到该进程的启动命令</li>
+</ul>
+<div class="codehilite"><pre><span></span>vim /data/bkee/etc/supervisor-bkdata-monitor.conf
+
+<span class="c1"># 在[program:scheduler]需要找到一下配置</span>
+
+<span class="nv">environment</span><span class="o">=</span><span class="nv">C_FORCE_ROOT</span><span class="o">=</span>true,DJANGO_CONF_MODULE<span class="o">=</span>conf.worker.production.enterprise,DJANGO_SETTINGS_MODULE<span class="o">=</span>settings,LOGGER_WITHOUT_CONSOLE<span class="o">=</span><span class="m">1</span>
+<span class="nv">command</span><span class="o">=</span>/data/bkee/.envs/monitor/bin/celery -A kernel.scheduler.celery_app worker -l info
+</pre></div>
+
+
+<ul>
+<li>手动执行以下命令</li>
+</ul>
+<div class="codehilite"><pre><span></span>workon monitor
+<span class="c1"># export environment的配置，逗号改成空格。</span>
+<span class="nb">export</span> <span class="nv">C_FORCE_ROOT</span><span class="o">=</span><span class="nb">true</span> <span class="nv">DJANGO_CONF_MODULE</span><span class="o">=</span>conf.worker.production.enterprise <span class="nv">DJANGO_SETTINGS_MODULE</span><span class="o">=</span>settings <span class="nv">LOGGER_WITHOUT_CONSOLE</span><span class="o">=</span><span class="m">1</span>
+<span class="c1"># 直接运行command的配置</span>
+/data/bkee/.envs/monitor/bin/celery -A kernel.scheduler.celery_app worker -l info
+</pre></div>
+
+
+<p>查看报错信息以确认具体错误日志</p>
+<h2 id="100">主机百分比指标超过 100</h2>
+<p>出现此问题，优先去对应机器上看下是否有 2 个 basereport 进程在运行</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/tapd_10158081_base64_1529380070_63.png" /></p>
+<h2 id="exporter-data">exporter 采集下发时，模块 data 接口返回结果错误，但没有详细的错误信息</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/tapd_10158081_base64_1531108539_85.png" /></p>
+<p>可能是 bk_bkdata_api.collector_exporter 表没有创建，可查看 dataapi 的 sys.log 查看更准确错误信息</p>
+<div class="codehilite"><pre><span></span><span class="nb">source</span> /data/install/utils.fc <span class="o">&amp;&amp;</span> mysql -h <span class="nv">$MYSQL_IP0</span> -u <span class="nv">$MYSQL_USER</span> -p<span class="s2">&quot;</span><span class="nv">$MYSQL_PASS</span><span class="s2">&quot;</span> bk_bkdata_api
+</pre></div>
+
+
+<h2 id="_6">自定义字符型未收到告警问题排查</h2>
+<p>在蓝鲸监控配置好监控项</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/tapd_10158081_base64_1532314076_68.png" /></p>
+<p>按配置时的页面提示，去到主机上执行命令</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/tapd_10158081_base64_1532314258_30.png" /></p>
+<p>在机器上执行命令  /usr/local/gse/plugins/bin/gsecmdline -d 2001 -l "This service is offline."</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/tapd_10158081_base64_1532314377_78.png" /></p>
+<p>正常情况下，在事件中心可以看到有告警产生，如下图所示</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/tapd_10158081_base64_1532314420_46.png" /></p>
+<p><strong>排查方法</strong></p>
+<ol>
+<li>
+<p>先检查下机器上的 agent 是否正常，数据是否有正确上报</p>
+</li>
+<li>
+<p>第一步正常的情况下，执行下面的步骤</p>
+<ul>
+<li>
+<p>去到bkdata机器tailf一下日志</p>
+<p><code>bash
+workon monitor  # （社区版5.1用 workon bkdata-monitor）
+tail -f ../../logs/bkdata/kernel.log | grep "gse_custom_out_str_"</code></p>
+</li>
+<li>
+<p>去到业务下任意一台机器，触发一条自定义字符告警</p>
+<p><code>bash
+ /usr/local/gse/plugins/bin/gsecmdline -d 2001 -l "xxx"</code></p>
+</li>
+<li>
+<p>回到bkdata机器，看下日志，正常会输出如下的日志</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/tapd_10158081_base64_1532316099_62.png" /></p>
+</li>
+</ul>
+</li>
+<li>
+<p>如果第二步正常，可以看到日志输出</p>
+</li>
+</ol>
+<h2 id="fail-to-restart-process">托管进程启动失败：fail to restart process</h2>
+<p><strong>问题表象</strong>：在配置组件采集参数，完成配置下发和验证测试的过程中，出现如下错误提示</p>
+<div class="codehilite"><pre><span></span><span class="mf">1.</span><span class="w"> </span><span class="n">测试不通过</span><span class="err">，</span><span class="o">[</span><span class="n">datadog</span><span class="o">]</span><span class="n">托管程序启动失败</span><span class="err">：</span><span class="n">fail</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">restart</span><span class="w"> </span><span class="n">process</span><span class="w"></span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">存在执行失败的主机</span><span class="err">，</span><span class="n">需要将失败主机剔除方可进行下一步操作</span><span class="w"></span>
+</pre></div>
+
+
+<p><strong>思路方法</strong>：
+- 进入下发机器
+- 进入 datadog 安装目录，尝试启动 datadog server，查看是否有报错
+  <code>bash
+  $ cd /usr/local/gse/external_plugins/datadog
+  $ source ./env.sh
+  $ ${datadog_python_path} ./datadog/datadog_httpserver.py ${datadog_conf_path}</code></p>
+<ul>
+<li>
+<p>常见问题</p>
+</li>
+<li>
+<p>env.sh文件不存在，在页面点击“重试”即可</p>
+</li>
+<li>python 版本过低，安装 python2.7 版本，并指定正确的 python 程序路径</li>
+<li>socket.error: [Errno 98] Address already in use
+    <code>bash
+    ps -ef | grep datadog</code></li>
+<li>如果存在<code>/datadog/datadog/jar/jmxfetch-0.19.0-jar-with-dependencies.jar</code>的进程，则kill掉即可</li>
+</ul><h1 id="_1">节点管理常见问题</h1>
+<h2 id="unknown-column">部署的时候报 Unknown column</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/15318834424275.png" /></p>
+<ul>
+<li>
+<p>原因: 因为升级数据初始化是根据 3.0 以上版本的 DB 结构做数据迁移的，低于 3.0 的 agent 版本原有的机器表中不存在对应的字段，所以会报错</p>
+</li>
+<li>
+<p>解决办法：</p>
+<ol>
+<li>先升级 agent 安装到最新版本</li>
+<li>重建数据库(drop database bk_nodeman; create database bk_nodeman)</li>
+<li>重新部署节点管理</li>
+</ol>
+</li>
+</ul>
+<h2 id="agent">检测 Agent 状态和版本异常</h2>
+<p><strong>表象</strong>：在 step 6 检测 Agent 状态和版本过程一直报如下错误</p>
+<div class="codehilite"><pre><span></span><span class="o">[</span><span class="m">2018</span>-08-23 <span class="m">11</span>:11:18<span class="o">]</span>: check agent status <span class="o">(</span><span class="m">21</span>/60<span class="o">)(</span>bk_agent_alive: <span class="m">1</span>-&gt;alive, <span class="m">0</span>-&gt;dead<span class="o">)</span>:0
+<span class="o">[</span><span class="m">2018</span>-08-23 <span class="m">11</span>:11:19<span class="o">]</span>: check agent status <span class="o">(</span><span class="m">22</span>/60<span class="o">)(</span>bk_agent_alive: <span class="m">1</span>-&gt;alive, <span class="m">0</span>-&gt;dead<span class="o">)</span>:0
+<span class="o">[</span><span class="m">2018</span>-08-23 <span class="m">11</span>:11:21<span class="o">]</span>: check agent status <span class="o">(</span><span class="m">23</span>/60<span class="o">)(</span>bk_agent_alive: <span class="m">1</span>-&gt;alive, <span class="m">0</span>-&gt;dead<span class="o">)</span>:0
+<span class="o">[</span><span class="m">2018</span>-08-23 <span class="m">11</span>:15:20<span class="o">]</span>: CELERY_TASK_TIMEOUT: install script running timeout<span class="o">(</span>600s<span class="o">)</span>，install failed，please connect us
+</pre></div>
+
+
+<p><strong>解决方法</strong>：</p>
+<p>此种问题，常见于云区域，请确认 GSE 和 Agent 的策略 OK</p>
+<h2 id="proxy">安装 Proxy 报错</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/1535613920390.png" /></p>
+<p><strong>解决方法</strong>：</p>
+<ol>
+<li>修改一下 nginx 的配置，把外网 ip 绑定上</li>
+<li>登录到 nginx 的机器</li>
+</ol>
+<div class="codehilite"><pre><span></span>vi /data/bkce/etc/nginx/miniweb.conf
+server_name x.x.x.x（内网ip） x.x.x.x（外网ip）<span class="p">;</span>
+</pre></div>
+
+
+<ol>
+<li>退出到中控机,重启 nginx：</li>
+</ol>
+<div class="codehilite"><pre><span></span>./bkcec stop nginx
+./bkcec start nginx
+</pre></div>
+
+
+<h2 id="windows-cygwin">Windows 没有 cygwin 的无法连接</h2>
+<p>参考 <a href="5.1/节点管理/附录/smb.md">Windows 开 139，445 端口</a></p>
+<h2 id="agent_1">原来使用 agent 安装, 在部署节点管理后, 主机信息没有同步到节点管理</h2>
+<p>原因: 节点管理低于 1.0.52 的版本还没有数据迁移功能。数据迁移动作会在第一次安装节点管理 SaaS 时从 agent-setup SaaS 迁移过来。升级蓝鲸企业版时，由于节点管理的数据库已经存在，故没有进行迁移动作</p>
+<p>解决办法：</p>
+<ul>
+<li>先升级 agent 安装到最新版本(1.0.52)</li>
+<li>重建数据库<code>drop database bk_nodeman; create database bk_nodeman</code></li>
+<li>重新部署节点管理最新版本</li>
+</ul>
+<h2 id="agent-unkown-components-error-the-response-is-nonecodeunkown-error">节点管理中部署 agent 失败, 详情日志中报错: 组件调用异常: unkown component's error: the response is None(code=UNKOWN ERROR)</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/1535613594508.png" /></p>
+<p>可能原因: bk_nodeman 没有添加到 paas 白名单</p>
+<p>解决办法: 登陆中控机执行</p>
+<div class="codehilite"><pre><span></span><span class="nb">source</span> utils.fc
+_add_app_token bk_nodeman <span class="k">$(</span>app_token bk_nodeman<span class="k">)</span>
+</pre></div>
+
+
+<h2 id="cmdb-0-import_from-41">注册主机到 CMDB 失败: 0 行[[import_from]' 数据校验参数不通过(社区版4.1及其之前版本)</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/15318845967497.jpg" /></p>
+<p>原因: CMDB 中主机属性配置信息错误</p>
+<p>解决办法：</p>
+<ul>
+<li>打开 CMDB, 进入 [后台配置] -&gt; [模型管理]</li>
+<li>在视图区域点击[主机], 点击 [模型配置] 标签页</li>
+</ul>
+<p>在字段列表中找到 字段名 为 录入方式(import_from)的行, 并点击展开如下</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/15318847114893.jpg" /></p>
+<p>编辑上图中 api 类型的枚举值为 3 并保存. 然后回到节点管理重新安装</p>
+<h2 id="cmdb-0-xxxxx">注册主机到 CMDB 失败: 0 行"xxxxx"未赋值</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/15318848260214.png" /></p>
+<p>原因: 在 CMDB 导入主机的字段中增加了一个自定义的必填字段</p>
+<p>解决办法: 在 CMDB 的主机模型配置中, 将该字段去除必填属性</p>
+<h2 id="agent-exec-redis_pipe_line_cmd-failed">检查 Agent 状态报错: 组件调用异常 exec redis_pipe_line_cmd failed</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/15318862302643.png" /></p>
+<p>原因: gse_api 查询 redis 状态失败</p>
+<p>解决办法:
+升级 gse 版本 或 重启 gse_api，gse_dba</p>
+<h2 id="agent_2">检查 agent 状态超时</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/15318864938300.jpg" /></p>
+<p>原因: 通过 esb 查询 agent 状态, 太长时间获取不到 agent 状态信息. 可能原因如下</p>
+<ul>
+<li>agent 到 gse server 之间网络不通. 检查端口策略</li>
+<li>proxy 到 server 之间网络不通, 检查端口策略</li>
+<li>注册到 cmdb 的 ip 与从 gse 侧访问 proxy 或 agent 所使用的 ip 不一致</li>
+<li>gse_dba 异常, 尝试重启</li>
+<li>agent 配置文件 agent.conf 中的 agentip 字段的值与注册到 CMDB 中的值不一致</li>
+</ul>
+<h2 id="windows">安装 windows 在第一步卡住</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/15318885055901.jpg" /></p>
+<p>原因: 检测 Windows 系统版本需要通过 SMB 协议向待安装主机发送命令时可能阻塞</p>
+<p>解决办法: 升级节点管理到最新版本或参考 <a href="5.1/节点管理/附录/smb.md">Windows 开 139，445 端口</a></p>
+<h2 id="_2">启动进程失败</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/15315097172270.jpg" /></p>
+<p>解决办法: 联系蓝鲸的同学</p>
+<h2 id="authentication-failed">密码错误: Authentication failed</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/1535612961429.png" /></p>
+<p>解决办法: 检查密码并修正后重试
+Note</p>
+<blockquote>
+<p>windows 无 Cygwin 的环境中, 密码中不能包含@符号</p>
+</blockquote>
+<h2 id="agent-failed-to-connect-gse-service">检查 Agent 状态结果提示: failed to connect GSE service</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/1535612853368.png" /></p>
+<p>若为 proxy</p>
+<ul>
+<li>检查 proxy 到 gse 外网之间是否能正常通信(结合网络策略)</li>
+<li>检查 gse 服务是否正常</li>
+</ul>
+<p>若为 P-Agent</p>
+<ul>
+<li>检查 P-Agent 到 proxy 之间网络是否通畅</li>
+<li>检查所有 Proxy 是否正常</li>
+</ul>
+<h2 id="gseappo-proxy-nat-proxy-gse-proxy-p-agent-proxy-ip">GSE/appo 到 Proxy 之间有 NAT, Proxy 到 GSE 可直连, Proxy 到 P-Agent 之间直连, 要怎么填写 Proxy 的内外网 IP</h2>
+<ul>
+<li>外网 IP 填写从 appo 登陆 Proxy 时所使用的 IP</li>
+<li>内网 IP 填写 P-Agent 能连上的 IP.</li>
+</ul>
+<h2 id="_3">已知问题列表</h2>
+<ul>
+<li>若曾使用过 <code>Agent安装</code> 这个 app 的早期版本,安装节点管理后, 数据会自动迁移过来,但 Windows 机器的操作系统类型为 Linux,这是因为 Agent 安装 的历史版本问题, 需要进行手动修改</li>
+<li>从 A 业务迁移主机到 B 业务时, 虽然提示成功, 但在当前区域下 Agent 状态异常, 因为在 CMDB 中, 主机还在旧的业务下, 查询主机状态时,指定的是当前业务, 因此异常</li>
+</ul><h1 id="_1">日志检索常见问题</h1>
+<h2 id="_2">通用问题</h2>
+<ul>
+<li>日志检索下发失败</li>
+<li>查询不到日志日志检索下发失败</li>
+<li>查询不到日志</li>
+<li>日志占满磁盘空间</li>
+</ul>
+<div class="codehilite"><pre><span></span>检查用户kafka的机器是不是磁盘满了 df -lh
+如果是的话，检查是否是kafka的数据日志满了 du -sh /data/bkce/public/kafka
+如果是的话，看下用户的/data/bkce/service/kafka/config/server.properties里面是否有log.retention.bytes配置，如果没有的话加上log.retention.bytes<span class="o">=</span><span class="m">21474836480</span>
+停掉kafka
+启动kafka，去磁盘满的机器看是否磁盘空间释放了（这里可能要等Kafka启动后一段时间才启动，刚才操作大约10分钟）
+</pre></div>
+
+
+<h2 id="_3">环境问题</h2>
+<p>如果用户的蓝鲸后台机器上也部署了 zabbix agent 时，在使用日志检索时，可能会遇到如下截图的错误：</p>
+<p><img alt="failed create es" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/bk_log_search_failed_create_es.png" /></p>
+<p>这个问题一般是 bkdata 模块的 databus_es 进程监听的 10050 端口和该机器上 zabbix agent 的端口冲突。</p>
+<p>解决方法如下：</p>
+<ol>
+<li>修改中控机的/data/install/ports.env 中下面两行配置的 10050 端口为 10049，避开冲突
+    <code>bash
+    export DATABUS_ES_PORT=10050
+    export CONNECTOR_ES_PORT=10050</code></li>
+<li>./bkcec sync common</li>
+<li>./bkcec render bkdata</li>
+<li>./bkcec stop bkdata databus</li>
+<li>./bkcec start bkdata databus</li>
+<li>./bkcec stop bkdata dataapi</li>
+<li>./bkcec start bkdata dataapi</li>
+</ol>
+<h3 id="_4">内存问题</h3>
+<p>/data/bkce/logs/bkdata/databus_es.log 日志报错 memory is low  提示内存不足，但是分配了足够的内存</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/logseach.png" /></p>
+<div class="codehilite"><pre><span></span> vim /data/bkce/bkdata/databus/conf/es.cluster.properties
+<span class="c1">#  启动jvm是最大分配内存</span>
+deploy.cluster.memory.max<span class="o">=</span>2G
+</pre></div>
+
+
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/logseach2.png" /></p>
+<p>重启 databus_es</p>
+<div class="codehilite"><pre><span></span>supervisorctl -c /data/bkce/etc/supervisor-bkdata-databus.conf restart databus_es
+</pre></div><h1 id="_1">网络管理常见问题</h1>
+<h2 id="snmp-syslog">如何开通设备的 snmp 和 syslog 服务</h2>
+<p>网络设备需要开通和设置好 snmp 和 syslog 服务，才能纳入监控管理。有 3 种情况：</p>
+<ul>
+<li>请求网络管理员用手工方式开通和设置 Cisco，华为，H3C 等网络设备的 snmp 和 syslog 服务</li>
+<li>Linux 和 Windows 的 snmp 设置可参考系统的“开通 snmp 和 syslog” 功能页面中的说明</li>
+<li>使用“开通 snmp 和 syslog”功能页面，采用 ssh 方式一台台开通设备的 snmp 和 syslog 服务</li>
+</ul>
+<h2 id="_2">如何自动发现设备及其模块</h2>
+<p>首先设备要开通 snmp 服务。然后在“自动发现设备”页面中，输入起始 IP 地址和终止 IP 地址，点击“确认”，如下图所示。发现过程会提示本次新发现了多少设备，重新发现了多少设备。如果是重新发现的设备，可能会同时发现出设备名称的改变，也会做出提示，并生成一条事件信息。</p>
+<p>发现完毕后，可以转到“设备信息”页面中查询新发现设备的详细信息</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/bk_network_20180827110903.png" /></p>
+<h2 id="_3">如何自动发现物理拓扑和调整物理拓扑</h2>
+<p>系统采用了 CDP,STP 和 FDB 三种发现方式，以尽可能完整准确的发现异构网络环境的真实的物理拓扑结构。 选择“自动发现物理拓扑”菜单项，出现下面的页面：</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/常见问题/assets/bk_network_20180827110851.png" /></p>
+<p>然后<strong>不要输入任何信息</strong>，再直接点击“确认”，将显示发现过程，发现信息会提示本次发现的（新的或修改的）物理连接信息。发现完毕后，可转入“物理拓扑图”，查看物理拓扑。</p>
+<p><strong>没有进行拓扑图的发 s 现前，物理拓扑图中显示的是散列的各个设备</strong>。
+<strong>物理拓扑图初始是没有进行布局调整的界面，所以会显得比较零乱，此时需要进行手工调整布局，然后保存下来即可</strong>。</p>
+<h2 id="_4">如何请求和使用其他应用功能</h2>
+<p>社区版提供了网络管理基本和实用的功能，能满足日常基本上的网络监控管理需要。而其他工作则需要升级到企业版或云版，它们提供了更为全面的功能，如：</p>
+<ul>
+<li>统计报表</li>
+<li>拓扑连接的手工可视化调整</li>
+<li>客户化的 KPI 定义</li>
+<li>客户化的阀值定义</li>
+<li>流量管理</li>
+<li>链路管理</li>
+<li>专线管理</li>
+<li>网络服务（ISM）管理</li>
+<li>逻辑拓扑的自动发现</li>
+<li>多租户支持</li>
+</ul><h1 id="consul">Consul</h1>
+<h2 id="consul_1">Consul 解析逻辑</h2>
+<p>在部署和使用时，如果遇到类似这样的日志信息："Name or service not known" 或者 "host=xxx.service.consul port=xxxx max retries……"</p>
+<p>意味着内部域名无法解析的问题。内部域名，指的是蓝鲸集群模块之间使用 consul 模块注册的以".service.consul"结尾 的域名。它由每台机器上运行的 consul 进程监听的 53 端口提供解析服务。</p>
+<h2 id="consul_2">Consul 配置说明</h2>
+<ul>
+<li>主配置</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span><span class="c1"># cat /data/bkee/etc/consul.conf</span>
+<span class="o">{</span>
+    <span class="s2">&quot;rejoin_after_leave&quot;</span>: true,
+    <span class="s2">&quot;skip_leave_on_interrupt&quot;</span>: true,
+    <span class="s2">&quot;recursors&quot;</span>: <span class="o">[]</span>,
+    <span class="s2">&quot;bind_addr&quot;</span>: <span class="s2">&quot;10.X.X.X&quot;</span>,
+    <span class="s2">&quot;node_id&quot;</span>: <span class="s2">&quot;8fb274be-245f-4301-926f-76e1c1abf316&quot;</span>,
+    <span class="s2">&quot;retry_join&quot;</span>: <span class="o">[</span>
+        <span class="s2">&quot;10.X.X.X&quot;</span>,
+        <span class="s2">&quot;10.X.X.X&quot;</span>,
+        <span class="s2">&quot;10.X.X.X&quot;</span>
+    <span class="o">]</span>,
+    <span class="s2">&quot;log_level&quot;</span>: <span class="s2">&quot;info&quot;</span>,
+    <span class="s2">&quot;server&quot;</span>: true,
+    <span class="s2">&quot;datacenter&quot;</span>: <span class="s2">&quot;dc&quot;</span>,
+    <span class="s2">&quot;data_dir&quot;</span>: <span class="s2">&quot;/data/bkee/public/consul&quot;</span>,
+    <span class="s2">&quot;leave_on_terminate&quot;</span>: false,
+    <span class="s2">&quot;node_name&quot;</span>: <span class="s2">&quot;gse-1&quot;</span>,
+    <span class="s2">&quot;bootstrap_expect&quot;</span>: <span class="m">3</span>,
+    <span class="s2">&quot;pid_file&quot;</span>: <span class="s2">&quot;/data/bkee/logs/consul.pid&quot;</span>,
+    <span class="s2">&quot;encrypt&quot;</span>: <span class="s2">&quot;uUrZvLe8gff5jNKRwH1QOw==&quot;</span>,
+    <span class="s2">&quot;ports&quot;</span>: <span class="o">{</span>
+        <span class="s2">&quot;dns&quot;</span>: <span class="m">53</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>服务配置</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span><span class="c1"># cat /data/bkee/etc/consul.d/license.json</span>
+<span class="o">{</span>
+    <span class="s2">&quot;service&quot;</span>: <span class="o">{</span>
+        <span class="s2">&quot;id&quot;</span>: <span class="s2">&quot;license-1&quot;</span>,
+        <span class="s2">&quot;checks&quot;</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">&quot;service_id&quot;</span>: <span class="s2">&quot;license-1&quot;</span>,
+                <span class="s2">&quot;interval&quot;</span>: <span class="s2">&quot;10s&quot;</span>,
+                <span class="s2">&quot;script&quot;</span>: <span class="s2">&quot;/data/bkee/bin/health_check/check_proc_exists -m license&quot;</span>
+            <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">&quot;name&quot;</span>: <span class="s2">&quot;license&quot;</span>,
+        <span class="s2">&quot;enableTagOverride&quot;</span>: false,
+        <span class="s2">&quot;address&quot;</span>: <span class="s2">&quot;10.X.X.X&quot;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="consul_3">Consul 内部域名无法解析</h2>
+<p><strong>表象</strong>：</p>
+<p>在部署和使用时，如果遇到类似这样的日志信息："Name or service not known" 或者 "host=xxx.service.consul port=xxxx max retries……"</p>
+<p>意味着内部域名无法解析的问题。内部域名，指的是蓝鲸集群模块之间使用 consul 模块注册的以".service.consul"结尾 的域名。它由每台机器上运行的 consul 进程监听的 53 端口提供解析服务</p>
+<p><strong>思路方法</strong>：</p>
+<p>当无法解析时，第一步，在报错的机器上使用 dig 看看 consul 能否解析：</p>
+<div class="codehilite"><pre><span></span>$ dig xxx.service.consul @127.0.0.1
+</pre></div>
+
+
+<p>@127.0.0.1 表示使用 127.0.0.1:53 这个作为 dns 服务器，也就是使用 consul 提供的 dns 服务</p>
+<p>正常情况下，可以看到类似下图的记录。如果命令换成<code>dig 域名</code> 没出现正确的记录，说明 <code>/etc/resolv.conf</code>里没有配置上 127.0.0.1 的 namserver，确认 <code>/etc/resolv.conf</code> 里第一行是<code>nameserver 127.0.0.1</code></p>
+<div class="codehilite"><pre><span></span><span class="p">;;</span> ANSWER SECTION:
+zk.service.consul.    <span class="m">0</span>    IN    A    <span class="m">10</span>.x.x.x
+zk.service.consul.    <span class="m">0</span>    IN    A    <span class="m">10</span>.x.x.x
+zk.service.consul.    <span class="m">0</span>    IN    A    <span class="m">10</span>.x.x.x
+
+<span class="p">;;</span> Query time: <span class="m">1</span> msec
+<span class="p">;;</span> SERVER: <span class="m">127</span>.0.0.1#53<span class="o">(</span><span class="m">127</span>.0.0.1<span class="o">)</span>
+</pre></div>
+
+
+<p>如果出现以下信息， 说明 consul 没有正常启动。那么 使用 supervisor 启动 consul 进程</p>
+<div class="codehilite"><pre><span></span><span class="p">;</span> &lt;&lt;&gt;&gt; DiG <span class="m">9</span>.9.4-RedHat-9.9.4-29.el7_2.2 &lt;&lt;&gt;&gt; zk.service.consul @127.0.0.1
+<span class="p">;;</span> global options: +cmd
+<span class="p">;;</span> connection timed out<span class="p">;</span> no servers could be reached
+</pre></div>
+
+
+<p>如果出现以下信息 "IN A" 后面没有 ip 地址，说明 consul 启动了，但是无法解析域名</p>
+<div class="codehilite"><pre><span></span><span class="p">;;</span> QUESTION SECTION:
+<span class="p">;</span>zk.service.consul.        IN    A
+
+<span class="p">;;</span> AUTHORITY SECTION:
+consul.            <span class="m">0</span>    IN    SOA    ns.consul. postmaster.consul. <span class="m">1530849644</span> <span class="m">3600</span> <span class="m">600</span> <span class="m">86400</span> <span class="m">0</span>
+</pre></div>
+
+
+<p>此时按照以下步骤:</p>
+<ul>
+<li>运行 <code>consul monitor</code> 看看日志，主要确认 consul 集群状态是否正常。观察是否有"no cluster leader" 的输出。</li>
+<li>针对具体的域名，譬如 zk.service.consul，那么登陆到 zk 所在机器，查看<code>/data/bkce/etc/consul.d/zk.json</code>文件 运行里面的 check 脚本，看返回的输出。</li>
+</ul>
+<p>对于出现"no cluster leader"的输出时，说明 consul 之间没有成功组成集群，选举出 leader：</p>
+<ul>
+<li>检查 consul server 节点是否都 running</li>
+<li>在任意一台 consul 上输入 <code>consul join &lt;另外一个consul节点&gt;</code></li>
+<li>查看节点状态：<code>consul operator raft list-peers</code></li>
+</ul><h1 id="influxdb">InfluxDB 常见问题</h1>
+<h2 id="influxdb_1">InfluxDB 查询</h2>
+<p>Influxdb 为蓝鲸监控数据存储载体，在发生蓝鲸监控没有数据时，有个 check 点，确认 InfluxDB 是否正常</p>
+<p>检查 InfluxDB 的数据库</p>
+<div class="codehilite"><pre><span></span>$ influx -host <span class="nv">$INFLUXDB_HOST</span> -port <span class="nv">$INFLUXDB_PORT</span> -execute <span class="s1">&#39;show databases&#39;</span>
+name: databases
+name
+----
+_internal
+system_2
+</pre></div>
+
+
+<p>检查 InfluxDB 的结构</p>
+<div class="codehilite"><pre><span></span>$ influx -host <span class="nv">$INFLUXDB_HOST</span> -port <span class="nv">$INFLUXDB_PORT</span> -database system_2 -execute <span class="s1">&#39;show measurements&#39;</span>
+name: measurements
+name
+----
+system_cpu_detail_2
+system_cpu_summary_2
+system_disk_2
+system_env_2
+system_inode_2
+system_io_2
+system_load_2
+system_mem_2
+system_net_2
+system_netstat_2
+system_proc_2
+system_swap_2
+</pre></div>
+
+
+<p>检查 InfluxDB 的数据</p>
+<div class="codehilite"><pre><span></span>&gt; <span class="k">select</span> * from system_cpu_detail_2 limit <span class="m">10</span><span class="p">;</span>
+name: system_cpu_detail_2
+<span class="nb">time</span>                company_id device_name hostname idle               iowait               ip            plat_id stolen system               usage              user
+----                ---------- ----------- -------- ----               ------               --            ------- ------ ------               -----              ----
+<span class="m">1535439967000000000</span> <span class="m">0</span>          cpu0        rbtnode1 <span class="m">0</span>.6058552226105512 <span class="m">0</span>.0694560560385358   <span class="m">10</span>.x.x.x <span class="m">0</span>       <span class="m">0</span>      <span class="m">0</span>.04019670092112785  <span class="m">48</span>.09914587171289  <span class="m">0</span>.28380991039469905
+<span class="m">1535439967000000000</span> <span class="m">0</span>          cpu7        rbtnode1 <span class="m">0</span>.7863101634785973 <span class="m">0</span>.00837019347933527  <span class="m">10</span>.x.x.x <span class="m">0</span>       <span class="m">0</span>      <span class="m">0</span>.030681614533304973 <span class="m">24</span>.205951186893405 <span class="m">0</span>.17413388216866021
+<span class="m">1535439967000000000</span> <span class="m">0</span>          cpu2        rbtnode1 <span class="m">0</span>.6678563495185631 <span class="m">0</span>.009100081035768667 <span class="m">10</span>.x.x.x <span class="m">0</span>       <span class="m">0</span>      <span class="m">0</span>.040028319084854255 <span class="m">35</span>.79896476874237  <span class="m">0</span>.2824698411674115
+<span class="m">1535439967000000000</span> <span class="m">0</span>          cpu6        rbtnode1 <span class="m">0</span>.7829082548721787 <span class="m">0</span>.012854377626957599 <span class="m">10</span>.x.x.x <span class="m">0</span>       <span class="m">0</span>      <span class="m">0</span>.03067846131995839  <span class="m">24</span>.644470470134607 <span class="m">0</span>.1730757661552659
+<span class="m">1535439967000000000</span> <span class="m">0</span>          cpu5        rbtnode1 <span class="m">0</span>.7646966906635414 <span class="m">0</span>.028642471368069893 <span class="m">10</span>.x.x.x <span class="m">0</span>       <span class="m">0</span>      <span class="m">0</span>.030657712793992715 <span class="m">30</span>.637870416875536 <span class="m">0</span>.1755306285693026
+<span class="m">1535439967000000000</span> <span class="m">0</span>          cpu1        rbtnode1 <span class="m">0</span>.6646903677764837 <span class="m">0</span>.011202611791902923 <span class="m">10</span>.x.x.x <span class="m">0</span>       <span class="m">0</span>      <span class="m">0</span>.03985501626475787  <span class="m">35</span>.816906114265606 <span class="m">0</span>.2837339392108164
+<span class="m">1535439967000000000</span> <span class="m">0</span>          cpu4        rbtnode1 <span class="m">0</span>.7346243011891722 <span class="m">0</span>.05592099142758973  <span class="m">10</span>.x.x.x <span class="m">0</span>       <span class="m">0</span>      <span class="m">0</span>.0312518993637984   <span class="m">38</span>.19095477386919  <span class="m">0</span>.1776992052751767
+<span class="m">1535439967000000000</span> <span class="m">0</span>          cpu3        rbtnode1 <span class="m">0</span>.6710939376132079 <span class="m">0</span>.007952705725687499 <span class="m">10</span>.x.x.x <span class="m">0</span>       <span class="m">0</span>      <span class="m">0</span>.0398088272799649   <span class="m">34</span>.2078877005351   <span class="m">0</span>.28061707932910834
+<span class="m">1535440027000000000</span> <span class="m">0</span>          cpu4        rbtnode1 <span class="m">0</span>.7345565004723897 <span class="m">0</span>.05588967150219944  <span class="m">10</span>.x.x.x <span class="m">0</span>       <span class="m">0</span>      <span class="m">0</span>.03126793860725039  <span class="m">28</span>.370927318295703 <span class="m">0</span>.1777816774563495
+<span class="m">1535440027000000000</span> <span class="m">0</span>          cpu3        rbtnode1 <span class="m">0</span>.6710074762738196 <span class="m">0</span>.00793005575830115  <span class="m">10</span>.x.x.x <span class="m">0</span>       <span class="m">0</span>      <span class="m">0</span>.03980792783012481  <span class="m">35</span>.225375626044226 <span class="m">0</span>.2807265704162614
+</pre></div><h1 id="kafka">Kafka 常见问题</h1>
+<h2 id="kafka_1">Kafka 常用操作</h2>
+<p>Kakfa 查询 topic</p>
+<div class="codehilite"><pre><span></span>$ /data/bkce/service/kafka/bin/kafka-topics.sh --zookeeper zk.service.consul:2181/common_kafka --describe <span class="p">|</span> grep Topic
+</pre></div>
+
+
+<p>查看 topic 状态</p>
+<div class="codehilite"><pre><span></span>$ /data/bkce/service/kafka/bin/kafka-topics.sh --zookeeper zk.service.consul:2181/common_kafka --describe --topic connect-configs.tsdb
+</pre></div>
+
+
+<p>查看 topic 能否读</p>
+<div class="codehilite"><pre><span></span>$ /data/bkce/service/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka.service.consul:9092 --topic connect-configs.tsdb --from-beginning <span class="p">|</span> head
+</pre></div>
+
+
+<p>确认实时的 topic 能否读</p>
+<div class="codehilite"><pre><span></span>$ /data/bkce/service/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka.service.consul:9092 --topic connect-configs.etl --from-beginning <span class="p">|</span> head
+</pre></div>
+
+
+<h2 id="kafka-broker">Kafka broker 节点缺失</h2>
+<p>若社区版为 3 台部署的，必须返回[1, 2, 3]才正常，示例如下
+若brokers ids不为[1, 2, 3]，可能存在<code>/data/bkce/public/kafka/.lock</code>文件，有的话，删除此文件，再重新使用<code>./bkcec stop kafka</code>和<code>./bkcec start kafka</code>重启kafka，重启完再次确认状态</p>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span><span class="c1"># /data/bkce/service/zk/bin/zkCli.sh -server zk.service.consul:2181 ls /common_kafka/brokers/ids</span>
+Connecting to zk.service.consul:2181
+log4j:WARN No appenders could be found <span class="k">for</span> logger <span class="o">(</span>org.apache.zookeeper.ZooKeeper<span class="o">)</span>.
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig <span class="k">for</span> more info.
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+<span class="o">[</span><span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span><span class="o">]</span>
+</pre></div>
+
+
+<h2 id="kafka_2">kafka 数据或日志清理</h2>
+<blockquote>
+<p>Kafka 将数据持久化到了硬盘上，允许配置一定的策略对数据清理，清理的策略有两个，删除和压缩</p>
+<p>严格注意：下面清理策略，请根据实际业务，服务器状况，及需求来定制</p>
+</blockquote>
+<p>有如下 2 种方式进行设置</p>
+<p>方式一：通过调整配置文件</p>
+<div class="codehilite"><pre><span></span><span class="c1"># 配置文件位置</span>
+/data/bkce/service/kafka/config/server.properties
+
+<span class="c1"># 可以增加log.cleanup.policy这个数据清理方式设置，此行为为删除动作</span>
+log.cleanup.policy<span class="o">=</span>delete
+
+<span class="c1"># 下面有2种方式，保留时间或大小，请自行根据实际情况调整此处设置，1G为1073741824。具体保留大小根据实际情况设置</span>
+<span class="c1"># 注意：下面为直接删除，删除后的消息不可恢复</span>
+log.retention.hours<span class="o">=</span><span class="m">168</span>（超过指定时间168小时后，删除旧的消息）
+log.retention.bytes<span class="o">=</span><span class="m">10737418240</span>（超过指定大小10G后，删除旧的消息）
+</pre></div>
+
+
+<p>设置完毕，重启服务来生效</p>
+<p>方式二：Kakfa 设置 Topic 过期时间</p>
+<div class="codehilite"><pre><span></span><span class="c1"># 设置过期时间，只能用毫秒（retention.ms），或者bytes（retention.bytes）</span>
+$ /data/bkce/service/kafka/bin/kafka-topics.sh --zookeeper zk.service.consul:2181/common_kafka --topic snapshot2 --alter --config retention.ms<span class="o">=</span><span class="m">17280000</span>
+$ WARNING: Altering topic configuration from this script has been deprecated and may be removed in future releases.
+          Going forward, please use kafka-configs.sh <span class="k">for</span> this functionality
+$ updated config <span class="k">for</span> topic <span class="s2">&quot;snapshot2&quot;</span>
+</pre></div>
+
+
+<h2 id="kafka-gse_data">Kafka gse_data 报错</h2>
+<p>在 gse 的模块 gse_data 的日志中，会出现有如下报错，这种是 Kafka 消息机制的正常行为，只要确定快照数据 OK，就可确认<code>gse_data-&gt;kafka-&gt;bkdata_&gt;cmdb</code>的链路正常</p>
+<div class="codehilite"><pre><span></span>     <span class="m">52</span> <span class="o">[</span><span class="m">2018</span>-08-23 <span class="m">16</span>:47:05.109<span class="o">]</span> &lt;<span class="m">11297</span>--805308672&gt;<span class="o">[</span>ERROR<span class="o">][</span>kafka_producer:18<span class="o">]</span>KAFKA-3-ERROR: rdkafka#producer-15 <span class="m">10</span>.X.X.X:9092/1: Receive failed: Disconnected
+     <span class="m">53</span> <span class="o">[</span><span class="m">2018</span>-08-23 <span class="m">16</span>:47:05.614<span class="o">]</span> &lt;<span class="m">11297</span>--318793984&gt;<span class="o">[</span>ERROR<span class="o">][</span>kafka_producer:18<span class="o">]</span>KAFKA-3-ERROR: rdkafka#producer-4 kafka.service.consul:9092/bootstrap: Receive failed: Disconnected
+     <span class="m">54</span> <span class="o">[</span><span class="m">2018</span>-08-23 <span class="m">16</span>:52:05.198<span class="o">]</span> &lt;<span class="m">11297</span>--176183552&gt;<span class="o">[</span>ERROR<span class="o">][</span>kafka_producer:18<span class="o">]</span>KAFKA-3-ERROR: rdkafka#producer-12 <span class="m">10</span>.X.X.X:9092/1: Receive failed: Disconnected
+     <span class="m">55</span> <span class="o">[</span><span class="m">2018</span>-08-23 <span class="m">16</span>:52:05.936<span class="o">]</span> &lt;<span class="m">11297</span>--998275328&gt;<span class="o">[</span>ERROR<span class="o">][</span>kafka_producer:18<span class="o">]</span>KAFKA-3-ERROR: rdkafka#producer-14 <span class="m">10</span>.178.181.35:9092/3: Receive failed: Disconnected
+     <span class="m">56</span> <span class="o">[</span><span class="m">2018</span>-08-23 <span class="m">16</span>:57:05.115<span class="o">]</span> &lt;<span class="m">11297</span>--956311808&gt;<span class="o">[</span>ERROR<span class="o">][</span>kafka_producer:18<span class="o">]</span>KAFKA-3-ERROR: rdkafka#producer-16 <span class="m">10</span>.178.181.35:9092/3: Receive failed: Disconnected
+     <span class="m">57</span> <span class="o">[</span><span class="m">2018</span>-08-23 <span class="m">16</span>:57:05.115<span class="o">]</span> &lt;<span class="m">11297</span>--1166031104&gt;<span class="o">[</span>ERROR<span class="o">][</span>kafka_producer:18<span class="o">]</span>KAFKA-3-FAIL: rdkafka#producer-12 kafka.service.consul:9092/bootstrap: Receive failed: Disconnected
+</pre></div><h1 id="mysql">MySQL 常见问题</h1>
+<h2 id="mysql_1">MySQL 密码更新流程</h2>
+<blockquote>
+<p>如下指引，若无特殊说明，全部在中控机<code>/data/install</code>目录进行</p>
+</blockquote>
+<h3 id="mysql_2">停止 MySQL</h3>
+<div class="codehilite"><pre><span></span>./bkcec stop mysql
+
+<span class="c1"># 确认mysql真正停掉</span>
+./bkcec status mysql
+
+<span class="c1"># 在mysql机器确认</span>
+ps -ef <span class="p">|</span> grep mysql <span class="p">|</span> grep -v grep
+</pre></div>
+
+
+<h3 id="mysql_3">修改 MySQL 密码</h3>
+<p>修改 globals.env 里的 mysql_PASS 值，密码不要包含 <code>[ ] / : @ ?</code> 等特殊字符</p>
+<div class="codehilite"><pre><span></span><span class="nb">export</span> <span class="nv">MYSQL_PASS</span><span class="o">=</span><span class="s1">&#39;新密码&#39;</span>
+</pre></div>
+
+
+<h3 id="install">同步 install 目录</h3>
+<div class="codehilite"><pre><span></span>./bkcec sync common
+</pre></div>
+
+
+<h3 id="_1">关闭相关服务</h3>
+<div class="codehilite"><pre><span></span><span class="c1"># 关闭平台服务</span>
+<span class="nb">echo</span> bkdata gse job paas gse kafka cmdb <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec stop
+<span class="nb">echo</span> bkdata gse job paas gse kafka cmdb <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec status
+</pre></div>
+
+
+<h3 id="saas">关闭 saas 应用</h3>
+<p>在 appo 服务器上执行</p>
+<div class="codehilite"><pre><span></span><span class="c1"># 若为单机部署，请使用如下指令</span>
+ls /data/bkce/paas_agent/apps/projects <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span> <span class="p">|</span> sed <span class="s1">&#39;s/.$//&#39;</span> <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec stop saas-o
+
+<span class="c1"># 若为多台部署，请在中控机/data/install目录下使用如下指令</span>
+rcmd root@<span class="nv">$APPO_IP</span> <span class="s2">&quot;ls /data/bkce/paas_agent/apps/projects&quot;</span> <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec stop saas-o
+
+<span class="c1"># 不论单机还是多台部署，建议在appo的服务器上确认应用的进程真正停掉，若存在未停掉进程，可以采用强杀方法</span>
+ps -ef<span class="p">|</span>grep bk_
+<span class="k">for</span> x in <span class="sb">`</span>ls /data/bkce/paas_agent/apps/projects <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span> <span class="p">|</span> sed <span class="s1">&#39;s/.$//&#39;</span><span class="sb">`</span> <span class="p">;</span> <span class="k">do</span> ps -ef <span class="p">|</span> grep <span class="nv">$x</span> <span class="p">|</span> grep -v grep <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> xargs -n <span class="m">1</span> <span class="nb">kill</span> -9 <span class="p">;</span> <span class="k">done</span>
+</pre></div>
+
+
+<h3 id="_2">重新生成配置</h3>
+<p>和 MySQL 相关的模块为 MySQL，PaaS，Job，bkdata，SaaS</p>
+<div class="codehilite"><pre><span></span><span class="nb">echo</span> mysql paas job bkdata <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec render
+</pre></div>
+
+
+<p><strong>bkdata</strong> 特别注意，有 3 个地方</p>
+<div class="codehilite"><pre><span></span>配置1：
+/data/bkce/bkdata/databus/conf/redis.cluster.properties  确认  connector.redis.auth<span class="o">=</span>redis密码
+
+配置2：
+/data/bkce/bkdata/databus/conf/jdbc.cluster.properties  确认  connector.connection.password<span class="o">=</span>mysql密码
+
+配置3：
+/data/bkce/bkdata/databus/conf/etl.cluster.properties  确认  cc.cache.passwd<span class="o">=</span>mysql密码
+</pre></div>
+
+
+<h3 id="saas-o">更改 saas-o 应用的密码</h3>
+<div class="codehilite"><pre><span></span><span class="c1"># 在appo服务器上，先测试一下，确认打印出来的是新密码，注意有*的话，注意转义</span>
+find /data/bkce/paas_agent/apps/projects/bk_*/conf -name <span class="s2">&quot;*.conf&quot;</span> <span class="p">|</span> grep <span class="s2">&quot;bk&quot;</span> <span class="p">|</span> xargs grep <span class="s2">&quot;老密码&quot;</span> -l <span class="p">|</span> xargs sed <span class="s2">&quot;s/老密码/新密码/g&quot;</span>
+
+<span class="c1"># 测试没问题，加-i，修改文件</span>
+find /data/bkce/paas_agent/apps/projects/bk_*/conf -name <span class="s2">&quot;*.conf&quot;</span> <span class="p">|</span> grep <span class="s2">&quot;bk&quot;</span> <span class="p">|</span> xargs grep <span class="s2">&quot;老密码&quot;</span> -l <span class="p">|</span> xargs sed -i <span class="s2">&quot;s/老密码/新密码/g&quot;</span>
+</pre></div>
+
+
+<h3 id="mysql_4">启动 MySQL</h3>
+<div class="codehilite"><pre><span></span>./bkcec start mysql
+</pre></div>
+
+
+<h3 id="mysql_5">重新初始化 MySQL</h3>
+<div class="codehilite"><pre><span></span>./bkcec initdata mysql
+</pre></div>
+
+
+<h3 id="paas">重新初始化 PaaS</h3>
+<div class="codehilite"><pre><span></span>./bkcec initdata paas
+</pre></div>
+
+
+<h3 id="_3">重新启动平台</h3>
+<div class="codehilite"><pre><span></span><span class="nb">echo</span> paas gse cmdb kafka job bkdata <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec start
+</pre></div>
+
+
+<h3 id="appo">重新初始化 APPO</h3>
+<div class="codehilite"><pre><span></span><span class="c1"># 在中控机</span>
+./bkcec stop appo
+./bkcec initdata appo
+./bkcec start appo
+./bkcec activate appo
+</pre></div>
+
+
+<h3 id="_4">重新启动应用</h3>
+<div class="codehilite"><pre><span></span><span class="c1"># 若为单机部署，请使用如下指令</span>
+ls /data/bkce/paas_agent/apps/projects <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span> <span class="p">|</span> sed <span class="s1">&#39;s/.$//&#39;</span> <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec start saas-o
+
+<span class="c1"># 若为多台部署，请在中控机/data/install目录下使用如下指令</span>
+rcmd root@<span class="nv">$APPO_IP</span> <span class="s2">&quot;ls /data/bkce/paas_agent/apps/projects&quot;</span> <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec start saas-o
+</pre></div>
+
+
+<h3 id="_5">检查</h3>
+<p>确保 CMDB，JOB，蓝鲸监控等模块功能全部 OK</p>
+<div class="codehilite"><pre><span></span><span class="c1"># 1.确认bkdata任务</span>
+$ /data/bkce/bkdata/dataapi/bin/check_databus_status.sh
+<span class="o">===========</span><span class="nv">TSDB</span><span class="o">===============</span>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<span class="m">100</span>   <span class="m">773</span>  <span class="m">100</span>   <span class="m">773</span>    <span class="m">0</span>     <span class="m">0</span>  <span class="m">14599</span>      <span class="m">0</span> --:--:-- --:--:-- --:--:-- <span class="m">14865</span>
+tsdb_2_system_cpu_summary
+<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;tsdb_2_system_cpu_summary&quot;</span>,<span class="s2">&quot;connector&quot;</span>:<span class="o">{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10054&quot;</span><span class="o">}</span>,<span class="s2">&quot;tasks&quot;</span>:<span class="o">[{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;id&quot;</span>:0,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10054&quot;</span><span class="o">}]}</span>
+
+<span class="o">===========</span><span class="nv">MYSQL</span><span class="o">===============</span>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<span class="m">100</span>    <span class="m">27</span>  <span class="m">100</span>    <span class="m">27</span>    <span class="m">0</span>     <span class="m">0</span>   <span class="m">1118</span>      <span class="m">0</span> --:--:-- --:--:-- --:--:--  <span class="m">1125</span>
+jdbc_2_ja_gse_proc_port
+<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;jdbc_2_ja_gse_proc_port&quot;</span>,<span class="s2">&quot;connector&quot;</span>:<span class="o">{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10051&quot;</span><span class="o">}</span>,<span class="s2">&quot;tasks&quot;</span>:<span class="o">[{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;id&quot;</span>:0,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10051&quot;</span><span class="o">}]}</span>
+
+<span class="o">===========</span><span class="nv">ETL</span><span class="o">===============</span>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<span class="m">100</span>  <span class="m">1040</span>  <span class="m">100</span>  <span class="m">1040</span>    <span class="m">0</span>     <span class="m">0</span>   166k      <span class="m">0</span> --:--:-- --:--:-- --:--:--  169k
+etl_1001_2_system_cpu_summary
+<span class="o">{</span><span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;etl_1001_2_system_cpu_summary&quot;</span>,<span class="s2">&quot;connector&quot;</span>:<span class="o">{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10052&quot;</span><span class="o">}</span>,<span class="s2">&quot;tasks&quot;</span>:<span class="o">[{</span><span class="s2">&quot;state&quot;</span>:<span class="s2">&quot;RUNNING&quot;</span>,<span class="s2">&quot;id&quot;</span>:0,<span class="s2">&quot;worker_id&quot;</span>:<span class="s2">&quot;10.X.X.X:10052&quot;</span><span class="o">}]}</span>
+
+<span class="c1"># 2.确认kafka节点数量</span>
+$ /data/bkce/service/zk/bin/zkCli.sh -server zk.service.consul:2181 ls /common_kafka/brokers/ids
+......
+WatchedEvent state:SyncConnected type:None path:null
+<span class="o">[</span><span class="m">1</span>, <span class="m">2</span>, <span class="m">3</span><span class="o">]</span>
+
+<span class="c1"># 此步主要检查redis内是否有快照数据，在redis服务器上</span>
+<span class="nb">source</span> /data/install/utils.fc
+$ redis-cli -h <span class="nv">$REDIS_IP</span> -p <span class="nv">$REDIS_PORT</span> -a <span class="nv">$REDIS_PASS</span>
+<span class="m">10</span>.X.X.X:6379&gt; AUTH <span class="s2">&quot;REDIS密码&quot;</span>
+OK
+<span class="m">10</span>.X.X.X:6379&gt; SUBSCRIBE 2_snapshot
+Reading messages... <span class="o">(</span>press Ctrl-C to quit<span class="o">)</span>
+<span class="m">1</span><span class="o">)</span> <span class="s2">&quot;subscribe&quot;</span>
+<span class="m">2</span><span class="o">)</span> <span class="s2">&quot;2_snapshot&quot;</span>
+<span class="m">3</span><span class="o">)</span> <span class="o">(</span>integer<span class="o">)</span> <span class="m">1</span>
+<span class="m">1</span><span class="o">)</span> <span class="s2">&quot;message&quot;</span>
+<span class="m">2</span><span class="o">)</span> <span class="s2">&quot;2_snapshot&quot;</span>
+<span class="m">3</span><span class="o">)</span> <span class="s2">&quot;{\&quot;localTime\&quot;: \&quot;2018-08-15 11:18:00\&quot;, \&quot;data\&quot;: \&quot;{\\\&quot;beat\\\&quot;:{\\\&quot;address\\\&quot;:</span>
+</pre></div>
+
+
+<h2 id="mysql-binlog">MySQL 清理 binlog 日志方法</h2>
+<blockquote>
+<p>MySQL 中的 binlog 日志记录了数据库中数据的变动，便于对数据的基于时间点和基于位置的恢复，但是 binlog 也会日渐增大，占用很大的磁盘空间，因此，要对 binlog 使用正确安全的方法清理掉一部分没用的日志</p>
+</blockquote>
+<p><strong>注意：如下提供的方法仅供用户参考，具体操作请务必按照自己的实际情况设置</strong></p>
+<h3 id="binlog">手动清理 binlog</h3>
+<p>若社区版设置了多台 mysql，需查看主库和从库正在使用的 binlog 是哪个文件</p>
+<div class="codehilite"><pre><span></span>MySQL <span class="o">[(</span>none<span class="o">)]</span>&gt; show master status<span class="se">\G</span>
+*************************** <span class="m">1</span>. row ***************************
+            File: mysql-bin.000006
+        Position: <span class="m">97013298</span>
+    Binlog_Do_DB:
+Binlog_Ignore_DB:
+<span class="m">1</span> row in <span class="nb">set</span> <span class="o">(</span><span class="m">0</span>.00 sec<span class="o">)</span>
+
+MySQL <span class="o">[(</span>none<span class="o">)]</span>&gt; show slave status<span class="se">\G</span>
+Empty <span class="nb">set</span> <span class="o">(</span><span class="m">0</span>.00 sec<span class="o">)</span>
+</pre></div>
+
+
+<p>在删除 binlog 日志之前，首先对 binlog 日志备份，以防万一</p>
+<p>清理方法一：删除指定日期以前的日志索引中 binlog 日志文件</p>
+<div class="codehilite"><pre><span></span>purge master logs before <span class="s1">&#39;2018-08-01 17:20:00&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<p>清理方法二：删除指定日志文件的日志索引中 binlog 日志文件</p>
+<div class="codehilite"><pre><span></span>purge master logs to<span class="s1">&#39;mysql-bin.000006&#39;</span><span class="p">;</span>
+</pre></div>
+
+
+<p><strong>注意</strong></p>
+<ul>
+<li>时间和文件名一定不可以写错，尤其是时间中的年和文件名中的序号，以防不小心将正在使用的 binlog 删除！！！</li>
+<li>切勿删除正在使用的 binlog！！！</li>
+<li>使用该语法，会将对应的文件和 mysql-bin.index 中的对应路径删除！！！</li>
+</ul>
+<h3 id="binlog_1">自动清理 binlog</h3>
+<p>使用如下方法查询当前 binlog 的过期时间，若为 0 表示不过期</p>
+<div class="codehilite"><pre><span></span>mysql&gt; show variables like <span class="s1">&#39;expire_logs_days&#39;</span><span class="p">;</span>
++------------------+-------+
+<span class="p">|</span> Variable_name    <span class="p">|</span> Value <span class="p">|</span>
++------------------+-------+
+<span class="p">|</span> expire_logs_days <span class="p">|</span>   <span class="m">0</span>   <span class="p">|</span>
++------------------+-------+
+</pre></div>
+
+
+<p>使用如下方法设置 binlog 过期时间，设置 30 表示 30 天后自动清理之前的过期日志</p>
+<div class="codehilite"><pre><span></span>mysql&gt; <span class="nb">set</span> global <span class="nv">expire_logs_days</span> <span class="o">=</span> <span class="m">30</span><span class="p">;</span>
+</pre></div><h1 id="rabbitmq">RabbitMQ 常见问题</h1>
+<h2 id="rabbitmq_1">RabbitMQ 启动失败</h2>
+<p>4.1 社区版本 RabbitMQ 启动失败问题处理</p>
+<p><strong>表象</strong>：在部署蓝鲸 JOB 过程中需要进行 RabbitMQ 的安装，数据初始化，激活步骤，此问题多发生在此过程</p>
+<p><strong>思路方法</strong>：如果是在添加用户和 vhost 时报错，那么说明启动 rabbitmq-server 没有成功，通过以下方式确认</p>
+<div class="codehilite"><pre><span></span><span class="c1"># 查看进程是否存在</span>
+$ ps -ef <span class="p">|</span> grep beam
+
+<span class="c1"># 查看监听端口是否存在(5672, 15672, 25672 三个端口必须都在）</span>
+$ netstat -tnlpu <span class="p">|</span> grep <span class="m">5672</span>  
+</pre></div>
+
+
+<p>若没有启动，通过 <code>systemctl start rabbitmq-server</code> 启动。若系统没有 systemctl 命令，通过 <code>service rabbitmq start</code>启动</p>
+<p>首先排查 <code>/data/bkce/etc/rabbitmq</code> 目录，对 RabbitMQ 用户是否有读权限，<code>/data/bkce/public/rabbitmq</code>目录对 RabbitMQ 用户是否有写权限</p>
+<p>自己处理好目录的权限问题后，再尝试重启 <code>rabbitmq-server</code></p>
+<h2 id="rabbitmq-activate">rabbitmq activate 失败</h2>
+<p><strong>表象</strong>：此问题发生在 <code>./bk_install app_mgr</code>，会发生如下报错</p>
+<div class="codehilite"><pre><span></span>$ <span class="o">[</span>X.X.X.X<span class="o">]</span> register and activate rabbitmq failed. requrest env: .
+$ <span class="o">[</span>X.X.X.X<span class="o">]</span> api reponse: <span class="o">{</span><span class="s2">&quot;msg&quot;</span>: <span class="s2">&quot;HTTPConnectionPool(host=&#39;X.X.X.X&#39;, port=15672): Max retries exceeded with url: /api/overview (caused by NewConnectionError(&#39;&lt;requests.packages.urllibs.connecion.HTTPConnection object at ox7fc5175c4e10&gt;: Failed to establish a new connection: [Errno lll] Connection refused&#39;,))&quot;</span><span class="o">}</span>
+</pre></div>
+
+
+<p><strong>思路方法</strong>：</p>
+<ol>
+<li>确认 umask，若不是 022，修改 <code>/etc/profile</code>，然后 <code>source /etc/profile</code>，再卸载 RabbitMQ，重新安装</li>
+<li>确认在安装过程，或在 <code>rabbitmq activate</code> 前主机域名是否做过调整修改</li>
+</ol>
+<h2 id="rabbitmq-initdata">rabbitmq initdata 失败</h2>
+<p><strong>表象</strong>：在部署蓝鲸 JOB 过程中需要进行 RabbitMQ 的安装，数据初始化，激活步骤，此问题多发生在此过程</p>
+<div class="codehilite"><pre><span></span><span class="o">[</span> root@rbtnodel install<span class="o">)</span><span class="c1"># ．/bkcec initdata rabbitmq</span>
+Warning： Permanently added <span class="s1">&#39;10.x.x.x&#39;</span> <span class="o">(</span>RSA<span class="o">)</span> to the list Of known hosts.
+bash： line <span class="m">5</span>： systemctl： <span class="nb">command</span> not found
+
+Creating u se r <span class="s2">&quot;admin&quot;</span>
+Error: unable to connect to node rabbit@rbtnode1 ： nodedown
+<span class="nv">DIAGNOSTICS</span>
+<span class="o">============</span>
+
+nodes in question： <span class="o">[</span> rabbit@rbtnode1 <span class="o">}</span>
+hosts, their running n Odes an d ports ：
+ - rbtnodel： Hrabbitmqct127684,36040<span class="o">))</span>
+
+current node details ：
+ - node name： rabbitmqctl27684@rbtnode1
+ - home dir： /var/lib/rabbitmq
+ - cookie hash： UgOyBrCIoJjXfjMxhu7+Dg::
+add rabbitmq u se r admin failed ．
+<span class="o">[</span><span class="m">10</span>.x.x.x<span class="o">]</span> <span class="m">20180828</span>．130149 <span class="m">337</span>     add rabbitmq user admin failed
+</pre></div>
+
+
+<p><strong>思路方法</strong>：通过以下方式来尝试解决</p>
+<blockquote>
+<p>注意：若系统没有 systemctl 命令，注意修改下<code>/data/install/utils.fc</code>文件，查找到<code>init_rabbitmq_cluster ()</code>函数，把<code>systemctl start rabbitmq-server</code>修改为<code>service rabbitmq-server start</code></p>
+</blockquote>
+<div class="codehilite"><pre><span></span><span class="c1"># rabbitmq现在是运行状态？是的话。</span>
+./bkcec stop rabbitmq
+rm -rf /root/.erlang.cookie /var/lib/rabbitmq/* /data/bkce/public/rabbitmq/*
+<span class="c1"># 确认rabbitmq进程真正停掉，若存在未停掉的，使用如下强制停掉</span>
+ps -ef <span class="p">|</span> grep rabbitmq <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span> <span class="p">|</span> xargs -n <span class="m">1</span> <span class="nb">kill</span> -9
+
+<span class="c1"># 若系统没有systemctl命令，注意修改下/data/install/utils.fc文件，查找到init_rabbitmq_cluster ()函数，把systemctl start rabbitmq-server修改为service rabbitmq-server start</span>
+<span class="m">1773</span> init_rabbitmq_cluster <span class="o">()</span> <span class="o">{</span>
+<span class="m">1774</span>     <span class="nv">ckv</span><span class="o">=</span><span class="k">$(</span>uuid -v4<span class="k">)</span>
+<span class="m">1775</span>     <span class="nv">cookie</span><span class="o">=</span>/var/lib/rabbitmq/.erlang.cookie
+<span class="m">1776</span>     rcmd root@<span class="nv">$RABBITMQ_IP</span> <span class="s2">&quot;</span>
+<span class="s2">1777             echo -n </span><span class="nv">$ckv</span><span class="s2"> &gt;</span><span class="nv">$cookie</span><span class="s2">;</span>
+<span class="s2">1778             echo -n </span><span class="nv">$ckv</span><span class="s2"> &gt;/root/</span><span class="si">${</span><span class="nv">cookie</span><span class="p">##*/</span><span class="si">}</span><span class="s2">;</span>
+<span class="s2">1779         chown rabbitmq.rabbitmq </span><span class="nv">$cookie</span><span class="s2">;</span>
+<span class="s2">1780         chmod 400 </span><span class="nv">$cookie</span><span class="s2"> /root/</span><span class="si">${</span><span class="nv">cookie</span><span class="p">##*/</span><span class="si">}</span><span class="s2">;</span>
+<span class="s2">1781         systemctl start rabbitmq-server&quot;</span>
+
+<span class="c1"># 再手动重新进行数据初始化</span>
+./bkcec initdata rabbitmq
+
+<span class="c1"># 初始化成功后，在/data/install/.bk_install.step文件里面，把下面的加进去，防止安装时再报错</span>
+initdata rabbitmq
+</pre></div>
+
+
+<h2 id="rabbitmq-15672">rabbitmq 15672 不存在</h2>
+<p>如果是在激活 RabbitMQ 时报错<strong>15672</strong> 端口拒绝链接，那说明 <code>rabbitmq-server</code>没有成功加载<code>rabbitmq_management</code>插件</p>
+<p>原因可能有 2 种：</p>
+<ol>
+<li>umask 不正确，导致无法访问对应目录</li>
+<li>主机名发生变更，导致节点发现异常</li>
+</ol><h1 id="redis">Redis 常见问题</h1>
+<h2 id="redis_1">Redis 密码修改</h2>
+<blockquote>
+<p>如下指引，若无特殊说明，全部在中控机<code>/data/install</code>目录进行</p>
+</blockquote>
+<h3 id="redis_2">停止 Redis</h3>
+<div class="codehilite"><pre><span></span>./bkcec stop redis
+</pre></div>
+
+
+<h3 id="redis_3">修改 Redis 密码</h3>
+<p>修改 globals.env 里的 REDIS_PASS 值，密码不要包含 [ ] / : @ ? 等特殊字符</p>
+<h3 id="install">同步 install 目录</h3>
+<div class="codehilite"><pre><span></span>./bkcec sync common
+</pre></div>
+
+
+<h3 id="_1">重新生成配置</h3>
+<div class="codehilite"><pre><span></span><span class="nb">echo</span> bkdata fta gse job cmdb paas redis <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec render
+</pre></div>
+
+
+<h3 id="_2">关闭相关服务</h3>
+<div class="codehilite"><pre><span></span><span class="nb">echo</span> bkdata fta gse job cmdb paas <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec stop
+</pre></div>
+
+
+<h3 id="zookeeper-redis">更新 ZooKeeper 内 Redis 密码</h3>
+<p>此步有 2 种方式，推荐方式 1</p>
+<p>方式 1：通过命令修改 zk 内 redis 密码</p>
+<div class="codehilite"><pre><span></span><span class="c1"># 修改方法，注意把引号内新密码调整为redis的新密码，密码不要包含 [ ] / : @ ? 等特殊字符</span>
+$ /data/bkce/service/zk/bin/zkCli.sh -server zk.service.consul:2181
+Connecting to zk.service.consul:2181
+Welcome to ZooKeeper!
+JLine support is enabled
+<span class="o">[</span>zk: zk.service.consul:2181<span class="o">(</span>CONNECTED<span class="o">)</span> <span class="m">0</span><span class="o">]</span>
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+
+<span class="c1"># 此处获取到老密码</span>
+<span class="o">[</span>zk: zk.service.consul:2181<span class="o">(</span>CONNECTED<span class="o">)</span> <span class="m">0</span><span class="o">]</span> get /gse/config/etc/dataserver/storage/all/0_1
+<span class="o">([{</span><span class="s2">&quot;host&quot;</span>:<span class="s2">&quot;redis.service.consul&quot;</span>,<span class="s2">&quot;port&quot;</span>:6379,<span class="s2">&quot;type&quot;</span>:4,<span class="s2">&quot;passwd&quot;</span>:<span class="s2">&quot;老密码位置&quot;</span><span class="o">}])</span>
+<span class="nv">cZxid</span> <span class="o">=</span> 0x100000096
+<span class="nv">ctime</span> <span class="o">=</span> Mon Aug <span class="m">20</span> <span class="m">11</span>:32:05 CST <span class="m">2018</span>
+<span class="nv">mZxid</span> <span class="o">=</span> 0x200015eec
+<span class="nv">mtime</span> <span class="o">=</span> Thu Aug <span class="m">23</span> <span class="m">19</span>:38:04 CST <span class="m">2018</span>
+<span class="nv">pZxid</span> <span class="o">=</span> 0x100000096
+<span class="nv">cversion</span> <span class="o">=</span> <span class="m">0</span>
+<span class="nv">dataVersion</span> <span class="o">=</span> <span class="m">5</span>
+<span class="nv">aclVersion</span> <span class="o">=</span> <span class="m">0</span>
+<span class="nv">ephemeralOwner</span> <span class="o">=</span> 0x0
+<span class="nv">dataLength</span> <span class="o">=</span> <span class="m">79</span>
+<span class="nv">numChildren</span> <span class="o">=</span> <span class="m">0</span>
+
+<span class="c1"># 此处使用set命令，设置新密码，严格按照上面获取的串，仅修改密码位置</span>
+<span class="o">[</span>zk: zk.service.consul:2181<span class="o">(</span>CONNECTED<span class="o">)</span> <span class="m">1</span><span class="o">]</span> <span class="nb">set</span> /gse/config/etc/dataserver/storage/all/0_1 <span class="o">[{</span><span class="s2">&quot;host&quot;</span>:<span class="s2">&quot;redis.service.consul&quot;</span>,<span class="s2">&quot;port&quot;</span>:6379,<span class="s2">&quot;type&quot;</span>:4,<span class="s2">&quot;passwd&quot;</span>:<span class="s2">&quot;新密码&quot;</span><span class="o">}]</span>
+
+<span class="c1"># 可以再查询是否为新的密码，为新的密码表示OK</span>
+<span class="o">[</span>zk: zk.service.consul:2181<span class="o">(</span>CONNECTED<span class="o">)</span> <span class="m">1</span><span class="o">]</span> get /gse/config/etc/dataserver/storage/all/0_1
+</pre></div>
+
+
+<p>方式 2：可以通过重新安装 gse 来实现</p>
+<div class="codehilite"><pre><span></span>./bkcec stop gse
+./bkcec install gse <span class="m">1</span>
+./bkcec start gse
+</pre></div>
+
+
+<h3 id="bkdata-databus">修改 bkdata databus 的配置</h3>
+<p>在 bkdata 服务器上修改<code>/data/bkce/bkdata/databus/conf/redis.cluster.properties</code>配置，新增<code>connector.redis.auth=新密码</code>配置</p>
+<p>注意新密码不要用任何符号引起来，类似单引号，双引号</p>
+<div class="codehilite"><pre><span></span>connector.redis.auth<span class="o">=</span>新密码
+</pre></div>
+
+
+<h3 id="_3">启动服务验证</h3>
+<div class="codehilite"><pre><span></span><span class="nb">echo</span> redis paas cmdb gse job bkdata fta <span class="p">|</span> xargs -n <span class="m">1</span> ./bkcec start
+</pre></div>
+
+
+<p>确保 JOB，CMDB，蓝鲸监控等模块功能全部 OK</p><h1 id="zookeeper">ZooKeeper 常见问题</h1>
+<h2 id="zookeeper_1">ZooKeeper 无法启动</h2>
+<p><strong>表象</strong></p>
+<p>使用<code>./bkcec start zk</code>提示 started，但很快 EXIT 退出</p>
+<p><strong>原因</strong></p>
+<ol>
+<li>java 是否安装正常</li>
+<li>2181 端口被占用</li>
+<li>上述 1.2 均正常，仍无法启动的异常</li>
+</ol>
+<p><strong>解决方法</strong></p>
+<p>原因 1  检查java版本及java环境是否正常</p>
+<div class="codehilite"><pre><span></span><span class="c1"># 使用java或者java -version命令来验证</span>
+$ java
+$ java -version
+</pre></div>
+
+
+<p>原因 2 检查端口是否被占用</p>
+<div class="codehilite"><pre><span></span><span class="c1"># 检查端口</span>
+$ netstat -apn <span class="p">|</span> grep <span class="m">2181</span>
+tcp        <span class="m">0</span>      <span class="m">0</span> :::2181                     :::*                        LISTEN      <span class="m">1403</span>/java
+$ <span class="nb">kill</span> -9 <span class="m">1403</span>
+$ netstat -apn <span class="p">|</span> grep <span class="m">2181</span>
+$
+<span class="c1"># 重新启动</span>
+</pre></div>
+
+
+<p>原因 3 脏数据导致启动zk失败</p>
+<p>通过查看zk日志如下报错则是zk脏数据问题</p>
+<p><code>/data/bkce/logs/zk/zookeeper.log</code></p>
+<div class="codehilite"><pre><span></span><span class="o">[</span>root@rbtnode1 /data/install<span class="o">]</span>$ cat /data/bkce/logs/zk/zookeeper.log <span class="p">|</span>grep version-2
+<span class="m">2019</span>-11-14 <span class="m">10</span>:01:16,503 <span class="o">[</span>myid:1<span class="o">]</span> - INFO  <span class="o">[</span>PurgeTask:PurgeTxnLog@147<span class="o">]</span> - Removing file: Nov <span class="m">13</span>, <span class="m">2019</span> <span class="m">6</span>:16:55 AM   /data/bkce/public/zk/datalog/version-2/log.1003bbb20
+<span class="m">2019</span>-11-14 <span class="m">10</span>:01:16,522 <span class="o">[</span>myid:1<span class="o">]</span> - INFO  <span class="o">[</span>PurgeTask:PurgeTxnLog@147<span class="o">]</span> - Removing file: Nov <span class="m">13</span>, <span class="m">2019</span> <span class="m">6</span>:16:55 AM   /data/bkce/public/zk/data/version-2/snapshot.1003cbc12
+<span class="m">2019</span>-11-14 <span class="m">10</span>:01:16,612 <span class="o">[</span>myid:1<span class="o">]</span> - INFO  <span class="o">[</span>main:FileSnap@171<span class="o">]</span> - invalid snapshot /data/bkce/public/zk/data/version-2/snapshot.1003cbc12
+java.io.FileNotFoundException: /data/bkce/public/zk/data/version-2/snapshot.1003cbc12 <span class="o">(</span>No such file or directory<span class="o">)</span>
+<span class="m">2019</span>-11-14 <span class="m">10</span>:01:16,613 <span class="o">[</span>myid:1<span class="o">]</span> - INFO  <span class="o">[</span>main:FileSnap@83<span class="o">]</span> - Reading snapshot /data/bkce/public/zk/data/version-2/snapshot.10043a527
+<span class="m">2019</span>-11-14 <span class="m">10</span>:01:18,416 <span class="o">[</span>myid:1<span class="o">]</span> - INFO  <span class="o">[</span>QuorumPeer<span class="o">[</span><span class="nv">myid</span><span class="o">=</span><span class="m">1</span><span class="o">]</span>/10.0.5.92:2181:ZooKeeperServer@173<span class="o">]</span> - Created server with tickTime <span class="m">2000</span> minSessionTimeout <span class="m">4000</span> maxSessionTimeout <span class="m">40000</span> datadir /data/bkce/public/zk/datalog/version-2 snapdir /data/bkce/public/zk/data/version-
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span><span class="c1"># 进入到zk data目录，找到zoo.conf中配置的dataDir和dataLogDir路径。然后删除两个文件夹下的version -2文件夹</span>
+$ <span class="nb">cd</span> /data/bkce/public/zk/data
+
+<span class="c1"># 把有zookeeper_server.pid以及version-X开头的文件和文件夹删掉</span>
+$ rm -rf version-1 zookeeper_server.pid
+
+<span class="c1"># 重新启动zk，即可解决</span>
+$ ./bkcec start zk
+</pre></div>
+
+
+<p>上述 3 条确认后，仍无法启动的，可能 zk.sh 版本不对，请和蓝鲸运营人员联系</p><h2 id="_1">敬请期待</h2>
+    </body>
+    </html>
+    

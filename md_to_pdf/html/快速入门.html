@@ -1,0 +1,991 @@
+
+    <html lang="zh-cn">
+    <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <link href="F:\bkdoc\md_to_pdf/default.css" rel="stylesheet">
+    </head>
+    <body>
+    <h1 id="_1">品牌简介</h1>
+<p>腾讯蓝鲸智云，简称蓝鲸，是腾讯互动娱乐事业群（Interactive Entertainment Group，简称 IEG）自研自用的一套用于构建企业研发运营一体化体系的 PaaS 开发框架，提供了 aPaaS（DevOps 流水线、运行环境托管、前后台框架）和 iPaaS（持续集成、CMDB、作业平台、容器管理、数据平台、AI 等原子平台）等模块，帮助企业技术人员快速构建基础运营 PaaS。</p>
+<p>传统的 Linux 等单机操作系统已发展数十年，随着云时代的到来，企业所需资源数暴增，操作节点（物理或虚拟服务器及容器）数量普遍达到数千个，大型互联网公司甚至达到百万级别，混合云模式成为常态，虽然 IaaS 供应商的出现从一定程度上解决了资源切割调度问题，但并未很好的解决资源与应用的融合，企业需要一种介于 IaaS 与应用（SaaS）之间的层级，用于屏蔽及控制 IaaS，快速开发及托管 SaaS，我们将其称之为基础 PaaS 层，并着重发展用于研发及托管企业内技术运营类 SaaS 的基础运营 PaaS，并将其作为区别于传统 OS 的下一代企业级分布式运营操作系统。</p>
+<p>企业 IT 应用的全生命周期可划分为研发、运维、运营三段，在各行业进行互联网化转型的过程中，融入敏捷思维，即形成持续集成、持续部署、持续运营的概念（CI-CD-CO）。</p>
+<p>为降低转型成本，不以增加人力数量为转型前提，腾讯 IEG 以运维团队作为转型起点，充分利用这一群体低价值重复性工作量占比高的特点，从 CD 领域切入，以 PaaS 技术进行运维自动化领域的烟囱治理，形成运维 PaaS 体系。将自动化所释放的人力资源，转型为运维开发团队，利用 PaaS 的自增长属性，将运维 PaaS 逐步向 CI 及 CO 拓展，最终完成企业级研发 - 运维 - 运营基础 PaaS 构建，落地企业研发运营一体化。
+腾讯蓝鲸智云秉承开放共赢的理念，招募及联合国内优质合作伙伴，以改变中国运维行业为起点，致力于推动国内企业借助研发运营一体化，低成本实现企业 IT 经营管理模式升级和自主化。</p><h1 id="_1">版本类别</h1>
+<p>腾讯蓝鲸智云有 2 个主要版本线：社区版和企业版，根据软件包的功能和技术服务提供方的不同，细分为软件基础包、软件增强包、合作商软件包。各版本的描述和产品内容详见下表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">版本类别</th>
+<th align="center">详细描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">社区版</td>
+<td align="center">可以从腾讯蓝鲸智云官方网站下载，并免费使用，用户以运维社区的个人 / 企业为主，通过社区力量，协助腾讯蓝鲸更好地验证产品的功能和性能。目前该版本的软件由基础平台（管控平台、配置平台、作业平台、PaaS 平台）和官方提供的 SaaS（节点管理、日志检索、蓝鲸监控、故障自愈、标准运维等）组成，且 PaaS 平台上可运行基于腾讯蓝鲸统一开发框架研发的各种场景 SaaS。</td>
+</tr>
+<tr>
+<td align="center">企业版</td>
+<td align="center">企业版是付费软件，通过购买 License 的方式永久授权。用户以企业客户为主。其软件产品在功能、性能、服务等方面均优于社区版。蓝鲸的 “企业版技术合作伙伴” 为软件销售和实施的授权方。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_2">软件包类别</h2>
+<table>
+<thead>
+<tr>
+<th align="center">软件包类别</th>
+<th align="center">详细描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">基础包</td>
+<td align="center">基础包是企业内落地自动化运维解决方案的基础软件，包含基础平台（管控平台、配置平台、作业平台、PaaS 平台）和官方提供的 SaaS（如：节点管理、蓝鲸监控、故障自愈、标准运维、ITSM 等）。</td>
+</tr>
+<tr>
+<td align="center">增强包</td>
+<td align="center">增强包是更高级的运维产品的集合，必须基于基础包一起使用。有蓝鲸数据平台、容器管理平台、蓝盾等。根据企业需求，可以提供给客户使用。在社区版中，目前增强包有容器管理平台。</td>
+</tr>
+<tr>
+<td align="center">合作商软件包</td>
+<td align="center">插件包是由腾讯蓝鲸合作伙伴提供的运维解决方案场景类的产品，如 Wman、OSKit、网络管理、CICDKit 等，该类产品可在已有基础包的前提下，以 “插件” 的方式，面向用户提供更多功能场景。由于开发者 / 技术服务提供方均非腾讯蓝鲸团队，涉及到合作、销售、推广等事宜需要与软件提供方商榷。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>社区版中的部分产品已开源（如：配置平台、PaaS 平台、标准运维、故障自愈），其 GitHub 项目的 release 包与社区版最新的版本包保持一致，使用过程中，请遵循《蓝鲸智云软件用户服务协议》和开源项目协议。</p>
+</li>
+<li>
+<p><a href="http://bk.tencent.com/applyinfo/ee/">蓝鲸企业版在线体验申请信息</a> |   蓝鲸智云团队面向企业出售技术解决方案，将由腾讯蓝鲸的技术合作伙伴提供专属的企业服务。请填写在线体验申请信息，工作人员将在 3-5 个工作日内与您取得联系。</p>
+</li>
+</ul><h1 id="_1">部署脚本</h1>
+<h2 id="bkcec">bkcec 说明</h2>
+<p>bkcec 是蓝鲸社区版的安装维护主脚本。</p>
+<p>bk_install 是封装了 bkcec 的集成安装脚本。</p>
+<p>bkcec 的调用语法为：<code>bkcec &lt;command&gt; &lt;module&gt; [project] [1]</code></p>
+<p>其中可用的 command 有：</p>
+<ul>
+<li><strong>sync：</strong> 从中控机的 src/ 同步安装 <code>&lt;module&gt;</code> 依赖的文件和目录到对应机器的 src/ 下。</li>
+<li><strong>install：</strong> 安装 <code>&lt;module&gt;</code> 到 $INSTALL_PATH（默认 /data/bkce）下。</li>
+<li><strong>install <module> 1：</strong> 等同于先执行 <code>sync &lt;module&gt;</code>，再执行<code>install &lt;module&gt;</code>，合二为一。</li>
+<li><strong>initdata：</strong> 安装后初始化，常用于模块的用户创建，sql 导入，权限设置等操作。</li>
+<li><strong>render：</strong> 渲染模块的模板文件，install 过程中会调用它，做模板变量替换。</li>
+<li><strong>status：</strong> 检查模块的进程是否运行。</li>
+<li><strong>start：</strong> 启动模块的进程。</li>
+<li><strong>stop：</strong> 停止模块的进程。</li>
+<li><strong>upgrade：</strong> 升级更新模块。</li>
+</ul>
+<p>其中模块名，对应 install.config 里的名称，当前社区版包含以下模块，按模块特点分为两类：</p>
+<ul>
+<li>
+<p>开源外部组件。</p>
+</li>
+<li>
+<p>蓝鲸自研产品。</p>
+</li>
+</ul>
+<h3 id="_2">开源外部组件</h3>
+<h4 id="_3">基础部分：</h4>
+<ul>
+<li>
+<p><strong>nginx：</strong> web 服务器和反向代理。</p>
+</li>
+<li>
+<p><strong>rabbitmq：</strong> 消息队列服务。</p>
+</li>
+<li>
+<p><strong>kafka：</strong> 分布式数据流处理服务。</p>
+</li>
+<li>
+<p><strong>zk：</strong> zookeeper 分布式配置服务。</p>
+</li>
+<li>
+<p><strong>es：</strong> elasticsearch 分布式搜索和数据分析引擎。</p>
+</li>
+<li>
+<p><strong>consul：</strong> 分布式服务发现和域名服务。</p>
+</li>
+<li>
+<p><strong>mongodb：</strong> 面向文档的数据库管理系统。</p>
+</li>
+<li>
+<p><strong>mysql：</strong> 关系数据库管理系统。</p>
+</li>
+<li>
+<p><strong>beanstalk：</strong> 消息队列服务。</p>
+</li>
+<li>
+<p><strong>redis：</strong> 键值对存储数据库。</p>
+</li>
+</ul>
+<h4 id="bcs">BCS 部分：</h4>
+<ul>
+<li>
+<p><strong>web_console：</strong> 是容器服务提供快捷查看集群状态的命令行服务。</p>
+</li>
+<li>
+<p><strong>cc：</strong> 容器管理平台配置中心。</p>
+</li>
+<li>
+<p><strong>monitor：</strong> 容器监控后台-用于产生告警。</p>
+</li>
+<li>
+<p><strong>thanos(rule)：</strong> 全局监控告警策略。</p>
+</li>
+<li>
+<p><strong>devops(navigator)：</strong> 提供产品导航统一框架。</p>
+</li>
+<li>
+<p><strong>grafana：</strong> 容器监控后台-用于可视化展示。</p>
+</li>
+<li>
+<p><strong>devops(pm)：</strong> 项目管理后台模块。</p>
+</li>
+<li>
+<p><strong>harbor(api)：</strong> 是蓝盾 bcs 容器服务查询 docker 镜像信息的中间件，目前只支持harbor镜像查询 ，后面有计划支持其他 docker 仓库( jfrog /腾讯云等）。</p>
+</li>
+<li>
+<p><strong>harbor(server)：</strong> Harbor 是 Vmware 公司开源的企业级 Docker Registry 管理项目。</p>
+</li>
+<li>
+<p><strong>bcs(api)：</strong> apiserver 是 bcs 容器管理平台的总接入口，是 bcs 对外暴露的唯一入口。主要功能包括：路由，服务发现，负载均衡，熔断，限流，鉴权等功能。</p>
+</li>
+<li>
+<p><strong>bcs(storage)：</strong> bcs-storage 作为 bcs 的动态数据管理，负责存储来自 mesos 和 k8s 集群上报的资源动态数据，并提供相应的查询 API 接口。</p>
+</li>
+<li>
+<p><strong>bcs(health-master)：</strong> health-master 负责整个监控服务的源数据拉取，为 health-slave 提供任务分发功能。同时负责数据的分析、聚合、 处理等。</p>
+</li>
+<li>
+<p><strong>bcs(dns-service)：</strong> 为 bcs service 下的 mesos 集群提供 DNS 服务。</p>
+</li>
+<li>
+<p><strong>bcs(health-slave)：</strong> health-slave 负责：任务获取-&gt; 执行 -&gt; 上报执行结果。</p>
+</li>
+<li>
+<p><strong>bcs(ops)：</strong> 容器服务调用标准运维作业。</p>
+</li>
+</ul>
+<h3 id="_4">蓝鲸自研产品</h3>
+<ul>
+<li>
+<p><strong>paas：</strong> 蓝鲸 PaaS 平台。</p>
+</li>
+<li>
+<p><strong>cmdb：</strong> 蓝鲸配置平台。</p>
+</li>
+<li>
+<p><strong>job：</strong> 蓝鲸作业平台。</p>
+</li>
+<li>
+<p><strong>gse：</strong> 管控平台后台。</p>
+</li>
+<li>
+<p><strong>license：</strong> 证书服务。</p>
+</li>
+<li>
+<p><strong>appo：</strong>  SaaS 部署的正式环境。</p>
+</li>
+<li>
+<p><strong>appt：</strong> SaaS 部署的测试环境。</p>
+</li>
+<li>
+<p><strong>bkdata：</strong> 数据平台基础服务。</p>
+</li>
+<li>
+<p><strong>dataapi：</strong> 数据平台 API 接口服务。</p>
+</li>
+<li>
+<p><strong>databus：</strong> 数据平台总线服务。</p>
+</li>
+<li>
+<p><strong>monitor：</strong> 监控后台。</p>
+</li>
+<li>
+<p><strong>fta：</strong> 故障自愈后台。</p>
+</li>
+</ul>
+<p><strong>启动蓝鲸监控后台服务示例： <code>./bkece start bkdata monitor</code></strong>。</p>
+<h3 id="_5">文件用途</h3>
+<h4 id="_6">脚本包的文件说明</h4>
+<ul>
+<li>
+<p><strong>RELEASE.md：</strong> 版本日志。</p>
+</li>
+<li>
+<p><strong>VERSION：</strong> 版本号。</p>
+</li>
+<li>
+<p><strong>agent_setup/：</strong> 存放安装 Agent 相关的脚本以及脚本模版。</p>
+</li>
+<li>
+<p><strong>appmgr/：</strong> 存放构建 SaaS 和运行 SaaS 所需的脚本，社区版采用 virtualenv 方式。</p>
+</li>
+<li>
+<p><strong>bk_install：</strong> 封装 bkcec 用来做集成安装部署。</p>
+</li>
+<li>
+<p><strong>bkcec：</strong> 安装和维护的主脚本。</p>
+</li>
+<li>
+<p><strong>bkco.env bkco.fc bkco_install：</strong> 网络管理模块所用的安装部署相关环境变量和函数定义。</p>
+</li>
+<li>
+<p><strong>clean.fc：</strong> 卸载清理相关函数。</p>
+</li>
+<li>
+<p><strong>configure_ssh_without_pass：</strong> 一键配置免密 ssh 登陆用的脚本。</p>
+</li>
+<li>
+<p><strong>control.rc：</strong> 定义进程启停的函数库。</p>
+</li>
+<li>
+<p><strong>crontab.rc：</strong> crontab 新增和删除相关的函数定义。</p>
+</li>
+<li>
+<p><strong>deck/saas.py：</strong> 命令行部署 SaaS 应用的工具。</p>
+</li>
+<li>
+<p><strong>deliver.rc：</strong> 定义从中控机同步文件目录到对应模块机器的函数。</p>
+</li>
+<li>
+<p><strong>dependences.env：</strong> 各模块依赖的命令和 rpm 包定义。</p>
+</li>
+<li>
+<p><strong>errors.env：</strong> 错误码定义。</p>
+</li>
+<li>
+<p><strong>functions：</strong> 通用的 bash 函数。</p>
+</li>
+<li>
+<p><strong>globals.env：</strong> 定义蓝鲸组件用到的全局变量配置。</p>
+</li>
+<li>
+<p><strong>health_check/check_proc_exists：</strong> Consul 使用的健康检查脚本。</p>
+</li>
+<li>
+<p><strong>install.config：</strong> 定义模块在主机的分布部署方式。</p>
+</li>
+<li>
+<p><strong>install_minibk：</strong> 最小化单机部署的封装脚本。</p>
+</li>
+<li>
+<p><strong>migrate/：</strong> 蓝鲸套件迁移升级的脚本，目前没有用。</p>
+</li>
+<li>
+<p><strong>parse_config：</strong> 解析 install.config 并生成 Consul 主配置和服务定义的配置， <code>config.env</code> 等文件。</p>
+</li>
+<li>
+<p><strong>pip/：</strong> 存放安装脚本所需的 pip 依赖包。</p>
+</li>
+<li>
+<p><strong>ports.env：</strong> 定义所有组件需要设定的端口信息。</p>
+</li>
+<li>
+<p><strong>process_watch + watch.rc：</strong> 进程监控脚本。</p>
+</li>
+<li>
+<p><strong>register.rc：</strong> 自动注册主机到 CMDB 的函数。</p>
+</li>
+<li>
+<p><strong>scripts/：</strong> gse_agent 和 gse_proxy 安装所需要启停脚本，在安装 GSE 时会自动打包进去。</p>
+</li>
+<li>
+<p><strong>status.rc：</strong> 检查进程状态相关的函数。</p>
+</li>
+<li>
+<p><strong>summary.rc：</strong> 打印相关模块和所有模块的版本信息。</p>
+</li>
+<li>
+<p><strong>templates/：</strong> 安装脚本初始依赖的配置模版，目前只是 Consul 的 Supervisor 配置。</p>
+</li>
+<li>
+<p><strong>templates_render.rc：</strong> 渲染配置模版，根据读取配置文件和动态生成的变量去替换模版里的占位符。</p>
+</li>
+<li>
+<p><strong>update.rc：</strong> 一些更新配置或者证书的操作定义。</p>
+</li>
+<li>
+<p><strong>upgrade.rc：</strong> 各模块的升级操作封装。</p>
+</li>
+<li>
+<p><strong>utils.fc：</strong> 安装、初始化主要函数都在这里先找。</p>
+</li>
+<li>
+<p><strong>bcs/：</strong> 存放 bcs 构建所需的脚本。</p>
+</li>
+<li>
+<p><strong>install.config.3ip.sample</strong> 部署基础不含bcs时使用。</p>
+</li>
+<li>
+<p><strong>install.config.bcs.sample</strong> 完整的基础平台+bcs方案分布。</p>
+</li>
+<li>
+<p><strong>install.config.bcs.single.sample</strong> 单机部署bcs模块分布示例。</p>
+</li>
+<li>
+<p><strong>install.config.new.sample</strong>：部署 bcs 时使用。</p>
+</li>
+</ul>
+<h3 id="_7">完成安装或日常升级后生成的文件</h3>
+<ul>
+<li>
+<p><strong>.agreed：</strong> 同意安装协议后的标记文件。</p>
+</li>
+<li>
+<p><strong>.app.token：</strong> 后台程序和 SaaS，访问 ESB 接口时需要使用的 app_code 和 app_token 的键值对。</p>
+</li>
+<li>
+<p><strong>.bk_install.step：</strong> 集成安装的步骤进度标记文件。</p>
+</li>
+<li>
+<p><strong>.controller_ip：</strong> 中控机的 IP 地址。</p>
+</li>
+<li>
+<p><strong>.migrate/：</strong> 成功导入的 sql 文件的标记文件。使用了 chattr +i，具有不可删除属性。</p>
+</li>
+<li>
+<p><strong>.path：</strong> 蓝鲸的安装路径。</p>
+</li>
+<li>
+<p><strong>.rcmdrc：</strong> 使用 rcmd()函数远程执行命令时，会加载的 rc 文件。</p>
+</li>
+<li>
+<p><strong>/tmp/bkc.log：</strong> bkcec 等脚本输出的日志。</p>
+</li>
+</ul><h1 id="_1">软件下载</h1>
+<p>安装软件需要 <a href="https://bk.tencent.com/download/">下载</a> 2 个文件：软件包、证书。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/downloadall.png" /></p>
+<ul>
+<li>软件包（完整包和分包）
+为了方便用户获取社区版软件包，提供了 2 种下载模式：完整包下载、分包下载。所以，社区版的“完整包”=“部署脚本”+“产品软件”+“开源组件”。用户可以根据自己的需要进行下载。</li>
+</ul>
+<blockquote>
+<p>部署脚本: 用于自动化安装和维护蓝鲸软件产品，属于蓝鲸软件的通用“安装和维护工具”，可以用于安装维护不同版本的产品软件，和不同版本的开源组件。
+产品软件: 是蓝鲸所有自研产品/服务的集合，包括平台级产品和 SaaS 级产品。用户可以根据需要选择更新整个产品，或者更新部分模块。
+开源组件: 提供了蓝鲸软件在使用过程中依赖的所有开源组件和配置模板，可根据需要选择下载，若涉及到开源组件的版权信息，请遵守开源协议要求。</p>
+</blockquote>
+<p>说明：首次安装用户，建议下载完整包。</p>
+<ul>
+<li>证书
+软件安装过程中，需要提供证书文件，才能确保软件的正常启动，最多输入 3 个 MAC 地址。</li>
+</ul><h1 id="_1">机器评估</h1>
+<p>对于蓝鲸部署所需的硬件配置选型，并无定规。蓝鲸由众多开源组件和自研组件构成。
+开源组件的硬件选型可以参考相应的官方文档。</p>
+<p>蓝鲸产品本身的建议配置如下：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>配置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PaaS</td>
+<td>2 核 4G</td>
+</tr>
+<tr>
+<td>CMDB</td>
+<td>2 核 2G</td>
+</tr>
+<tr>
+<td>JOB</td>
+<td>2 核 4G</td>
+</tr>
+<tr>
+<td>BKDATA</td>
+<td>4 核 12G</td>
+</tr>
+<tr>
+<td>FTA</td>
+<td>1 核 2G</td>
+</tr>
+</tbody>
+</table>
+<p>如果硬件资源富余，可以一开始拆分搭建部署。若硬件资源不足，一开始可以混合搭建，注意观测资源消耗情况，可以适时增加机器，迁移模块的方式来保证整体的可用性。</p>
+<p>资源规划是一个复杂的、动态的过程，更像是一门艺术而不是科学。</p>
+<p>这里给出的一个比较合理的初始配置，基于以下考虑：</p>
+<ol>
+<li>
+<p>分布式模块达到高可用至少三个节点，所以至少需要三个 OS (物理机或虚拟机均可)</p>
+</li>
+<li>
+<p>BKDATA 是耗费资源最多的蓝鲸组件。请分配到 4 核 16G 以上的机器。</p>
+</li>
+<li>
+<p>若日志检索，蓝鲸监控是主要使用场景，请给 influxdb 和 elasticsearch 模块更多的内存，更好磁盘性能。如 SSD。</p>
+</li>
+<li>
+<p>NGINX 模块所在的机器需要有对外提供服务，可访问的 IP。这是蓝鲸平台的总入口。</p>
+</li>
+<li>
+<p>如果需要有跨云管理需求，GSE 部署的机器需要有跨云的网络条件。</p>
+</li>
+</ol>
+<p>根据以上考虑，安装蓝鲸初始配置，请满足：</p>
+<ul>
+<li>1 台 4 核 16G</li>
+<li>2 台 4 核 8G</li>
+</ul><h1 id="_1">安装环境准备</h1>
+<p>开始安装蓝鲸社区版前，需按以下文档指南，做好准备工作。</p>
+<p><strong>注意：所有待安装蓝鲸的机器均需要按以下清单检查和操作。</strong></p>
+<h2 id="_2">获取安装包</h2>
+<p>蓝鲸社区版包含部署脚本、产品软件和开源组件。蓝鲸提供完整包与分包的下载通道，请自行到下载地址按需获取。新装环境及新用户建议下载完整包使用。</p>
+<p>下载地址：<a href="https://bk.tencent.com/download/">https://bk.tencent.com/download/</a></p>
+<p>下载完成后，请核对 MD5 码。</p>
+<h2 id="centos">CentOS 系统设置</h2>
+<p>准备好硬件，安装完原生 CentOS 系统后。我们需要对初始系统做一些配置，保证后续安装过程的顺畅和蓝鲸平台的运行。</p>
+<p><strong>系统版本：</strong> 要求 CentOS-7.0 以上版本，推荐 CentOS-7.5。</p>
+<ol>
+<li>
+<p>关闭 SELinux</p>
+<p>```bash</p>
+<h1 id="selinux">检查 SELinux 的状态，如果它已经禁用，可以跳过后面的命令</h1>
+<p>sestatus
+```</p>
+<p>可以使用以下命令禁用 SELinux，或者修改配置文件。
+```bash</p>
+<h1 id="selinux_1">通过命令禁用 SELinux</h1>
+<p>setenforce 0</p>
+<h1 id="_3">或者修改配置文件</h1>
+<p>sed -i 's/^SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+<code>接着，重启机器：</code>bash
+reboot
+```
+2. 安装 rsync 命令</p>
+<p>安装脚本依赖 rsync 分发同步文件。</p>
+<p>```bash</p>
+<h1 id="rsync-rsync">检查是否有 rsync 命令，如果有返回 rsync 路径，可以跳过后面的命令</h1>
+<p>which rsync</p>
+<h1 id="rsync">安装 rsync</h1>
+<p>yum -y install rsync
+```
+3. 关闭默认防火墙（firewalld）</p>
+<p>安装和运行蓝鲸时，模块之间互相访问的端口策略较多，建议对蓝鲸后台服务器之间关闭防火墙。</p>
+<p>```bash</p>
+<h1 id="not-running">检查默认防火墙状态，如果返回 not running，可以跳过后面的命令</h1>
+<p>firewall-cmd --state
+<code>停止并禁用 firewalld</code>bash
+systemctl stop firewalld    # 停止 firewalld
+systemctl disable firewalld # 禁用 firewall 开机启动
+```</p>
+</li>
+<li>
+<p>停止并禁用 NetWorkManager
+    <code>bash
+    systemctl stop NetworkManager 
+    systemctl disable NetworkManager</code></p>
+</li>
+<li>
+<p>调整最大文件打开数</p>
+<p>```bash</p>
+<h1 id="root-max-open-files">检查当前 root 账号下的 max open files 值</h1>
+<p>ulimit -n
+```</p>
+<p>如果为默认的 1024，建议通过修改配置文件调整为 102400 或更大。</p>
+<p><strong>注意：</strong> limits.conf 初始文件的备份。
+<code>bash
+cat &lt;&lt; EOF &gt;&gt; /etc/security/limits.conf
+root soft nofile 102400
+root hard nofile 102400
+EOF</code></p>
+<p>修改后，重新使用 root 登录检查是否生效。</p>
+</li>
+<li>
+<p>确认服务器时间同步</p>
+<p>服务器后台时间不同步会对时间敏感的服务带来不可预见的后果。务必在安装和使用蓝鲸时保证时间同步。</p>
+<p>```bash</p>
+<h1 id="3s">检查每台机器当前时间和时区是否一致，若相互之间差别大于3s（考虑批量执行时的时差），建议校时。</h1>
+<p>date -R</p>
+<h1 id="ntp-serverntpd">查看和ntp server的时间差异(需要外网访问，如果内网有ntpd服务器，自行替换域名为该服务的地址)</h1>
+<p>ntpdate -d cn.pool.ntp.org
+```</p>
+<p>如果输出的最后一行 offset 大于 1s 建议校时。
+```bash</p>
+<h1 id="ntp">和 ntp 服务器同步时间</h1>
+<p>ntpdate cn.pool.ntp.org
+```</p>
+<p>更可靠的方式包括通过运行 ntpd 或者 chrony 等服务在后台保持时间同步。具体请参考官方文档 <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/ch-configuring_ntp_using_ntpd">使用 ntpd 配置 NTP</a> 或 <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/ch-Configuring_NTP_Using_the_chrony_Suite">使用 chrony 配置 NTP</a>。</p>
+</li>
+<li>
+<p>检查是否存在全局 HTTP 代理</p>
+<p>蓝鲸服务器之间会有的 HTTP 请求，如果存在 HTTP 代理，且未能正确代理这些请求，会发生不可预见的错误。</p>
+<p>```bash</p>
+<h1 id="http_proxy-https_proxy">检查 http_proxy https_proxy 变量是否设置，若为空可以跳过后面的操作。</h1>
+<p>echo "$http_proxy" "$https_proxy"
+```
+对于本机配置 http_proxy 变量的方式，请依次查找文件 /etc/profile、/etc/bashrc、$HOME/.bashrc 等是否有设置。
+或者咨询网络管理员/IT 部门协助处理。</p>
+</li>
+</ol>
+<p>在这些主机中，选择任意一台机器作为蓝鲸的运维中控机。之后的安装命令执行，如果没有特别说明，均在这台中控机上执行。</p>
+<p>将下载的蓝鲸社区版完整包上传到中控机，并解压到 <strong>同级</strong> 目录下。以解压到 <code>/data</code> 目录为例：</p>
+<div class="codehilite"><pre><span></span>tar xf bkce_src-5.0.3.tar.gz  -C /data
+</pre></div>
+
+
+<p>解压之后，得到两个目录：src，install</p>
+<ul>
+<li>
+<p>src：存放蓝鲸产品软件，以及依赖的开源组件</p>
+</li>
+<li>
+<p>install：存放安装部署脚本、安装时的参数配置、日常运维脚本等</p>
+</li>
+</ul>
+<h2 id="yum">配置 YUM 源</h2>
+<p>在所有蓝鲸服务器上配置好 YUM 源，要求该 YUM  源包含 EPEL。</p>
+<p>不能连外网 YUM 源的环境，可以配置一个内部的 YUM  源 或者本地 YUM 源。</p>
+<h2 id="yum_1">本地 YUM 源</h2>
+<p>参考附录中的 <a href="../../场景案例/离线部署/offline_setup.md">离线安装的配置方法</a>。</p>
+<h2 id="yum_2">在线 YUM 源</h2>
+<p>推荐使用以下 YUM 源：</p>
+<ul>
+<li><a href="https://mirrors.cloud.tencent.com/help/centos.html">腾讯云 CentOS</a></li>
+<li><a href="https://mirrors.cloud.tencent.com/help/epel.html">腾讯云 EPEL</a></li>
+</ul>
+<h2 id="_4">配置文件</h2>
+<p>在 install 目录下，共有三个配置：</p>
+<ul>
+<li>install.config</li>
+<li>globals.env</li>
+<li>ports.env</li>
+</ul>
+<h3 id="installconfig">install.config</h3>
+<p><code>install.config</code> 是模块和服务器对应关系的配置文件，描述在哪些机器上安装哪些模块。
+每行两列，第一列是 IP 地址；第二列是以英文逗号分隔的模块名称。
+详情参考<code>install.config.3IP.sample</code>文件（可将 install.config.3IP.sample 复制为 install.config）。</p>
+<div class="codehilite"><pre><span></span><span class="o">[</span>bkce-basic<span class="o">]</span>
+<span class="m">10</span>.0.0.1 nginx,rabbitmq,kafka<span class="o">(</span>config<span class="o">)</span>,zk<span class="o">(</span>config<span class="o">)</span>,es,appt,fta,consul,bkdata<span class="o">(</span>databus<span class="o">)</span>
+<span class="m">10</span>.0.0.2 mongodb,appo,kafka<span class="o">(</span>config<span class="o">)</span>,zk<span class="o">(</span>config<span class="o">)</span>,es,mysql,consul,bkdata<span class="o">(</span>dataapi<span class="o">)</span>,beanstalk
+<span class="m">10</span>.0.0.3 paas,cmdb,job,gse,license,kafka<span class="o">(</span>config<span class="o">)</span>,zk<span class="o">(</span>config<span class="o">)</span>,es,redis,influxdb,consul,bkdata<span class="o">(</span>monitor<span class="o">)</span>
+</pre></div>
+
+
+<blockquote>
+<p>说明:
+- 该配置文件，ip 后面使用空格与服务名称隔开，含有多个内网 ip 的机器，默认使用 /sbin/ifconfig 输出中的第一个内网 ip，在 ip 后面写上该机器要安装的服务列表即可，部署过程中默认使用标准私有地址，若企业环境使用非标准私有地址，请参考 <strong>本章后续内容 - 非标准私有地址处理方法</strong> 的处理方法。
+- zk 表示 zookeeper， es 表示 elasticsearch。
+- gse 与 redis 需要部署在同一台机器上。
+- 增加机器数量时， 可以将以上配置中的服务挪到新的机器上，分担负载。 要保证：kafka， es， zk 的每个组件的总数量为 3。</p>
+</blockquote>
+<h3 id="globalsenv">globals.env</h3>
+<p>该文件定义了各类组件的账号密码信息。 功能开关控制选项等。可根据实际情况进行修改。
+配置项含义，请查看文件中的注释。</p>
+<ul>
+<li>该文件含密码信息，请保证除了 root 用户外，其他用户不可读。</li>
+<li>各类账号密码建议修改，注意设置的各类密码不能有 / $  ` &lt; &gt; &amp; 等特殊字符。</li>
+<li>配置 HTTP 代理：若公司不能访问外网，但有自己的 proxy，在该配置文件的 BK_PROXY 选项中指定代理地址。</li>
+<li>若需要跨云管理功能(服务器在不同的 IDC，内网不互通的情况):</li>
+<li>需要将 gse 所在机器的外网 IP 填到该文件中 GSE_WAN_IP 配置项中的括号里 如：<code>export GSE_WAN_IP=(1.2.3.4)</code>，若没有外网 IP 则留空。</li>
+<li><code>HAS_DNS_SERVER</code> 配置默认为 0，表示配置的蓝鲸域名需要通过 /etc/hosts 来解析，此时部署脚本会自动修改每台机器的 /etc/hosts 添加相关域名。如果想走自己的 dns 配置，改为非 0 即可。</li>
+<li><code>HTTP_SCHEMA=http</code>  默 认 HTTP_SCHEMA 设置为  HTTP 即蓝鲸软件全站为  HTTP，若设置为 HTTPS 则蓝鲸软件全站为 HTTPS，可支持 HTTP 和 HTTPS 的切换。</li>
+<li>该配置文件中提供了访问蓝鲸三大平台的域名配置，需要提前准备好。</li>
+</ul>
+<p><code>bash
+  export BK_DOMAIN="bk.com"                # 蓝鲸根域名(不含主机名)
+  export PAAS_FQDN="paas.$BK_DOMAIN"       # PAAS 完整域名
+  export CMDB_FQDN="cmdb.$BK_DOMAIN"       # CMDB 完整域名
+  export JOB_FQDN="job.$BK_DOMAIN"         # JOB 完整域名</code></p>
+<blockquote>
+<p>说明：
+1. BK_DOMAIN 的值不能为 "com" "net" 这种顶级域名，至少二级域名开始。
+2. FQDN 的选择需要遵循 DNS 的命名规范，可选的字符集是 [A-Za-z0-9.] 以及 "-"，特别要注意，下划线 (_) 是不允许的。
+3. PAAS_FQDN CMDB_FQDN JOB_FQDN 的值都必须在 BK_DOMAIN 定义的根域名之下，保证登陆鉴权的 cookie 文件有效。</p>
+</blockquote>
+<h3 id="portsenv">ports.env</h3>
+<p>端口定义。 默认情况下，不用修改。特殊场景下，若有端口冲突，可以自行定义。</p>
+<h2 id="_5">非标准私有地址处理方法</h2>
+<p>蓝鲸社区版部署脚本中(install 目录)下有以下文件中有获取 ip 的函数 get_lan_ip，非标准地址，均需要在安装部署前完成修改。</p>
+<div class="codehilite"><pre><span></span>./appmgr/docker/saas/buildsaas
+./appmgr/docker/build
+./functions
+./scripts/gse/server/gsectl
+./scripts/gse/plugins/reload.sh
+./scripts/gse/plugins/start.sh
+./scripts/gse/plugins/stop.sh
+./scripts/gse/agent/gsectl
+./scripts/gse/proxy/gsectl
+./scripts/gse/agentaix/gsectl.ksh
+./agent_setup/download#agent_setup_pro.sh
+./agent_setup/download#agent_setup_aix.ksh
+./agent_setup/download#agent_setup.sh
+</pre></div>
+
+
+<p>这些文件列表，可能随版本迭代变动，也可以用以下命令查找出来包含这个函数的脚本文件有哪些：</p>
+<div class="codehilite"><pre><span></span>grep -l <span class="s1">&#39;get_lan_ip *()&#39;</span> -r /data/install
+</pre></div>
+
+
+<p>修改方法：</p>
+<p>假设服务器的的 ip 是：138.x.x.x，它不在标准的私有地址范围，那么你需要修改 get_lan_ip() 函数为：</p>
+<div class="codehilite"><pre><span></span>get_lan_ip  <span class="o">()</span> <span class="o">{</span>
+...省略
+               <span class="k">if</span> <span class="o">(</span><span class="nv">$3</span> ~ /^10<span class="se">\.</span>/<span class="o">)</span> <span class="o">{</span>
+                   print <span class="nv">$3</span>
+               <span class="o">}</span>
+               <span class="k">if</span> <span class="o">(</span><span class="nv">$3</span> ~ /^138<span class="se">\.</span>/<span class="o">)</span> <span class="o">{</span>
+                   print <span class="nv">$3</span>
+               <span class="o">}</span>
+          <span class="o">}</span><span class="err">&#39;</span>
+
+   <span class="k">return</span> <span class="nv">$?</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="pipconf">pip.conf</h2>
+<p>在线安装时，依赖 pip，需要配置可用的 pip 源。</p>
+<div class="codehilite"><pre><span></span>vim /data/src/.pip/pip.conf
+
+<span class="o">[</span>global<span class="o">]</span>
+index-url <span class="o">=</span> https://mirrors.cloud.tencent.com/pypi/simple
+trusted-host <span class="o">=</span> mirrors.cloud.tencent.com
+</pre></div>
+
+
+<ul>
+<li>
+<p>设置为能连上的 pip 源，以腾讯云镜像源加速 pip 为例。默认的 pip 源配置通常无法使用，验证方式如下。</p>
+</li>
+<li>
+<p>在每台机器上对 <code>pip.conf</code> 中配置的 url 进行操作：<code>curl http://xxxxxxx</code>，若能正常返回列表信息则为成功。</p>
+</li>
+</ul>
+<h2 id="_6">获取证书</h2>
+<ol>
+<li>
+<p>通过 <code>ifconfig</code> 或者 <code>ip addr</code> 命令获取 install.config 文件中，license 和 gse 模块所在服务器的第一个内网网卡的 MAC 地址。如果分别属于两台服务器，那么两个的 MAC 地址以英文;分隔。</p>
+</li>
+<li>
+<p>在官网 <a href="https://bk.tencent.com/download_ssl/">证书生成页面</a> 根据输入框提示填入 MAC 地址，生成并下载证书。</p>
+</li>
+<li>
+<p>上传证书到中控机，并解压到 <code>src/cert</code> 目录下。</p>
+<p><code>bash
+tar xf ssl_certificates.tar.gz -C /data/src/cert/</code></p>
+</li>
+</ol>
+<h2 id="ssh">配置 SSH 免密登陆</h2>
+<p>登录到中控机，执行以下操作：</p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> /data/install
+bash configure_ssh_without_pass  <span class="c1"># 根据提示输入各主机的 root 密码完成免密登陆配置</span>
+</pre></div>
+
+
+<h2 id="_7">安装前校验环境是否满足</h2>
+<p>按文档要求做完环境和部署的配置后，准备开始安装前，请运行以下脚本，来校验是否满足：</p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> /data/install
+bash precheck.sh
+</pre></div>
+
+
+<p>正常输出如下图所示：</p>
+<div class="codehilite"><pre><span></span>start <span class="s">&lt;&lt;check_ssh_nopass&gt;&gt; ... [OK]</span>
+<span class="s">start &lt;&lt;check_password&gt;&gt; ... [OK]</span>
+<span class="s">start &lt;&lt;check_cert_mac&gt;&gt; ... [OK]</span>
+<span class="s">start &lt;&lt;check_get_lan_ip&gt;&gt; ... [OK]</span>
+<span class="s">start &lt;&lt;check_install_config&gt;&gt; ... [OK]</span>
+<span class="s">start &lt;&lt;check_s</span>elinux&gt;&gt; ... <span class="o">[</span>OK<span class="o">]</span>
+start <span class="s">&lt;&lt;check_umask&gt;&gt; ... [OK]</span>
+<span class="s">start &lt;&lt;check_</span>rabbitmq_version&gt;&gt; ... <span class="o">[</span>OK<span class="o">]</span>
+start <span class="s">&lt;&lt;check_http_proxy&gt;&gt; ... [OK]</span>
+<span class="s">start &lt;&lt;check_</span>open_files_limit&gt;&gt; ... <span class="o">[</span>OK<span class="o">]</span>
+start <span class="s">&lt;&lt;check_domain&gt;&gt; ... [OK]</span>
+<span class="s">start &lt;&lt;check_</span>rsync&gt;&gt; ... <span class="o">[</span>OK<span class="o">]</span>
+start <span class="s">&lt;&lt;check_service_dir&gt;&gt; ... [OK]</span>
+<span class="s">start &lt;&lt;check_</span>networkmanager&gt;&gt; ... <span class="o">[</span>OK<span class="o">]</span>
+start <span class="s">&lt;&lt;chec</span>k_firewalld&gt;&gt; ... <span class="o">[</span>OK<span class="o">]</span>
+</pre></div>
+
+
+<p>如果发现有 [FAIL] 的报错，按照提示和本文档修复。修复后，可继续跑 precheck.sh 脚本，直到不再出现 [FAIL]。如果需要从头开始检查，请使用 <code>precheck.sh -r</code> 参数。</p><h1 id="_1">单机部署</h1>
+<p>单机部署方案是针对新老用户快速低成本的搭建一套精简版的蓝鲸社区版推出的。</p>
+<p>从社区版 4.1.11 版本开始，支持完整版本蓝鲸的单机部署体验，前提要求是，单机 CPU 不低于 2 核，可用内存不低于 16GB。
+若机器性能没满足要求，只能部署精简版的蓝鲸平台。</p>
+<p>精简版蓝鲸平台满足简单的运维场景需求，包含：PaaS 平台，配置平台，作业平台，以及安装  Agent 用的 节点管理 SaaS。</p>
+<h2 id="_2">部署方式</h2>
+<ul>
+<li>
+<p><a href="https://cloud.tencent.com/developer/labs/lab/10386">腾讯云实验室</a></p>
+</li>
+<li>
+<p>自行提供主机</p>
+</li>
+</ul>
+<h2 id="_3">自行提供主机</h2>
+<p>按照安装 <a href="../../基础包安装/环境准备/get_ready.md">环境准备</a> 章节中，主机和系统环境的要求做好相应设置。</p>
+<ul>
+<li>环境准备</li>
+<li>
+<p>准备一台 CentOS 7 以上操作系统的机器（物理机和虚拟机均可）。</p>
+</li>
+<li>
+<p>按照安装 <a href="../../基础包安装/环境准备/get_ready.md">环境准备</a> 章节中，主机和系统环境的要求做好相应设置。</p>
+</li>
+<li>
+<p>配置好 YUM 源，包含 EPEL 仓库（可以通过 <code>yum info nginx</code> 测试下）。</p>
+</li>
+<li>
+<p>从 <a href="http://bk.tencent.com/download/">官网下载</a> 完整包，并解压到 /data/ 下。</p>
+<p><code>bash
+$ tar xf bkce_src-5.0.3.tar.gz  -C /data</code></p>
+</li>
+<li>
+<p>获取机器的 MAC 地址后，下载 <a href="https://bk.tencent.com/download_ssl/">证书文件</a>，解压到 src/cert 目录下
+    <code>bash
+    $ tar xf ssl_certificates.tar.gz -C /data/src/cert</code></p>
+</li>
+<li>
+<p>配置参数</p>
+</li>
+<li>
+<p>install.config 这个文件安装脚本会自动生成，无需自行配置。</p>
+</li>
+<li>
+<p>globals.env 重点关注域名和 GSE 外网 IP 相关的配置，详情参考 <a href="../../基础包安装/环境准备/get_ready.md#configs">环境准备-配置文件</a> 一节。</p>
+</li>
+<li>
+<p>ports.env 一般不用修改。</p>
+</li>
+<li>
+<p>执行安装</p>
+</li>
+</ul>
+<p>如果部署全部组件，请执行：
+  <code>bash
+  $ cd /data/install
+  $ ./install_minibk -y</code></p>
+<p>如果按需部署，假设只需要 PaaS，CMDB，JOB 平台，请执行：
+  <code>bash
+  $ cd /data/install
+  $ ./install_minibk
+  $ ./bk_install paas &amp;&amp; ./bk_install cmdb &amp;&amp; ./bk_install job</code></p>
+<p>安装过程中遇到失败的情况，请先定位排查解决后，再重新运行失败时的安装指令。</p>
+<h2 id="_4">访问蓝鲸</h2>
+<p>根据 <code>install/globals.env</code> 里配置的 PaaS 域名(PAAS_FQDN)、账号 (PAAS_ADMIN_USER)、密码(PAAS_ADMIN_PASS)信息，登录访问(若域名没设置 DNS 解析，需配置本机 hosts)。</p>
+<ul>
+<li>域名信息</li>
+</ul>
+<p><code>bash
+  export BK_DOMAIN="xxx.com"
+  export PAAS_FQDN="paas.$BK_DOMAIN"
+  export CMDB_FQDN="cmdb.$BK_DOMAIN"
+  export JOB_FQDN="job.$BK_DOMAIN"</code></p>
+<ul>
+<li>账号信息</li>
+</ul>
+<p><code>bash
+  export PAAS_ADMIN_USER=admin
+  export PAAS_ADMIN_PASS="xxx"</code></p>
+<p>日常维护和运维，单机部署和多机是一致的，请参考 <a href="../../维护手册/日常维护/maintain.md">维护文档</a>。</p>
+<h2 id="_5">使用蓝鲸</h2>
+<p>请参考蓝鲸各 <a href="https://bk.tencent.com/docs/">产品白皮书</a>。</p><h1 id="_1">环境验证</h1>
+<h2 id="_2">从后台验证环境是否安装正常</h2>
+<ol>
+<li>登录到中控机，通过脚本自带的命令查询蓝鲸后台模块的运行状态</li>
+</ol>
+<div class="codehilite"><pre><span></span><span class="c1"># 加载环境变量和蓝鲸安装维护的函数</span>
+<span class="nb">source</span> /data/install/utils.fc
+
+<span class="c1"># 查看运行状态</span>
+./bkcec status all
+</pre></div>
+
+
+<p><img alt="后台状态图1" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/check1.png" />
+<img alt="后台状态图2" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/check2.png" />
+如上图所示，所有模块状态都是 <code>RUNNING</code> 则说明蓝鲸社区版后台模块部署正常。</p>
+<ol>
+<li>
+<p>检查 BKDATA 清洗数据的任务是否正常启动</p>
+</li>
+<li>
+<p>社区版 V5.0 及更早版本，在部署 BKDATA 的主机上执行:</p>
+</li>
+</ol>
+<p><code>bash
+  # 检查是否有包含 databus_etl 的任务
+  crontab -l</code></p>
+<ul>
+<li>
+<p>社区版 V5.1 及之后版本，在部署完 BKDATA 后，检查进程  <code>run_cron</code> 是否存活:</p>
+</li>
+<li>
+<p>检查 BKDATA 运行状态
+  ```bash
+  # 从中控机中跳转到 BKDATA Svr，执行检查脚本检查接口，无报错即正常</p>
+</li>
+</ul>
+<p>ssh $BKDATA_IP
+  ./data/bkce/bkdata/dataapi/bin/check_xxx.sh
+  ```
+<img alt="bkdata检查脚本执行结果" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/check3.png" /></p>
+<ol>
+<li>
+<p>检查 Agent 状态是否正常：</p>
+</li>
+<li>
+<p>在中控机执行</p>
+</li>
+</ol>
+<p>```bash
+  ./bkcec status gse_agent</p>
+<p># 返回 “Running” 说明 Agent 状态正常
+  # 如果返回 "Exit" 则需要手动安装或者启动
+  # 手动安装
+  ./bkcec install gse_agent
+  # 启动
+  ./bkcec start gse_agent
+  ```</p>
+<ol>
+<li>
+<p>检查健康状态 API：</p>
+</li>
+<li>
+<p>蓝鲸产品后台提供了健康检查的接口，用 HTTP GET 请求访问，接口地址和端口用变量表达：</p>
+</li>
+</ol>
+<p>```bash
+  cd /data/install &amp;&amp; source utils.fc</p>
+<p># PaaS 注意 URL 末尾带上/
+  curl http://$PAAS_FQDN:$PAAS_HTTP_PORT/healthz/</p>
+<p># CMDB(beta)，目前版本不够准确
+  curl http://$CMDB_IP:$CMDB_API_PORT/healthz</p>
+<p># JOB
+  curl http://$JOB_FQDN:$PAAS_HTTP_PORT/healthz
+  ```</p>
+<ul>
+<li>蓝鲸监控 SaaS 的监控检查接口，可以用浏览器直接访问:</li>
+</ul>
+<div class="codehilite"><pre><span></span>http://<span class="nv">$PAAS_FQDN</span>:<span class="nv">$PAAS_HTTP_PORT</span>/o/bk_monitor/healthz/
+</pre></div>
+
+
+<h2 id="_3">从页面验证功能是否运行正常</h2>
+<p>请先 <strong>配置 host 或者 DNS</strong> 解析后，确认访问社区版域名（部署完成后提示的域名）是否正常。</p>
+<ul>
+<li>配置 host / DNS 解析：配置 DNS 服务或者在本地配置 host 解析请参照 蓝鲸配置文件 global.env 或者中控机下 <code>/etc/hosts</code>。</li>
+</ul>
+<p>从蓝鲸工作台-开发者中心-服务器中检查 <strong>正式服务器</strong> 是否激活。</p>
+<p><img alt="APPO状态检查图" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/paas_appostatuscheck.png" /></p>
+<p>从蓝鲸工作台-开发者中心-第三方服务中检查 <strong>RabbitMQ 服务</strong> 是否激活。</p>
+<p><img alt="RabbitMQ状态检查图" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/paas_rabbitmqstatuscheck.png" /></p>
+<p>登录蓝鲸，从各 SaaS 验证环境功能是否运行正常。</p>
+<blockquote>
+<p>产品功能介绍&amp;使用手册请参考各 <a href="https://bk.tencent.com/docs/">产品白皮书</a></p>
+</blockquote><h1 id="_1">快速使用</h1>
+<p>为了验证刚部署安装的环境是否正常，除了从后台验证，也需要从页面上进行功能性的验证。</p>
+<h2 id="_2">创建业务</h2>
+<ul>
+<li>首先在配置平台(CMDB) 上新建一个任务，将 admin 添加至运维人员。</li>
+</ul>
+<p><img alt="添加业务" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/add_business.png" /></p>
+<ul>
+<li>在业务下新建集群以及模块。(蓝鲸业务不支持集群及模块操作)</li>
+</ul>
+<p><img alt="添加模块" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/add_modul.png" /></p>
+<p><strong>下述步骤需在节点管理完成后操作。</strong></p>
+<ul>
+<li>成功安装完 Agent后，在 配置平台(CMDB) 中的对应业务下，则会出现安装好 Agent 的主机。</li>
+</ul>
+<p><img alt="主机" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/hosts.png" /></p>
+<ul>
+<li>将资源池下的主机移动到模块下。</li>
+</ul>
+<p><img alt="分配主机" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/dis_host.png" /></p>
+<h2 id="agent">安装 Agent</h2>
+<ul>
+<li>在对应业务下安装主机 Agent。</li>
+</ul>
+<p><img alt="安装agent" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/agent.png" /></p>
+<p><img alt="成功安装agent" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/success_agent.png" /></p>
+<ul>
+<li>Agent 安装成功后查看下采集器是否正常。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/agent_status.png" /></p>
+<h2 id="_3">执行作业</h2>
+<ul>
+<li>测试快速执行脚本可用性。</li>
+</ul>
+<p><img alt="快速执行作业脚本" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/exec_job.png" /></p>
+<ul>
+<li>查看作业执行情况。</li>
+</ul>
+<p><img alt="作业执行成功" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/job_success.png" /></p>
+<ul>
+<li>测试快速分发文件可用性。</li>
+</ul>
+<p>上传测试文件，分发至目标主机。</p>
+<p><img alt="快速分发文件" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/exec_file.png" /></p>
+<p>查看文件分发情况。</p>
+<p><img alt="文件分发成功" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/file_success.png" /></p>
+<p>查看目标主机路径下是否存在该文件。</p>
+<p><img alt="主机存在文件" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/exist_file.png" /></p>
+<ul>
+<li>测试定时作业可用性。</li>
+</ul>
+<p>左侧导航栏选择【新建作业】，作业新建完成后，选择【定时作业】进行添加定时作业任务。然后启动任务。</p>
+<p><img alt="定时作业" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/add_script.png" /></p>
+<p><img alt="新建定时作业" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/job_Timeing.png" /></p>
+<p>左侧导航栏选择【执行历史】查看定时作业执行情况。</p>
+<p><img alt="定制作业执行情况" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/Timejobsuccess.png" /></p>
+<h2 id="_4">创建流程</h2>
+<ul>
+<li>
+<p>新建一个业务流程模板。</p>
+<p>选择【快速执行脚本】，输入脚本内容，目标 IP 通过变量进行传入，类型选择【IP 选择器】，<a href="https://github.com/Tencent/bk-sops/blob/V3.3.X/docs/features/variables_engine.md#ip%E9%80%89%E6%8B%A9%E5%99%A8%E7%AE%80%E5%8D%95%E7%89%88">IP 选择器（简单版）跟 IP 选择器的区别</a> 。</p>
+</li>
+</ul>
+<p><img alt="新建流程模版" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/add_sops.png" /></p>
+<ul>
+<li>新建并认领流程任务。</li>
+</ul>
+<p><img alt="新建" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/add_sops_task.png" /></p>
+<p><img alt="认领任务" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/select_sops_task.png" /></p>
+<ul>
+<li>查看参数无误并执行任务。</li>
+</ul>
+<p><img alt="执行任务" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/view_para.png" /></p>
+<ul>
+<li>任务执行完成后，点击步骤可以查看执行的详细信息。点击对应链接可以跳转至作业平台查看作业执行情况及信息。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/sops_task_situation.png" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/sops_task_situation2.png" /></p>
+<h2 id="_5">主机监控</h2>
+<ul>
+<li>查看蓝鲸获取主机信息，主机状态，主机监控，服务状态图情况。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/bk_monitor.png" /></p>
+<h2 id="_6">故障自愈</h2>
+<ul>
+<li>创建自愈套餐(如果不创建也可以自行使用默认套餐)。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/fta.png" /></p>
+<ul>
+<li>接入自愈。蓝鲸监控模拟告警，看故障自愈是否能够获取到告警并实现自愈。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/add_fta.png" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/部署维护/assets/fta_source.png" /></p><h2 id="_1">更多信息</h2>
+<p>说明：“快速入门”是蓝鲸软件的一个基础操作，并不能涵盖所有的内容，通过下面文章介绍，可以获取更多信息。</p>
+<ul>
+<li>
+<p>部署维护：蓝鲸支持多机部署，详见<a href="5.1/部署维护/README.md">部署维护</a>的内容。</p>
+</li>
+<li>
+<p>场景案例：为了方便用户获取蓝鲸软件的最佳实践，提供了覆盖CI、CD、CO领域的<a href="5.1/bk_solutions/Getting_started/Getting_started.md">实践案例</a>。</p>
+</li>
+<li>
+<p>开发指南：软件支持私有化部署，提供的是通用的服务，若需要进行定制化服务，提供了<a href="5.1/开发指南/开发简介/README.md">二次开发</a>的教程。</p>
+</li>
+<li>
+<p>常见问题：提供了丰富的<a href="5.1/常见问题/README.md">问题库</a>。 </p>
+</li>
+</ul>
+    </body>
+    </html>
+    

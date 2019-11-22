@@ -1,0 +1,4106 @@
+
+    <html lang="zh-cn">
+    <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <link href="F:\bkdoc\md_to_pdf/default.css" rel="stylesheet">
+    </head>
+    <body>
+    <h1 id="_1">产品介绍</h1>
+<h2 id="_2">产品概述</h2>
+<p>作业平台（JOB）是一套基于蓝鲸智云管控平台 Agent 管道之上的基础操作平台，具备万级并发处理能力。除了支持脚本执行、文件拉取 / 分发、定时任务等一系列可实现的基础运维场景以外，还运用流程化的理念很好的将零碎的单个任务组装成一个作业流程。而每个任务都可做为一个原子节点，提供给其它系统和平台调度，实现调度自动化。</p>
+<h2 id="_3">产品定位</h2>
+<p>除了批量执行的万级高并发性能优势，作业平台还支持复杂的运维操作场景，定制作业功能将一个操作流程制作成完整的作业任务，丰富的 API 开放接口使得作业任务原子化，提供给其它系统或平台进行调度，进一步扩大了业务使用场景。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/14925991385140.jpg" /></p>
+<h2 id="_4">功能概要</h2>
+<table><tbody>
+<tr><td>    特性  </td><td>   子特性 </td><td>   功能描述    </td></tr>
+<tr><td rowspan="5">    作业执行    </td><td>   快速脚本执行  </td><td>   可通过手动编写、从已有的脚本克隆、从本地上传、从公共脚本选择四种方式导入脚本并批量执行。    </td></tr>
+<tr><td>    快速分发文件  </td><td>   支持本地上传和服务器上选择两种方式，除了一对多，还可以多对多、多对一形式进行文件分发。 </td></tr>
+<tr><td>    常用作业执行  </td><td>   查看已经保存的作业任务，可进行 “立即执行、定时启动、编辑、克隆、删除” 操作。    </td></tr>
+<tr><td>    新建作业    </td><td>   将多个脚本执行或文件分发的节点结合在一个流程步骤内，形成一个新建的作业任务。  </td></tr>
+<tr><td>    定时作业    </td><td>   对已创建的作业任务进行定时启停，可修改和删除。 </td></tr>
+<tr><td>    业务管理    </td><td>   脚本管理    </td><td>   支持对作业下的脚本进行查询、新建、执行、编辑和删除。  </td></tr>
+
+<tr><td>    执行历史    </td><td>   执行历史    </td><td>   对所有在作业平台执行过的脚本执行、文件分发、API  调用、定时任务等操作进行记录，方便查看详情。   </td></tr>
+
+<tr><td rowspan="2">    个人设置    </td><td>   通知管理    </td><td>   针对作业执行成功、失败、等待执行等三类场景进行通知，确保完成整个作业执行流程。 </td></tr>
+<tr><td>    个人设置    </td><td>   支持作业执行的一些默认设置、安全设置和作业迁移服务的迁入和迁出。    </td></tr>
+
+<tr><td rowspan="3">    管理员入口   </td><td>   公共脚本    </td><td>   支持对公共脚本的查询、新建、执行、编辑和删除。 </td></tr>
+<tr><td>    账户管理    </td><td>   对服务器上的账户和针对 SQL 执行功能的 DB 账户（仅企业版支持）进行管理如查询、添加、编辑和删除。    </td></tr>
+<tr><td>    IP 白名单  </td><td>   支持 IP 白名单的查询、新建、编辑和删除。  </td></tr>
+
+</tbody></table><h1 id="_1">核心优势</h1>
+<h2 id="_2">传输文件更灵活、快速</h2>
+<p>作业平台的任务执行和文件传输都是基于 Agent 触发的，Agent 使用 BT（BitTorrent） 方案应对大文件传输，使得文件拉取和传输更加高速、效率。</p>
+<h2 id="web">更清晰的 web 化脚本管理</h2>
+<p>云化脚本管理模式，帮助运维团队协作管理更清晰；多个协作者可借助平台进行脚本共享使用，除了脚本单独执行外，也可将多个脚本或文件传输流程串接组合成作业任务。</p>
+<h2 id="_3">万级并发，让批量执行更高效</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/14956348984203.gif" /></p>
+<h2 id="_4">流程式管理，一切皆 “作业”</h2>
+<p>面对特定的版本发布或变更的特性场景下，我们往往需要执行多个步骤；例如，停进程、拉取版本文件、分发版本文件到各个节点机器，最后再拉起进程正式对外服务；这就需要很多个步骤执行动作，你也可以选择将所有步骤封装成一个大脚本，但这太低效了，并且维护成本会很高。</p>
+<p>作业平台的作业管理模块很好的解决了这个问题，用户只需要将某一个特定业务场景的脚本或文件传输操作，按照顺序组装定制成一个作业任务，以后便可一键完成整套操作，即方便又便于管理。</p>
+<h2 id="timing">“秒级定时”，任务执行 Timing 更精准</h2>
+<p>突破了传统 Linux 系统自带的分钟级定时任务，作业平台能够支持到以秒为最小时间粒度的定时任务计划；且每个定时任务执行过程都会被记录日志，让一切操作都可追溯。</p>
+<h2 id="api">开放 API 接口，以原子形态连接一切</h2>
+<p>作业平台还开放了 API 接口，以原子节点的形态开放提供给其它系统或平台进行调度，真正意义上的 “连接一切”。</p><h1 id="_1">术语解释</h1>
+<ul>
+<li>
+<p><strong>脚本：</strong> 指运维工程师编写的可以运行在终端的工具脚本，包括 Shell、Perl、Bat、PowerShell、Python 等类型脚本。</p>
+</li>
+<li>
+<p><strong>公共脚本：</strong> 管理员根据业务需要创建一些公共脚本，其他人员可在任意业务下直接引用。</p>
+</li>
+<li>
+<p><strong>文件：</strong> 蓝鲸作业平台支持分发本地文件、服务器/远程文件两种类型。</p>
+</li>
+<li>
+<p><strong>作业：</strong> 将执行脚本步骤、分发文件步骤组装成一个任务流程，这个流程称为作业，组装作业的过程称为编排。</p>
+</li>
+<li>
+<p><strong>定时作业：</strong> 可以将创建好的作业设成定时执行。</p>
+</li>
+<li>
+<p><strong>云区域：</strong> 用于区分不同子网段的 IP，不同云区域的 IP 可以重复，同一个云区域下的 IP 可相互通信。</p>
+</li>
+<li>
+<p><strong>服务器帐户：</strong> 指在服务器上创建的帐户，如 root。</p>
+</li>
+</ul><h1 id="_1">产品架构图</h1>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/架构图.png" /></p>
+<p>作业平台分为 Web 层和后台任务调度层，并通过消息队列来消费任务，任务执行依赖底层的管控平台，管控平台采用 C/S 架构，用户只需要在目标机上安装蓝鲸 Agent，即可通过作业平台实现脚本执行或文件分发。</p><h1 id="_1">首页</h1>
+<p>作业平台提供了作业总览视图，通过总览视图能够直观明了的查看当前 IT 环境中的业务主机数，常用作业数，近 30 天的任务数，定时任务数，历史任务执行情况，任务执行时长统计，最近任务执行记录等。IT 运维人员能够做到对于基础作业情况一目了然。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/业务总览.png" /></p><h1 id="_1">快速脚本执行</h1>
+<p>可通过手动编写、从已有的脚本克隆、从本地上传、从公共脚本选择四种方式导入脚本并批量执行。</p>
+<p>很大程度上，解决了需要手动在多台机器上执行统一脚本的缓慢繁琐。只要能够读取主机信息以及 Agent 的状态是正常的，那么均可一键执行脚本，作业更快速高效。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/快速脚本执行.png" /></p><h1 id="_1">快速分发文件</h1>
+<p>支持本地上传和服务器上选择两种方式，除了一对多，还可以多对多、多对一形式进行文件分发至服务器上（Linux/Windows）。
+传输文件更灵活、快速。作业平台的任务执行和文件传输都是基于 Agent 触发的，Agent 使用 BT（BitTorrent） 方案应对大文件传输，使得文件拉取和传输更加高速、效率。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/快速分发文件.png" /></p><h1 id="_1">常用作业执行</h1>
+<p>常用作业的功能引入了流程编排的理念，将原子任务组装成一个复杂的运维场景，比如版本发布、变更、扩容，也可以把原子任务提供给上层 SaaS（如标准运维、故障自愈等）实现调度自动化。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/常用作业执行.png" /></p>
+<p>用户在创建一个作业且保存后，在常用作业执行的作业列表里面可见，未保存执行过的作业则在执行历史的列表里面可见。支持 <code>立即执行、定时启动、编辑、克隆、删除</code> 操作。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/14956348984203.gif" /></p><h1 id="_1">新建作业</h1>
+<p>流程式管理，一切皆 “作业” 。将多个脚本执行或文件分发的节点结合在一个流程步骤内，形成一个新建的作业任务。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/新建作业.png" /></p>
+<p>万级并发，不再限于单台执行。让批量执行更高效。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/14956348984203.gif" /></p><h1 id="_1">定时作业</h1>
+<p>“秒级” 定时，任务执行 Timing 更精准。突破了传统 Linux 系统自带的分钟级定时任务，作业平台能够支持到以秒为最小时间粒度的定时任务计划。且每个定时任务执行过程都会被记录日志，让一切操作都可追溯。对已创建的作业任务进行定时启停，可修改和删除。</p>
+<p><img alt="定时作业" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/定时作业.png" /></p>
+<p>定时任务类似于Linux下crontab语法，分别为<code>秒 分钟 小时 天 月 星期 年</code>，其中</p>
+<ul>
+<li>用<code>*</code>表示每个周期</li>
+<li>用<code>0/5</code> 从0开始，每隔5的周期</li>
+<li>用<code>0,1,2,3</code>表示指定周期0,1,2,3</li>
+<li>定时规则，选<code>勾选</code>时从0秒开始执行，如需从指定的秒执行，选择自定义</li>
+<li>定时规则，选<code>勾选</code>时默认无指定年的功能，如需指定年，选择自定义</li>
+</ul>
+<p><img alt="定时作业" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/定时作业2.png" /></p><h1 id="_1">脚本管理</h1>
+<p>支持在平台上直接新建、编辑和删除脚本。还支持从现有脚本克隆以及从本地上传脚本。支持快速查找新建好的脚本，规范管理生产上或者测试环境上的脚本。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/脚本管理.png" /></p><h1 id="_1">执行历史</h1>
+<p>所有类型的作业执行均有历史记录，记录着详细的作业信息，方便事后核查和审计。</p>
+<p>对所有在作业平台执行过的脚本执行、文件分发、API 调用、定时任务等操作进行记录，点击每个作业任务的【查看详情】，能够看到该任务的具体基本信息。点击【执行详情】，可以看到该任务完整的执行结果和执行日志。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/执行历史.png" /></p><h1 id="_1">通知管理</h1>
+<p>针对作业执行成功、失败、等待执行等三类场景进行通知，实时告知运维人员该作业处于的状态。确保完成整个作业执行流程。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/通知管理.png" /></p><h1 id="_1">个人设置</h1>
+<p>支持作业执行的一些默认设置、安全设置和作业迁移服务。默认设置可以简化作业在执行前的一些操作，如：作业的所处的业务、服务器使用的默认帐户等。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/个人设置.png" /></p><h1 id="_1">公共脚本</h1>
+<p>支持对公共脚本的管理。如：查询、新建、执行、编辑和删除。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/公共脚本.png" /></p><h1 id="_1">帐户管理</h1>
+<p>首先，每个用户对于哪些应用和该应用下的哪些对象有操作权限，可以通过蓝鲸配置平台统一定义。而配置平台与作业平台是原生集成的，两者的权限共享。对于没有权限的应用或者应用下的对象，用户没有权限操作。</p>
+<p><img alt="系统权限管理" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/系统权限管理.png" /></p>
+<p>其次，通过在服务器上或者数据库上为不同的蓝鲸平台用户创建不同权限的帐号，并把此帐号登记到作业平台，然后将此帐号分配给蓝鲸平台的用户。此后，蓝鲸平台用户执行任务的时候，只能执行分配的帐号具有的权限的相应任务。此功能目前只有企业版支持。</p>
+<ul>
+<li>添加服务器本地帐号，并把它授权给蓝鲸平台帐号。</li>
+</ul>
+<p><img alt="添加用户" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/添加用户.png" /></p>
+<p><img alt="新增用户2" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/新增用户2.png" /></p><h1 id="ip">IP 白名单</h1>
+<p>支持 IP 白名单的管理。如：查询、新建、编辑和删除。
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/IP白名单.png" /></p><h1 id="_1">快速脚本执行</h1>
+<p>在蓝鲸作业平台上，在快速脚本执行功能栏上，快速的执行一个简单的脚本。</p>
+<p><img alt="执行脚本" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/执行脚本.gif" /></p>
+<p><strong>步骤详情</strong></p>
+<p>1、输入脚本名称，否则会使用系统默认名称如：快速执行脚本-201961220413791。</p>
+<p>2、选择服务器账户： root 或者 system 。</p>
+<p>3、选择状态 “Agent 正常” 的目标主机，1-n 台，否则会执行失败。</p>
+<ul>
+<li>支持通过 IP 选择服务器、从配置平台选择服务器、手动添加服务器、从动态分组选择服务器。</li>
+<li>列表默认全部模块类型的主机，勾选 【仅展示模块类型为 “数据库” 的主机】  ， 可快速选择 “数据库” 类型的主机。</li>
+</ul>
+<p>4、选择脚本来源，支持选择手工录入、脚本克隆、本地脚本、公共脚本 4 种方式。</p>
+<p>5、写入脚本内容，脚本类型支持 Shell、Bat、Perl、Python、PowerShell。</p>
+<p>6、输入脚本参数。</p>
+<blockquote>
+<p><strong>Note:</strong>
+勾选敏感参数以后，可以避免一些敏感的数据，比如密码暴露。目前页面上的敏感参数用 * 展示，后台 API 则会显示明文。</p>
+</blockquote>
+<p>7、填写超时时间。
+为了避免脚本或者服务器异常，导致脚本卡住，设置超时时间后，任务超时会自动终止。</p>
+<p>8、点击【执行脚本】，若成功，节点状态反馈 “执行成功” ；若失败，节点状态反馈 “执行失败”，会提示 Agent 不正常的主机数和用户不存在的主机数。可查看完整日志。</p><h1 id="_1">把本地文件上传到服务器上</h1>
+<p>把 本地文件 <code>test.txt</code> 上传到 远程服务器的 <code>/tmp/</code> 目录。</p>
+<p><img alt="快速分发文件" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/快速分发文件.gif" /></p>
+<p><strong>步骤详情</strong></p>
+<p>1、输入脚本名称，否则会使用系统默认名称如：快速分发文件-2019612204221713。</p>
+<p>2、添加本地文件，1-n 个。</p>
+<blockquote>
+<p><strong>Note:</strong>
+- 本地文件上传会有同名文件覆盖风险。
+- 本地文件不能包含中文字符，且大小最大支持到 2 GB。
+- 文件名中支持正则表达式写法以匹配多个文件，文件名前需加【REGEX】，如 /tmp/REGEX：abc[A-z,a-z，0-9，+，-,- ]{0,50}.tgc 。
+- 如需分发文件目录，文件名请以 <code>/</code> 结束。</p>
+</blockquote>
+<p>3、选择状态 <code>Agent正常</code> 的目标主机，1-n 台，否则会执行失败。</p>
+<ul>
+<li>支持通过 IP 选择服务器、从配置平台选择服务器、手动添加服务器、从动态分组选择服务器。</li>
+<li>列表默认全部模块类型的主机，勾选  【仅展示模块类型为 "数据库" 的主机】  ， 可快速选择 “数据库“ 类型的主机。</li>
+</ul>
+<p>4、选择服务器账户：root 或者 system。</p>
+<p>5、选择目标路径。</p>
+<blockquote>
+<p><strong>Note:</strong>
+- 如果该路径不存在，系统将自动创建。
+- 文件传输目的地址的路径规则：Linux 服务器需要以 <code>/</code> 开头的绝对路径。例如：/data/xx 。Windows 服务器必须包含盘符开头，例如：D:\tmp\ 。</p>
+</blockquote>
+<p>6、点击【开始执行】，若成功，节点状态反馈 <code>执行成功</code>，若失败，节点状态反馈 <code>执行失败</code>，会提示 Agent 不正常的主机数和用户不存在的主机数。可查看完整日志。</p><h1 id="_1">服务器之间的文件传输</h1>
+<p>把 <code>A 服务器</code>的<code>test.txt</code>文件上传到 <code>B 服务器</code>的<code>/tmp/</code>目录。</p>
+<p><img alt="快速分发文件A2B" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/快速分发文件A2B.gif" /></p>
+<p><strong>步骤详情</strong></p>
+<p>1、输入脚本名称，否则会使用系统默认名称如：快速分发文件-2019612204221713 。</p>
+<p>2、添加服务器文件，1-n 个</p>
+<ul>
+<li>
+<p>选择服务器地址，选择状态 <code>Agent 正常</code> 的目标主机，1-n 台，否则会执行失败。</p>
+</li>
+<li>
+<p>支持通过 IP 选择服务器、从配置平台选择服务器、手动添加服务器、从动态分组选择服务器。</p>
+</li>
+<li>
+<p>列表默认全部模块类型的主机，勾选 <code>仅展示模块类型为 “数据库” 的主机</code>， 可快速选择“数据库” 类型的主机。</p>
+</li>
+<li>
+<p>选择服务器账户：root 或者 system。</p>
+</li>
+<li>
+<p>填写文件列表，即服务器文件路径，保证文件路径正确和文件存在，否则会执行失败。</p>
+</li>
+<li>
+<p>选择 <code>保存</code> 。</p>
+</li>
+</ul>
+<p>3、选择目标机器，选择状态 <code>Agent正常</code> 的目标主机，1-n 台，否则会执行失败。</p>
+<ul>
+<li>支持通过 IP 选择服务器、从配置平台选择服务器、手动添加服务器、从动态分组选择服务器。</li>
+<li>列表默认全部模块类型的主机，勾选 <code>仅展示模块类型为 “数据库” 的主机</code>， 可快速选择“数据库” 类型的主机。</li>
+</ul>
+<p>4、选择服务器账户：root 或者 system。</p>
+<p>5、选择目标路径。</p>
+<blockquote>
+<p><strong>Note:</strong>
+- 如果该路径不存在，系统将自动创建。
+- 文件传输目的地址的路径规则：Linux 服务器需要以 <code>/</code> 开头的绝对路径。例如：/data/xx 。Windows 服务器必须包含盘符开头，例如：D:\tmp\ 。</p>
+</blockquote>
+<p>6、点击【开始执行】，若成功，节点状态反馈 “执行成功” ；若失败，节点状态反馈 “执行失败”，会提示 Agent 不正常的主机数和用户不存在的主机数。可查看完整日志。</p><h1 id="_1">如何创建一个作业任务</h1>
+<p>1、填写作业名称、选择分类标签、输入作业描述。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/14956956997907.jpg" /></p>
+<p>2、全局变量设置。</p>
+<p>支持全局变量的配置，支持全局 IP 设定、云参、上下文传参等三种全局变量设置方式。</p>
+<ul>
+<li>全局 IP 设定</li>
+</ul>
+<p>是指多个步骤节点之间执行主机相同的场景。</p>
+<p><img alt="全局IP设定" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/全局IP设定-1561002894970.png" /></p>
+<ul>
+<li>云参</li>
+</ul>
+<p>是指多台主机共享参数，多台主机下的多个脚本都可以调用同一参数。</p>
+<p><img alt="云参" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/云参.png" /></p>
+<ul>
+<li>上下文传参</li>
+</ul>
+<p>是指两个节点同一个目标机器的参数传递。</p>
+<p><img alt="上下文传参" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/上下文传参.png" /></p>
+<p>3、设置步骤：</p>
+<ul>
+<li>
+<p>因为系统默认步骤 1 是 【添加脚本】 ，如需指定步骤 1 为 【添加传输文件】或 【添加 SQL 脚本】，应先新建步骤 【添加传输文件】 或 【添加 SQL 脚本】，然后拖动移动至步骤 1。</p>
+</li>
+<li>
+<p>点击 【+新增节点】 ，每个步骤支持多个节点并发。每个节点支持一对多、多对一、多对多的文件(本地文件或服务器文件)分发。</p>
+</li>
+<li>
+<p>支持对当前步骤的所有节点的 【完成后暂停】、【任务编辑】、【节点上移】、【节点下移】、【拖放】、【删除】 操作。</p>
+</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/步骤1.png" /></p>
+<ul>
+<li>【拖放】 功能可以跨同类型的步骤实现节点移动。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/步骤拖放.png" /></p>
+<p>4、设置完成，点击<code>保存</code> 或者<code>去执行</code> ，成功则会反馈执行结果<code>执行成功</code> ，如有任一步骤 <code>执行失败</code> 执行结果会反馈 <code>执行失败</code> ，每个步骤可以查看执行详情。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/作业平台/assets/14956959657692.gif" /></p><h2 id="api">作业平台 API 简介</h2>
+<p><strong>作业平台（Job）是一套基于蓝鲸智云管控平台 Agent 管道之上的基础操作平台，具备大并发处理能力；除了支持脚本执行、文件拉取/分发、定时任务等一系列可实现的基础运维场景以外，还运用流程化的理念很好的将零碎的单个任务组装成一个作业流程；而每个任务都可做为一个原子节点，提供给其它系统和平台调度，实现调度自动化。</strong></p>
+<table>
+<thead>
+<tr>
+<th>资源名称</th>
+<th>资源描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="5.1/API文档/JOB/callback_protocol.md">callback_protocol</a></td>
+<td>作业类回调报文描述</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/execute_job.md">execute_job</a></td>
+<td>启动作业</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/fast_execute_script.md">fast_execute_script</a></td>
+<td>快速执行脚本</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/fast_push_file.md">fast_push_file</a></td>
+<td>快速分发文件</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/get_cron_list.md">get_cron_list</a></td>
+<td>查询业务下定时作业信息</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/get_job_detail.md">get_job_detail</a></td>
+<td>查询作业模板详情</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/get_job_instance_log.md">get_job_instance_log</a></td>
+<td>根据作业实例ID查询作业执行日志</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/get_job_instance_status.md">get_job_instance_status</a></td>
+<td>查询作业执行状态</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/get_job_list.md">get_job_list</a></td>
+<td>查询作业模板</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/get_os_account.md">get_os_account</a></td>
+<td>查询业务下的执行账号</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/get_own_db_account_list.md">get_own_db_account_list</a></td>
+<td>查询用户有权限的DB帐号列表</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/get_script_detail.md">get_script_detail</a></td>
+<td>查询脚本详情</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/get_script_list.md">get_script_list</a></td>
+<td>查询脚本列表</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/get_step_instance_status.md">get_step_instance_status</a></td>
+<td>查询作业步骤的执行状态</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/save_cron.md">save_cron</a></td>
+<td>新建或保存定时作业</td>
+</tr>
+<tr>
+<td><a href="5.1/API文档/JOB/update_cron_status.md">update_cron_status</a></td>
+<td>更新定时作业状态</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/callback_protocol/</p>
+<h3 id="_2">请求方法</h3>
+<p>POST</p>
+<h3 id="_3">功能描述</h3>
+<p>此组件仅用于展示回调协议文档</p>
+<p>对作业执行类的请求传入的回调bk_callback_url地址进行回调时所传递的报文结构描述</p>
+<h3 id="_4">请求参数</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>job_instance_id</td>
+<td>int</td>
+<td>是</td>
+<td>作业实例ID</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>是</td>
+<td>作业状态码: 1.未执行; 2.正在执行; 3.执行成功; 4.执行失败; 5.跳过; 6.忽略错误; 7.等待用户; 8.手动结束; 9.状态异常; 10.步骤强制终止中; 11.步骤强制终止成功; 12.步骤强制终止失败</td>
+</tr>
+<tr>
+<td>step_instances</td>
+<td>array</td>
+<td>是</td>
+<td>步骤块中包含的各个步骤执行状态</td>
+</tr>
+</tbody>
+</table>
+<h4 id="step_instances">step_instances</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>step_instance_id</td>
+<td>int</td>
+<td>是</td>
+<td>作业步骤实例ID</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>是</td>
+<td>作业步骤状态码: 1.未执行; 2.正在执行; 3.执行成功; 4.执行失败; 5.跳过; 6.忽略错误; 7.等待用户; 8.手动结束; 9.状态异常; 10.步骤强制终止中; 11.步骤强制终止成功; 12.步骤强制终止失败</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_5">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;job_instance_id&quot;</span><span class="p">:</span> <span class="mi">12345</span><span class="p">,</span>
+    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;step_instances&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;step_instance_id&quot;</span><span class="p">:</span> <span class="mi">16271</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">3</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;step_instance_id&quot;</span><span class="p">:</span> <span class="mi">16272</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">2</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_6">回调响应</h3>
+<p>回调成功以HTTP状态为准，如果成功，则状态码200，其他表示失败，Job会对失败的做一次重试，如还失败，则忽略失败，不再回调。</p><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/execute_job/</p>
+<h3 id="_2">请求方法</h3>
+<p>POST</p>
+<h3 id="_3">功能描述</h3>
+<p>根据作业模板ID启动作业。支持全局变量，如果全局变量的类型为IP，参数值必须包含custom_query_id或ip_list。没有设置的参数将使用作业模版中的默认值。</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>bk_job_id</td>
+<td>int</td>
+<td>是</td>
+<td>作业模板ID</td>
+</tr>
+<tr>
+<td>steps</td>
+<td>array</td>
+<td>否</td>
+<td>指定要执行或自定义参数的步骤数组，要执行全部步骤可不传此参数，见下面steps结构定义</td>
+</tr>
+<tr>
+<td>global_vars</td>
+<td>array</td>
+<td>否</td>
+<td>全局变量信息，作业包含的全局变量和类型，可以通过接口“查询作业模板详情” (get_job_detail)获取。对于作业中的全局变量值，如果global_vars包含该变量信息，那么会使用api指定的值；否则使用全局变量默认值</td>
+</tr>
+<tr>
+<td>bk_callback_url</td>
+<td>string</td>
+<td>否</td>
+<td>回调URL，当任务执行完成后，JOB会调用该URL告知任务执行结果。回调协议参考callback_protocol组件文档</td>
+</tr>
+</tbody>
+</table>
+<h4 id="global_vars">global_vars</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>否</td>
+<td>全局变量id，唯一标识。如果id为空，那么使用name作为唯一标识</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>否</td>
+<td>全局变量name</td>
+</tr>
+<tr>
+<td>value</td>
+<td>string</td>
+<td>否</td>
+<td>字符串全局变量值，此字段仅在字符串类型变量有效。</td>
+</tr>
+<tr>
+<td>custom_query_id</td>
+<td>array</td>
+<td>否</td>
+<td>配置平台上的自定义查询id列表。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并，此字段仅在IP类型变量有效。</td>
+</tr>
+<tr>
+<td>ip_list</td>
+<td>array</td>
+<td>否</td>
+<td>IP对象数组。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并，此字段仅在IP类型变量有效。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="steps">steps</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>step_id</td>
+<td>int</td>
+<td>是</td>
+<td>步骤ID</td>
+</tr>
+<tr>
+<td>script_id</td>
+<td>int</td>
+<td>否</td>
+<td>脚本ID，如果不更改脚本，则不传</td>
+</tr>
+<tr>
+<td>script_type</td>
+<td>int</td>
+<td>否</td>
+<td>脚本类型：1(shell脚本)、2(bat脚本)、3(perl脚本)、4(python脚本)、5(powershell脚本)，当script_content有内容时必填</td>
+</tr>
+<tr>
+<td>script_content</td>
+<td>string</td>
+<td>否</td>
+<td>脚本内容Base64，如果同时传了script_id和script_content，则script_id优先</td>
+</tr>
+<tr>
+<td>script_param</td>
+<td>string</td>
+<td>否</td>
+<td>脚本参数Base64</td>
+</tr>
+<tr>
+<td>script_timeout</td>
+<td>int</td>
+<td>否</td>
+<td>脚本超时时间，秒。默认1000，取值范围60-86400</td>
+</tr>
+<tr>
+<td>account</td>
+<td>string</td>
+<td>否</td>
+<td>执行帐号名/别名</td>
+</tr>
+<tr>
+<td>db_account_id</td>
+<td>int</td>
+<td>否</td>
+<td>SQL执行的db帐号ID，SQL步骤必填</td>
+</tr>
+<tr>
+<td>file_target_path</td>
+<td>string</td>
+<td>否</td>
+<td>文件传输目标路径</td>
+</tr>
+<tr>
+<td>file_source</td>
+<td>array</td>
+<td>否</td>
+<td>源文件对象数组，见下面file_source定义</td>
+</tr>
+<tr>
+<td>custom_query_id</td>
+<td>array</td>
+<td>否</td>
+<td>配置平台上的自定义查询id列表。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并</td>
+</tr>
+<tr>
+<td>ip_list</td>
+<td>array</td>
+<td>否</td>
+<td>IP对象数组。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并</td>
+</tr>
+</tbody>
+</table>
+<h4 id="file_source">file_source</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>files</td>
+<td>array</td>
+<td>是</td>
+<td>源文件的绝对路径数组，支持多个文件</td>
+</tr>
+<tr>
+<td>account</td>
+<td>string</td>
+<td>是</td>
+<td>执行帐号名/别名</td>
+</tr>
+<tr>
+<td>custom_query_id</td>
+<td>array</td>
+<td>否</td>
+<td>配置平台上的自定义查询id列表。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并</td>
+</tr>
+<tr>
+<td>ip_list</td>
+<td>array</td>
+<td>否</td>
+<td>IP对象数组。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ip_list">ip_list</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_cloud_id</td>
+<td>int</td>
+<td>是</td>
+<td>云区域ID</td>
+</tr>
+<tr>
+<td>ip</td>
+<td>string</td>
+<td>是</td>
+<td>IP地址</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;bk_job_id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s2">&quot;global_vars&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">436</span><span class="p">,</span>
+            <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;7&quot;</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">437</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;new String value&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="s2">&quot;script_timeout&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="s2">&quot;script_param&quot;</span><span class="p">:</span> <span class="s2">&quot;aGVsbG8=&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;3&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;script_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;script_content&quot;</span><span class="p">:</span> <span class="s2">&quot;ZWNobyAkMQ==&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;step_id&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;script_type&quot;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;script_timeout&quot;</span><span class="p">:</span> <span class="mi">1003</span><span class="p">,</span>
+        <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;3&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;script_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;script_content&quot;</span><span class="p">:</span> <span class="s2">&quot;ZWNobyAkMQ==&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;step_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;db_account_id&quot;</span><span class="p">:</span> <span class="mi">31</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;file_target_path&quot;</span><span class="p">:</span> <span class="s2">&quot;/tmp/[FILESRCIP]/&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;file_source&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;/tmp/REGEX:[a-z]*.txt&quot;</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;3&quot;</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;3&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;step_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span>
+    <span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;job_instance_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Test&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;job_instance_id&quot;</span><span class="p">:</span> <span class="mi">10000</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/fast_execute_script/</p>
+<h3 id="_2">请求方法</h3>
+<p>POST</p>
+<h3 id="_3">功能描述</h3>
+<p>快速执行脚本</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>script_id</td>
+<td>int</td>
+<td>否</td>
+<td>脚本ID</td>
+</tr>
+<tr>
+<td>task_name</td>
+<td>string</td>
+<td>否</td>
+<td>自定义作业名称</td>
+</tr>
+<tr>
+<td>script_content</td>
+<td>string</td>
+<td>否</td>
+<td>脚本内容Base64，如果同时传了script_id和script_content，则script_id优先</td>
+</tr>
+<tr>
+<td>script_param</td>
+<td>string</td>
+<td>否</td>
+<td>脚本参数Base64。注意：如果有多个参数，比如&#34;param1 param2&#34;这种，需要对&#34;param1 param2&#34;整体进行base64编码，而不是对每个参数进行base64编码再拼接起来</td>
+</tr>
+<tr>
+<td>script_timeout</td>
+<td>int</td>
+<td>否</td>
+<td>脚本超时时间，秒。默认1000，取值范围60-86400</td>
+</tr>
+<tr>
+<td>account</td>
+<td>string</td>
+<td>否</td>
+<td>执行帐号名/别名</td>
+</tr>
+<tr>
+<td>is_param_sensitive</td>
+<td>int</td>
+<td>否</td>
+<td>敏感参数将会在执行详情页面上隐藏, 0:不是（默认），1:是</td>
+</tr>
+<tr>
+<td>script_type</td>
+<td>int</td>
+<td>否</td>
+<td>脚本类型：1(shell脚本)、2(bat脚本)、3(perl脚本)、4(python脚本)、5(Powershell脚本)</td>
+</tr>
+<tr>
+<td>custom_query_id</td>
+<td>array</td>
+<td>否</td>
+<td>配置平台上的自定义查询id列表。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并</td>
+</tr>
+<tr>
+<td>ip_list</td>
+<td>array</td>
+<td>否</td>
+<td>IP对象数组。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并</td>
+</tr>
+<tr>
+<td>bk_callback_url</td>
+<td>string</td>
+<td>否</td>
+<td>回调URL，当任务执行完成后，JOB会调用该URL告知任务执行结果。回调协议参考callback_protocol组件文档</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ip_list">ip_list</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_cloud_id</td>
+<td>int</td>
+<td>是</td>
+<td>云区域ID</td>
+</tr>
+<tr>
+<td>ip</td>
+<td>string</td>
+<td>是</td>
+<td>IP地址</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;script_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;script_content&quot;</span><span class="p">:</span> <span class="s2">&quot;ZWNobyAkMQ==&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;script_param&quot;</span><span class="p">:</span> <span class="s2">&quot;aGVsbG8=&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;script_timeout&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_param_sensitive&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;script_type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;3&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;job_instance_name&quot;</span><span class="p">:</span> <span class="s2">&quot;API Quick execution script1521100521303&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;job_instance_id&quot;</span><span class="p">:</span> <span class="mi">10000</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/fast_push_file/</p>
+<h3 id="_2">请求方法</h3>
+<p>POST</p>
+<h3 id="_3">功能描述</h3>
+<p>快速分发文件</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>account</td>
+<td>string</td>
+<td>是</td>
+<td>执行帐号名/别名</td>
+</tr>
+<tr>
+<td>file_target_path</td>
+<td>string</td>
+<td>是</td>
+<td>文件传输目标路径</td>
+</tr>
+<tr>
+<td>file_source</td>
+<td>array</td>
+<td>是</td>
+<td>源文件对象数组，见下面file_source定义</td>
+</tr>
+<tr>
+<td>custom_query_id</td>
+<td>array</td>
+<td>否</td>
+<td>配置平台上的自定义查询id列表。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并</td>
+</tr>
+<tr>
+<td>ip_list</td>
+<td>array</td>
+<td>否</td>
+<td>IP对象数组。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并</td>
+</tr>
+<tr>
+<td>bk_callback_url</td>
+<td>string</td>
+<td>否</td>
+<td>回调URL，当任务执行完成后，JOB会调用该URL告知任务执行结果。回调协议参考callback_protocol组件文档</td>
+</tr>
+</tbody>
+</table>
+<h4 id="file_source">file_source</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>files</td>
+<td>array</td>
+<td>是</td>
+<td>源文件的绝对路径数组，支持多个文件</td>
+</tr>
+<tr>
+<td>account</td>
+<td>string</td>
+<td>是</td>
+<td>执行帐号名/别名</td>
+</tr>
+<tr>
+<td>custom_query_id</td>
+<td>array</td>
+<td>否</td>
+<td>配置平台上的自定义查询id列表。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并</td>
+</tr>
+<tr>
+<td>ip_list</td>
+<td>array</td>
+<td>否</td>
+<td>IP对象数组。ip_list与custom_query_id之间任意选一或并存，ip数据会去重合并</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ip_list">ip_list</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_cloud_id</td>
+<td>int</td>
+<td>是</td>
+<td>云区域ID</td>
+</tr>
+<tr>
+<td>ip</td>
+<td>string</td>
+<td>是</td>
+<td>IP地址</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;file_target_path&quot;</span><span class="p">:</span> <span class="s2">&quot;/tmp/[FILESRCIP]/&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file_source&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;/tmp/REGEX:[a-z]*.txt&quot;</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;3&quot;</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;3&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;job_instance_name&quot;</span><span class="p">:</span> <span class="s2">&quot;API Quick Distribution File1521101427176&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;job_instance_id&quot;</span><span class="p">:</span> <span class="mi">10000</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/get_cron_list/</p>
+<h3 id="_2">请求方法</h3>
+<p>GET</p>
+<h3 id="_3">功能描述</h3>
+<p>查询业务下定时作业信息</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>cron_name</td>
+<td>string</td>
+<td>否</td>
+<td>定时作业名称</td>
+</tr>
+<tr>
+<td>cron_id</td>
+<td>int</td>
+<td>否</td>
+<td>定时任务ID，如果存在则忽略其他筛选条件，只查询这个指定的作业信息</td>
+</tr>
+<tr>
+<td>cron_status</td>
+<td>int</td>
+<td>否</td>
+<td>定时作业状态：1.已启动、2.已暂停</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>string</td>
+<td>否</td>
+<td>定时作业创建人帐号</td>
+</tr>
+<tr>
+<td>create_time_start</td>
+<td>string</td>
+<td>否</td>
+<td>创建起始时间，YYYY-MM-DD格式</td>
+</tr>
+<tr>
+<td>create_time_end</td>
+<td>string</td>
+<td>否</td>
+<td>创建结束时间，YYYY-MM-DD格式</td>
+</tr>
+<tr>
+<td>last_modify_user</td>
+<td>string</td>
+<td>否</td>
+<td>作业修改人帐号</td>
+</tr>
+<tr>
+<td>last_modify_time_start</td>
+<td>string</td>
+<td>否</td>
+<td>最后修改起始时间，YYYY-MM-DD格式</td>
+</tr>
+<tr>
+<td>last_modify_time_end</td>
+<td>string</td>
+<td>否</td>
+<td>最后修改结束时间，YYYY-MM-DD格式</td>
+</tr>
+<tr>
+<td>start</td>
+<td>int</td>
+<td>否</td>
+<td>默认0表示从第1条记录开始返回</td>
+</tr>
+<tr>
+<td>length</td>
+<td>int</td>
+<td>否</td>
+<td>返回记录数量，不传此参数默认返回全部</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;cron_name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cron_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;cron_status&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;create_time_start&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-02&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;create_time_end&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-23&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modify_time_start&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-02&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modify_time_end&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-23&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mi">100</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+         <span class="p">{</span>
+            <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;bk_job_id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s2">&quot;job_name&quot;</span><span class="p">:</span> <span class="s2">&quot;job name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cron_id&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+            <span class="s2">&quot;cron_name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cron_status&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;cron_expression&quot;</span><span class="p">:</span> <span class="s2">&quot;2 0/5 * * * ?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-14 15:46:01 +0800&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modify_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-14 15:48:57 +0800&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_9">返回结果参数说明</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>bk_job_id</td>
+<td>int</td>
+<td>作业模板ID</td>
+</tr>
+<tr>
+<td>job_name</td>
+<td>string</td>
+<td>作业名称</td>
+</tr>
+<tr>
+<td>cron_id</td>
+<td>int</td>
+<td>定时作业ID</td>
+</tr>
+<tr>
+<td>cron_name</td>
+<td>string</td>
+<td>定时作业名称</td>
+</tr>
+<tr>
+<td>cron_status</td>
+<td>string</td>
+<td>定时作业状态：1.已启动、2.已暂停</td>
+</tr>
+<tr>
+<td>cron_expression</td>
+<td>string</td>
+<td>定时任务crontab的定时规则，各自段含义为：秒 分 时 日 月 周 年（可选），如: 0 0/5 * * * ? 表示每5分钟执行一次</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>string</td>
+<td>作业创建人帐号</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>创建时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>last_modify_user</td>
+<td>string</td>
+<td>作业修改人帐号</td>
+</tr>
+<tr>
+<td>last_modify_time</td>
+<td>string</td>
+<td>最后修改时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/get_job_detail/</p>
+<h3 id="_2">请求方法</h3>
+<p>GET</p>
+<h3 id="_3">功能描述</h3>
+<p>根据作业模板ID查询作业模板详情</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>bk_job_id</td>
+<td>int</td>
+<td>是</td>
+<td>作业模板ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;bk_job_id&quot;</span><span class="p">:</span> <span class="mi">100</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;bk_job_id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 12:46:24 +0800&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_modify_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-16 09:58:47 +0800&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tag_id&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;step_num&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;global_vars&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;varName&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;value is Me&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;id-201831512468155&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;7&quot;</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;step_ids&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="mi">1059</span><span class="p">,</span>
+                    <span class="mi">1060</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;steps&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;step_id&quot;</span><span class="p">:</span> <span class="mi">1059</span><span class="p">,</span>
+                <span class="s2">&quot;script_type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;script_id&quot;</span><span class="p">:</span> <span class="mi">1078</span><span class="p">,</span>
+                <span class="s2">&quot;script_timeout&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+                <span class="s2">&quot;script_content&quot;</span><span class="p">:</span> <span class="s2">&quot;echo $1 $2 $3&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;script_param&quot;</span><span class="p">:</span> <span class="s2">&quot;a1 a2 a3&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_param_sensitive&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;db_account_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;block_order&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;block_name&quot;</span><span class="p">:</span> <span class="s2">&quot;step1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 12:46:24 +0800&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modify_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-16 09:58:47 +0800&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;pause&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;7&quot;</span>
+                <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;step_id&quot;</span><span class="p">:</span> <span class="mi">1060</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;pause&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;db_account_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;block_order&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;block_name&quot;</span><span class="p">:</span> <span class="s2">&quot;step2&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 12:46:24 +0800&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modify_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-16 14:19:02 +0800&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;file_target_path&quot;</span><span class="p">:</span> <span class="s2">&quot;/tmp/[FILESRCIP]/&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_source&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="s2">&quot;/tmp/REGEX:[a-z]*.txt&quot;</span><span class="p">,</span>
+                        <span class="p">],</span>
+                        <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;root&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+                            <span class="p">},</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">],</span>
+                        <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;7&quot;</span>
+                        <span class="p">]</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.2&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;custom_query_id&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;7&quot;</span>
+                <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;SQL Runner&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;step_id&quot;</span><span class="p">:</span> <span class="mi">1061</span><span class="p">,</span>
+                <span class="s2">&quot;script_id&quot;</span><span class="p">:</span> <span class="mi">1079</span><span class="p">,</span>
+                <span class="s2">&quot;script_content&quot;</span><span class="p">:</span> <span class="s2">&quot;select 1;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;script_type&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+                <span class="s2">&quot;script_timeout&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+                <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;mysql&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;db_account_id&quot;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span>
+                <span class="s2">&quot;block_order&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;block_name&quot;</span><span class="p">:</span> <span class="s2">&quot;SQL Execute Step&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 12:47:26 +0800&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modify_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-16 14:19:02 +0800&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;pause&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_9">返回结果参数说明</h3>
+<h4 id="data">data</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>bk_job_id</td>
+<td>int</td>
+<td>作业模板ID</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>作业名称</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>string</td>
+<td>作业创建人帐号</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>创建时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>last_modify_user</td>
+<td>string</td>
+<td>作业修改人帐号</td>
+</tr>
+<tr>
+<td>last_modify_time</td>
+<td>string</td>
+<td>最后修改时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>tag_id</td>
+<td>string</td>
+<td>作业标签ID，1.未分类、2.运营发布、3.故障处理、4.常用工具、5.产品自助、6.测试专用、7.持续集成</td>
+</tr>
+<tr>
+<td>step_num</td>
+<td>int</td>
+<td>步骤数量</td>
+</tr>
+<tr>
+<td>steps</td>
+<td>array</td>
+<td>步骤对象</td>
+</tr>
+<tr>
+<td>global_vars</td>
+<td>dict</td>
+<td>全局变量信息</td>
+</tr>
+</tbody>
+</table>
+<h4 id="steps">steps</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>step_id</td>
+<td>int</td>
+<td>作业步骤ID</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>作业步骤名称</td>
+</tr>
+<tr>
+<td>type</td>
+<td>int</td>
+<td>步骤类型：1.脚本步骤; 2.文件步骤; 4.SQL步骤</td>
+</tr>
+<tr>
+<td>block_order</td>
+<td>int</td>
+<td>步骤块在作业中的顺序</td>
+</tr>
+<tr>
+<td>block_name</td>
+<td>string</td>
+<td>步骤块名称</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>string</td>
+<td>作业步骤创建人帐号</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>创建时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>last_modify_user</td>
+<td>string</td>
+<td>作业步骤修改人帐号</td>
+</tr>
+<tr>
+<td>last_modify_time</td>
+<td>string</td>
+<td>最后修改时间，YYYY-MM-DD HH:mm:ss</td>
+</tr>
+<tr>
+<td>pause</td>
+<td>int</td>
+<td>0.执行完成后不暂停(默认); 1.执行完成后暂停</td>
+</tr>
+<tr>
+<td>script_id</td>
+<td>int</td>
+<td>脚本ID。当type=1或4时才有这个字段。</td>
+</tr>
+<tr>
+<td>script_param</td>
+<td>string</td>
+<td>脚本参数。当type=1或4时并且有值时才有这个字段。</td>
+</tr>
+<tr>
+<td>script_content</td>
+<td>string</td>
+<td>脚本内容。当type=1或4时才有这个字段。</td>
+</tr>
+<tr>
+<td>script_timeout</td>
+<td>int</td>
+<td>脚本超时时间，秒。默认1000，取值范围60-86400</td>
+</tr>
+<tr>
+<td>account</td>
+<td>string</td>
+<td>执行帐号名/别名</td>
+</tr>
+<tr>
+<td>is_param_sensitive</td>
+<td>int</td>
+<td>敏感参数将会在执行详情页面上隐藏, 0.不是（默认），1.是。当type=1时才有这个字段。</td>
+</tr>
+<tr>
+<td>db_account_id</td>
+<td>int</td>
+<td>SQL执行的db帐号ID，SQL步骤必填</td>
+</tr>
+<tr>
+<td>order</td>
+<td>int</td>
+<td>当前步骤在作业中的顺序号</td>
+</tr>
+<tr>
+<td>script_type</td>
+<td>int</td>
+<td>当type=1或4时并且有值时才有这个字段。脚本类型：1(shell脚本)、2(bat脚本)、3(perl脚本)、4(python脚本)、5(Powershell脚本)</td>
+</tr>
+<tr>
+<td>file_target_path</td>
+<td>string</td>
+<td>文件传输目标路径，当type=2时并且有值时才有这个字段</td>
+</tr>
+<tr>
+<td>file_source</td>
+<td>array</td>
+<td>源文件对象数组，当type=2时并且有值时才有这个字段，见下面file_source定义</td>
+</tr>
+<tr>
+<td>ip_list</td>
+<td>array</td>
+<td>IP对象数组，见下面ip_list结构定义</td>
+</tr>
+<tr>
+<td>custom_query_id</td>
+<td>array</td>
+<td>配置平台上的自定义查询id列表，有值时才有这个字段</td>
+</tr>
+</tbody>
+</table>
+<h4 id="global_vars">global_vars</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>全局变量ID，唯一标识</td>
+</tr>
+<tr>
+<td>type</td>
+<td>int</td>
+<td>全局变量数据类型：1:字符，2:IP，3:索引数组，4:关联数组</td>
+</tr>
+<tr>
+<td>category</td>
+<td>int</td>
+<td>全局变量类型：1:云参，2:上下文参数，3:IP</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>全局变量的名称</td>
+</tr>
+<tr>
+<td>value</td>
+<td>string</td>
+<td>字符串类型的全局变量值，当type=1时有这个字段</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>变量描述</td>
+</tr>
+<tr>
+<td>custom_query_id</td>
+<td>array</td>
+<td>配置平台上的自定义查询ID列表，当type=2时并且有值时才有这个字段</td>
+</tr>
+<tr>
+<td>ip_list</td>
+<td>array</td>
+<td>IP对象数组，当type=2时并且有值时才有这个字段，见下面ip_list结构定义</td>
+</tr>
+<tr>
+<td>step_ids</td>
+<td>array</td>
+<td>引用了这个IP全局变量的步骤ID列表，当type=2时并且有值时才有这个字段</td>
+</tr>
+</tbody>
+</table>
+<h4 id="file_source">file_source</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>files</td>
+<td>array</td>
+<td>源文件的绝对路径数组，支持多个文件</td>
+</tr>
+<tr>
+<td>account</td>
+<td>string</td>
+<td>执行帐号名/别名</td>
+</tr>
+<tr>
+<td>ip_list</td>
+<td>array</td>
+<td>IP对象数组，当有值时才有这个字段，见下面ip_list结构定义</td>
+</tr>
+<tr>
+<td>custom_query_id</td>
+<td>array</td>
+<td>配置平台上的自定义查询ID列表，当有值时才有这个字段</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ip_list">ip_list</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_cloud_id</td>
+<td>int</td>
+<td>云区域ID</td>
+</tr>
+<tr>
+<td>ip</td>
+<td>string</td>
+<td>IP地址</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/get_job_instance_log/</p>
+<h3 id="_2">请求方法</h3>
+<p>GET</p>
+<h3 id="_3">功能描述</h3>
+<p>根据作业实例ID查询作业执行日志</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>job_instance_id</td>
+<td>int</td>
+<td>是</td>
+<td>作业实例ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;job_instance_id&quot;</span><span class="p">:</span> <span class="mi">100</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;is_finished&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+            <span class="s2">&quot;step_instance_id&quot;</span><span class="p">:</span> <span class="mi">90000</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;step_results&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;ip_status&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+                    <span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;ip_logs&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;retry_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="s2">&quot;total_time&quot;</span><span class="p">:</span> <span class="mf">60.599</span><span class="p">,</span>
+                            <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 14:39:30 +0800&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 14:40:31 +0800&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="s2">&quot;error_code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="s2">&quot;exit_code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="s2">&quot;log_content&quot;</span><span class="p">:</span> <span class="s2">&quot;[2018-03-15 14:39:30][PID:56875] job_start</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_9">返回结果参数说明</h3>
+<h4 id="data">data</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>is_finished</td>
+<td>bool</td>
+<td>作业是否结束</td>
+</tr>
+<tr>
+<td>step_instance_id</td>
+<td>int</td>
+<td>作业步骤实例ID</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>作业实例名称</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>作业状态码: 1.未执行; 2.正在执行; 3.执行成功; 4.执行失败; 5.跳过; 6.忽略错误; 7.等待用户; 8.手动结束; 9.状态异常; 10.步骤强制终止中; 11.步骤强制终止成功; 12.步骤强制终止失败</td>
+</tr>
+<tr>
+<td>step_results</td>
+<td>array</td>
+<td>当前步骤下所有ip的日志，按tag分类或ip的执行状态(ip_status)归类存放</td>
+</tr>
+</tbody>
+</table>
+<h4 id="step_result">step_result</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ip_status</td>
+<td>int</td>
+<td>主机任务状态码，1.Agent异常; 3.上次已成功; 5.等待执行; 7.正在执行; 9.执行成功; 11.任务失败; 12.任务下发失败; 13.任务超时; 15.任务日志错误; 101.脚本执行失败; 102.脚本执行超时; 103.脚本执行被终止; 104.脚本返回码非零; 202.文件传输失败; 203.源文件不存在; 310.Agent异常; 311.用户名不存在; 320.文件获取失败; 321.文件超出限制; 329.文件传输错误; 399.任务执行出错</td>
+</tr>
+<tr>
+<td>tag</td>
+<td>string</td>
+<td>脚本用 job_success/job_fail 函数返回的标签内容</td>
+</tr>
+<tr>
+<td>ip_logs</td>
+<td>array</td>
+<td>ip 日志内容</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ip_logs">ip_logs</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>start_time</td>
+<td>string</td>
+<td>开始执行时间，YYYY-MM-DD HH:mm:ss</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td>string</td>
+<td>执行结束时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>total_time</td>
+<td>float</td>
+<td>总耗时，秒</td>
+</tr>
+<tr>
+<td>retry_count</td>
+<td>int</td>
+<td>步骤重试次数</td>
+</tr>
+<tr>
+<td>error_code</td>
+<td>int</td>
+<td>作业执行中出错码</td>
+</tr>
+<tr>
+<td>exit_code</td>
+<td>int</td>
+<td>shell脚本退出码; 0正常; 非0异常</td>
+</tr>
+<tr>
+<td>bk_cloud_id</td>
+<td>int</td>
+<td>云区域ID</td>
+</tr>
+<tr>
+<td>ip</td>
+<td>string</td>
+<td>IP地址</td>
+</tr>
+<tr>
+<td>log_content</td>
+<td>string</td>
+<td>作业脚本输出的日志内容</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/get_job_instance_status/</p>
+<h3 id="_2">请求方法</h3>
+<p>GET</p>
+<h3 id="_3">功能描述</h3>
+<p>根据作业实例 ID 查询作业执行状态</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>job_instance_id</td>
+<td>int</td>
+<td>是</td>
+<td>作业实例ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;job_instance_id&quot;</span><span class="p">:</span> <span class="mi">100</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;is_finished&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+        <span class="s2">&quot;job_instance&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;job_instance_id&quot;</span><span class="p">:</span> <span class="mi">65</span><span class="p">,</span>
+            <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;API Quick execution script1521089795887&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;start_way&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;operator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bk_job_id&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 12:56:35 +0800&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 12:56:35 +0800&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 12:56:39 +0800&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;total_time&quot;</span><span class="p">:</span> <span class="mf">3.169</span><span class="p">,</span>
+            <span class="s2">&quot;current_step_instance_id&quot;</span><span class="p">:</span> <span class="mi">75</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;block_order&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;block_name&quot;</span><span class="p">:</span> <span class="s2">&quot;API Quick execution script xxx&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;step_instances&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                        <span class="s2">&quot;total_time&quot;</span><span class="p">:</span> <span class="mf">3.169</span><span class="p">,</span>
+                        <span class="s2">&quot;pause&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;operation_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;operation_code&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                                <span class="s2">&quot;operation_name&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span>
+                            <span class="p">},</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;operation_code&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                                <span class="s2">&quot;operation_name&quot;</span><span class="p">:</span> <span class="s2">&quot;yyy&quot;</span>
+                            <span class="p">}</span>
+                        <span class="p">],</span>
+                        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;API Quick execution scriptxxx&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;step_instance_id&quot;</span><span class="p">:</span> <span class="mi">75</span><span class="p">,</span>
+                        <span class="s2">&quot;operator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;retry_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 12:56:35 +0800&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 12:56:39 +0800&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;step_id&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-15 12:56:35 +0800&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;step_ip_status&quot;</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="p">{</span>
+                                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.0.0.1&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">9</span>
+                            <span class="p">}</span>
+                        <span class="p">]</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_9">返回结果参数说明</h3>
+<h4 id="data">data</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>is_finished</td>
+<td>bool</td>
+<td>作业是否结束</td>
+</tr>
+<tr>
+<td>job_instance</td>
+<td>dict</td>
+<td>作业实例基本信息</td>
+</tr>
+<tr>
+<td>blocks</td>
+<td>array</td>
+<td>作业步骤块数组</td>
+</tr>
+</tbody>
+</table>
+<h4 id="job_instance">job_instance</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>作业实例名称</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>作业状态码: 1.未执行; 2.正在执行; 3.执行成功; 4.执行失败; 5.跳过; 6.忽略错误; 7.等待用户; 8.手动结束; 9.状态异常; 10.步骤强制终止中; 11.步骤强制终止成功; 12.步骤强制终止失败</td>
+</tr>
+<tr>
+<td>operator</td>
+<td>string</td>
+<td>作业执行人帐号</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>创建时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>start_time</td>
+<td>string</td>
+<td>开始执行时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td>string</td>
+<td>执行结束时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>total_time</td>
+<td>float</td>
+<td>总耗时，秒</td>
+</tr>
+<tr>
+<td>start_way</td>
+<td>int</td>
+<td>作业启动方式: 1.页面启动; 2.API调用; 3.定时任务</td>
+</tr>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>bk_job_id</td>
+<td>int</td>
+<td>作业模板ID，如果不是从作业模板启动的则为-1</td>
+</tr>
+<tr>
+<td>job_instance_id</td>
+<td>int</td>
+<td>作业实例ID</td>
+</tr>
+<tr>
+<td>current_step_instance_id</td>
+<td>int</td>
+<td>当前执行的步骤实例ID</td>
+</tr>
+</tbody>
+</table>
+<h4 id="blocks">blocks</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td>int</td>
+<td>步骤块类型：1.脚本步骤; 2.文件步骤; 4.SQL步骤</td>
+</tr>
+<tr>
+<td>block_order</td>
+<td>int</td>
+<td>步骤块顺序</td>
+</tr>
+<tr>
+<td>block_name</td>
+<td>string</td>
+<td>步骤块名称</td>
+</tr>
+<tr>
+<td>step_instances</td>
+<td>array</td>
+<td>步骤块中包含的各个步骤对象</td>
+</tr>
+</tbody>
+</table>
+<h4 id="step_instances">step_instances</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>step_id</td>
+<td>int</td>
+<td>作业模板步骤ID，如果不是从作业模板启动的则为-1</td>
+</tr>
+<tr>
+<td>step_instance_id</td>
+<td>int</td>
+<td>作业步骤实例ID</td>
+</tr>
+<tr>
+<td>type</td>
+<td>int</td>
+<td>步骤类型：1.脚本步骤; 2.文件步骤; 4.SQL步骤</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>作业实例名称</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>作业步骤状态码: 1.未执行; 2.正在执行; 3.执行成功; 4.执行失败; 5.跳过; 6.忽略错误; 7.等待用户; 8.手动结束; 9.状态异常; 10.步骤强制终止中; 11.步骤强制终止成功; 12.步骤强制终止失败</td>
+</tr>
+<tr>
+<td>operator</td>
+<td>string</td>
+<td>作业执行人帐号</td>
+</tr>
+<tr>
+<td>pause</td>
+<td>int</td>
+<td>0.执行完成后不暂停(默认); 1.执行完成后暂停</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>创建时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>start_time</td>
+<td>string</td>
+<td>开始执行时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td>string</td>
+<td>执行结束时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>total_time</td>
+<td>float</td>
+<td>总耗时，秒</td>
+</tr>
+<tr>
+<td>order</td>
+<td>int</td>
+<td>当前步骤在步骤块中的顺序</td>
+</tr>
+<tr>
+<td>retry_count</td>
+<td>int</td>
+<td>步骤重试次数</td>
+</tr>
+<tr>
+<td>operation_list</td>
+<td>array</td>
+<td>当前步骤可操作的指令</td>
+</tr>
+<tr>
+<td>step_ip_status</td>
+<td>array</td>
+<td>每个服务器的作业执行状态</td>
+</tr>
+</tbody>
+</table>
+<h4 id="operation_list-description">operation_list Description</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>operation_code</td>
+<td>int</td>
+<td>操作命令编码，命令标识</td>
+</tr>
+<tr>
+<td>operation_name</td>
+<td>string</td>
+<td>操作命令名称, 比如&#39;强制终止&#39;</td>
+</tr>
+</tbody>
+</table>
+<h4 id="step_ip_status-description">step_ip_status Description</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ip</td>
+<td>string</td>
+<td>IP</td>
+</tr>
+<tr>
+<td>bk_cloud_id</td>
+<td>int</td>
+<td>云区域ID</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>作业执行状态:1.Agent异常; 5.等待执行; 7.正在执行; 9.执行成功; 11.执行失败; 12.任务下发失败; 403.任务强制终止成功; 404.任务强制终止失败</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/get_job_list/</p>
+<h3 id="_2">请求方法</h3>
+<p>GET</p>
+<h3 id="_3">功能描述</h3>
+<p>查询作业模板</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>string</td>
+<td>否</td>
+<td>作业创建人帐号</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>否</td>
+<td>作业名称，模糊匹配</td>
+</tr>
+<tr>
+<td>create_time_start</td>
+<td>string</td>
+<td>否</td>
+<td>创建起始时间，YYYY-MM-DD格式</td>
+</tr>
+<tr>
+<td>create_time_end</td>
+<td>string</td>
+<td>否</td>
+<td>创建结束时间，YYYY-MM-DD格式</td>
+</tr>
+<tr>
+<td>last_modify_user</td>
+<td>string</td>
+<td>否</td>
+<td>作业修改人帐号</td>
+</tr>
+<tr>
+<td>last_modify_time_start</td>
+<td>string</td>
+<td>否</td>
+<td>最后修改起始时间，YYYY-MM-DD格式</td>
+</tr>
+<tr>
+<td>last_modify_time_end</td>
+<td>string</td>
+<td>否</td>
+<td>最后修改结束时间，YYYY-MM-DD格式</td>
+</tr>
+<tr>
+<td>tag_id</td>
+<td>string</td>
+<td>否</td>
+<td>作业标签ID，1.未分类、2.运营发布、3.故障处理、4.常用工具、5.产品自助、6.测试专用、7.持续集成</td>
+</tr>
+<tr>
+<td>start</td>
+<td>int</td>
+<td>否</td>
+<td>默认0表示从第1条记录开始返回</td>
+</tr>
+<tr>
+<td>length</td>
+<td>int</td>
+<td>否</td>
+<td>返回记录数量，不传此参数默认返回全部</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;create_time_start&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-02-22&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;create_time_end&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-02-22&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modify_time_start&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-02-22&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modify_time_end&quot;</span><span class="p">:</span> <span class="s2">&quot;2016-02-22&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;tag_id&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mi">100</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;bk_job_id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;step_num&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;tag_id&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-01-23 15:05:41 +0800&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modify_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-01-23 16:04:51 +0800&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_9">返回结果参数说明</h3>
+<h4 id="data">data</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>bk_job_id</td>
+<td>int</td>
+<td>作业模板ID</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>作业名称</td>
+</tr>
+<tr>
+<td>step_num</td>
+<td>int</td>
+<td>作业模板中的步骤数量</td>
+</tr>
+<tr>
+<td>tag_id</td>
+<td>string</td>
+<td>作业标签ID，1.未分类、2.运营发布、3.故障处理、4.常用工具、5.产品自助、6.测试专用、7.持续集成</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>string</td>
+<td>作业创建人帐号</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>创建时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>last_modify_user</td>
+<td>string</td>
+<td>作业修改人帐号</td>
+</tr>
+<tr>
+<td>last_modify_time</td>
+<td>string</td>
+<td>最后修改时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/get_os_account/</p>
+<h3 id="_2">请求方法</h3>
+<p>GET</p>
+<h3 id="_3">功能描述</h3>
+<p>查询业务下的执行账号</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;Administrator&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;os&quot;</span><span class="p">:</span> <span class="s2">&quot;Windows&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;Administrator&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-03-22 15:36:31&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span>
+            <span class="s2">&quot;account&quot;</span><span class="p">:</span> <span class="s2">&quot;SDFDSFDFDS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;os&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+            <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;SDFDSFDFDS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-08-10 11:49:20&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_9">返回结果参数说明</h3>
+<h4 id="data">data</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>账号ID</td>
+</tr>
+<tr>
+<td>account</td>
+<td>string</td>
+<td>账号名称</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>string</td>
+<td>账号创建人</td>
+</tr>
+<tr>
+<td>os</td>
+<td>string</td>
+<td>账号对应的OS</td>
+</tr>
+<tr>
+<td>alias</td>
+<td>string</td>
+<td>账号别名</td>
+</tr>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>账号创建时间</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/get_own_db_account_list/</p>
+<h3 id="_2">请求方法</h3>
+<p>GET</p>
+<h3 id="_3">功能描述</h3>
+<p>查询用户有权限的DB帐号列表</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>start</td>
+<td>int</td>
+<td>否</td>
+<td>默认0表示从第1条记录开始返回</td>
+</tr>
+<tr>
+<td>length</td>
+<td>int</td>
+<td>否</td>
+<td>返回记录数量，不传此参数默认返回全部</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mi">100</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;db_account_id&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="s2">&quot;db_alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mysql&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_9">返回结果参数说明</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>db_account_id</td>
+<td>int</td>
+<td>db帐号ID,主键，执行脚本或作业的接口请求传递参数时用此参数</td>
+</tr>
+<tr>
+<td>db_alias</td>
+<td>string</td>
+<td>帐号别名</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/get_script_detail/</p>
+<h3 id="_2">请求方法</h3>
+<p>GET</p>
+<h3 id="_3">功能描述</h3>
+<p>查询脚本详情</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>否</td>
+<td>业务ID，如果查询公共脚本可不传</td>
+</tr>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>是</td>
+<td>脚本ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">18</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;admin.20180723160606&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;public&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+        <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-07-23 16:06:06&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_modify_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-07-23 16:06:08&quot;</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_9">返回结果参数说明</h3>
+<h4 id="data">data</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>脚本ID</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>脚本名称</td>
+</tr>
+<tr>
+<td>version</td>
+<td>string</td>
+<td>脚本版本号</td>
+</tr>
+<tr>
+<td>tag</td>
+<td>string</td>
+<td>脚本版本备注</td>
+</tr>
+<tr>
+<td>type</td>
+<td>int</td>
+<td>脚本类型</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>string</td>
+<td>脚本创建人</td>
+</tr>
+<tr>
+<td>public</td>
+<td>bool</td>
+<td>是否公共脚本</td>
+</tr>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>脚本创建时间</td>
+</tr>
+<tr>
+<td>last_modify_user</td>
+<td>string</td>
+<td>脚本最近一次修改人</td>
+</tr>
+<tr>
+<td>last_modify_time</td>
+<td>string</td>
+<td>脚本最近一次修改时间</td>
+</tr>
+<tr>
+<td>content</td>
+<td>string</td>
+<td>脚本内容</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/get_script_list/</p>
+<h3 id="_2">请求方法</h3>
+<p>GET</p>
+<h3 id="_3">功能描述</h3>
+<p>查询脚本列表</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>否</td>
+<td>业务ID，如果查询公共脚本可不传</td>
+</tr>
+<tr>
+<td>is_public</td>
+<td>bool</td>
+<td>否</td>
+<td>是否公共脚本。true:公共脚本；false:业务脚本。默认值为false</td>
+</tr>
+<tr>
+<td>return_script_content</td>
+<td>bool</td>
+<td>否</td>
+<td>是否需要返回脚本内容。true:返回脚本内容；false：不返回脚本内容。默认为false。</td>
+</tr>
+<tr>
+<td>start</td>
+<td>int</td>
+<td>否</td>
+<td>默认0表示从第1条记录开始返回</td>
+</tr>
+<tr>
+<td>length</td>
+<td>int</td>
+<td>否</td>
+<td>分页查询-每页纪录数，默认为20。如果传入0或者不传，表示不分页</td>
+</tr>
+<tr>
+<td>script_type</td>
+<td>string</td>
+<td>否</td>
+<td>脚本类型。0：所有脚本类型，1：shell，2：bat，3：perl，4：python，5：powershell，6：sql。默认值为0</td>
+</tr>
+<tr>
+<td>script_name</td>
+<td>string</td>
+<td>否</td>
+<td>脚本名称，支持模糊查询</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;is_public&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+    <span class="s2">&quot;return_script_content&quot;</span><span class="p">:</span> <span class="n">false</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">6862</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;a.sh&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;admin.20180627172306&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;public&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+                <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-06-27 17:23:06&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modify_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-06-27 17:23:06&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;build_version&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;admin.20180723154537&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;creator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;public&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+                <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;create_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-07-23 15:45:37&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modify_user&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modify_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-07-23 17:24:17&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;page_size&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;total_record_size&quot;</span><span class="p">:</span> <span class="mi">2</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_9">返回结果参数说明</h3>
+<h4 id="data">data</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>脚本ID</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>脚本名称</td>
+</tr>
+<tr>
+<td>version</td>
+<td>string</td>
+<td>脚本版本号</td>
+</tr>
+<tr>
+<td>tag</td>
+<td>string</td>
+<td>脚本版本备注</td>
+</tr>
+<tr>
+<td>type</td>
+<td>int</td>
+<td>脚本类型</td>
+</tr>
+<tr>
+<td>creator</td>
+<td>string</td>
+<td>脚本创建人</td>
+</tr>
+<tr>
+<td>public</td>
+<td>bool</td>
+<td>是否公共脚本</td>
+</tr>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>脚本创建时间</td>
+</tr>
+<tr>
+<td>last_modify_user</td>
+<td>string</td>
+<td>脚本最近一次修改人</td>
+</tr>
+<tr>
+<td>last_modify_time</td>
+<td>string</td>
+<td>脚本最近一次修改时间</td>
+</tr>
+<tr>
+<td>content</td>
+<td>string</td>
+<td>脚本内容</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/get_step_instance_status/</p>
+<h3 id="_2">请求方法</h3>
+<p>POST</p>
+<h3 id="_3">功能描述</h3>
+<p>查询作业步骤的执行状态</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_6">接口参数</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>params</td>
+<td>map</td>
+<td>是</td>
+<td>请求参数结构</td>
+</tr>
+</tbody>
+</table>
+<h4 id="params">params</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>job_instance_id</td>
+<td>int</td>
+<td>是</td>
+<td>作业实例ID</td>
+</tr>
+<tr>
+<td>step_instance_id</td>
+<td>int</td>
+<td>是</td>
+<td>作业步骤实例ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;job_instance_id&quot;</span><span class="p">:</span> <span class="mi">490001</span><span class="p">,</span>
+        <span class="s2">&quot;step_instance_id&quot;</span><span class="p">:</span> <span class="mi">790001</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;is_finished&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+        <span class="s2">&quot;step_instance_analyse_result&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;result_type&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;result_type_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Success&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;ip_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;bk_cloud_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;10.25.0.2&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;step_instance_detail&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;step_instance_id&quot;</span><span class="p">:</span> <span class="mi">790001</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;my_job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;operator&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;step_id&quot;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+            <span class="s2">&quot;job_instance_id&quot;</span><span class="p">:</span> <span class="mi">490001</span><span class="p">,</span>
+            <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;target_ips&quot;</span><span class="p">:</span> <span class="s2">&quot;0:10.25.0.2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;abnormal_agent_ips&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;retry_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;start_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-06-07 12:15:14&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;end_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-06-07 12:15:42&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;total_time&quot;</span><span class="p">:</span> <span class="mf">28.395</span><span class="p">,</span>
+            <span class="s2">&quot;total_ip_num&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;abnormal_agent_ip_num&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;running_ip_num&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;fail_ip_num&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;success_ip_num&quot;</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_9">返回结果参数说明</h3>
+<h4 id="data">data</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>is_finished</td>
+<td>boolean</td>
+<td>作业步骤是否结束</td>
+</tr>
+<tr>
+<td>step_instance_detail</td>
+<td>map</td>
+<td>步骤实例执行详情</td>
+</tr>
+<tr>
+<td>step_instance_analyse_result</td>
+<td>map</td>
+<td>作业步骤执行结果分析</td>
+</tr>
+</tbody>
+</table>
+<h4 id="step_instance_detail">step_instance_detail</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>step_instance_id</td>
+<td>long</td>
+<td>作业步骤实例ID</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>步骤名称</td>
+</tr>
+<tr>
+<td>type</td>
+<td>int</td>
+<td>步骤类型: 1.脚本执行; 2.文件分发; 4.SQL脚本执行</td>
+</tr>
+<tr>
+<td>operator</td>
+<td>string</td>
+<td>作业执行人帐号</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>步骤执行状态码: 1.未执行; 2.正在执行; 3.执行成功; 4.执行失败; 5.跳过; 6.忽略错误; 7.等待用户; 8.手动结束; 9.状态异常; 10.步骤强制终止中; 11.步骤强制终止成功; 12.步骤强制终止失败</td>
+</tr>
+<tr>
+<td>step_id</td>
+<td>long</td>
+<td>步骤ID</td>
+</tr>
+<tr>
+<td>job_instance_id</td>
+<td>long</td>
+<td>作业实例ID</td>
+</tr>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>target_ips</td>
+<td>string</td>
+<td>目标服务器IP列表，格式:IP1,IP2,IP2</td>
+</tr>
+<tr>
+<td>abnormal_agent_ips</td>
+<td>string</td>
+<td>作业执行异常服务器的IP列表，格式:IP1,IP2,IP2</td>
+</tr>
+<tr>
+<td>retry_count</td>
+<td>int</td>
+<td>步骤重试次数</td>
+</tr>
+<tr>
+<td>start_time</td>
+<td>string</td>
+<td>开始执行时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td>string</td>
+<td>执行结束时间，YYYY-MM-DD HH:mm:ss格式</td>
+</tr>
+<tr>
+<td>total_time</td>
+<td>float</td>
+<td>步骤总耗时,秒</td>
+</tr>
+<tr>
+<td>total_ip_num</td>
+<td>int</td>
+<td>目标服务器数量</td>
+</tr>
+<tr>
+<td>abnormal_agent_ip_num</td>
+<td>int</td>
+<td>执行异常服务器数量</td>
+</tr>
+<tr>
+<td>running_ip_num</td>
+<td>int</td>
+<td>正在执行当前步骤的服务器数量</td>
+</tr>
+<tr>
+<td>fail_ip_num</td>
+<td>int</td>
+<td>当前步骤执行失败的服务器数量</td>
+</tr>
+<tr>
+<td>success_ip_num</td>
+<td>int</td>
+<td>作业执行成功的服务器数量</td>
+</tr>
+</tbody>
+</table>
+<h4 id="step_analyse_result">step_analyse_result</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>result_type</td>
+<td>int</td>
+<td>执行结果类型</td>
+</tr>
+<tr>
+<td>result_type_text</td>
+<td>int</td>
+<td>执行结果类型描述</td>
+</tr>
+<tr>
+<td>count</td>
+<td>int</td>
+<td>服务器数目</td>
+</tr>
+<tr>
+<td>ip_list</td>
+<td>array</td>
+<td>服务器IP列表</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ip_list">ip_list</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_cloud_id</td>
+<td>int</td>
+<td>云区域ID</td>
+</tr>
+<tr>
+<td>ip</td>
+<td>string</td>
+<td>IP</td>
+</tr>
+</tbody>
+</table><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/save_cron/</p>
+<h3 id="_2">请求方法</h3>
+<p>POST</p>
+<h3 id="_3">功能描述</h3>
+<p>新建或保存定时作业；新建定时作业，作业状态默认为暂停；操作者必须是业务的创建人或运维</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>bk_job_id</td>
+<td>int</td>
+<td>是</td>
+<td>要定时执行的作业的作业ID</td>
+</tr>
+<tr>
+<td>cron_id</td>
+<td>int</td>
+<td>否</td>
+<td>定时任务ID，更新定时任务时，必须传这个值</td>
+</tr>
+<tr>
+<td>cron_name</td>
+<td>string</td>
+<td>否</td>
+<td>定时作业名称，新建时必填，修改时选填</td>
+</tr>
+<tr>
+<td>cron_expression</td>
+<td>string</td>
+<td>否</td>
+<td>定时任务crontab的定时规则，新建时必填，修改时选填，各字段含义为：秒 分 时 日 月 周 年（可选），如: 0 0/5 * * * ? 表示每5分钟执行一次</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;bk_job_id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s2">&quot;cron_name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cron_expression&quot;</span><span class="p">:</span> <span class="s2">&quot;0 0/5 * * * ?&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;cron_id&quot;</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div><h3 id="_1">请求地址</h3>
+<p>/api/c/compapi/v2/job/update_cron_status/</p>
+<h3 id="_2">请求方法</h3>
+<p>POST</p>
+<h3 id="_3">功能描述</h3>
+<p>更新定时作业状态，如启动或暂停；操作者必须是业务的创建人或运维</p>
+<h3 id="_4">请求参数</h3>
+<h4 id="_5">通用参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_app_code</td>
+<td>string</td>
+<td>是</td>
+<td>应用ID</td>
+</tr>
+<tr>
+<td>bk_app_secret</td>
+<td>string</td>
+<td>是</td>
+<td>安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -&gt; 点击应用ID -&gt; 基本信息 获取</td>
+</tr>
+<tr>
+<td>bk_token</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户登录态，bk_token与bk_username必须一个有效，bk_token可以通过Cookie获取</td>
+</tr>
+<tr>
+<td>bk_username</td>
+<td>string</td>
+<td>否</td>
+<td>当前用户用户名，应用免登录态验证白名单中的应用，用此字段指定当前用户</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_6">接口参数</h4>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bk_biz_id</td>
+<td>int</td>
+<td>是</td>
+<td>业务ID</td>
+</tr>
+<tr>
+<td>cron_status</td>
+<td>int</td>
+<td>是</td>
+<td>定时状态，1.启动、2.暂停</td>
+</tr>
+<tr>
+<td>cron_id</td>
+<td>int</td>
+<td>是</td>
+<td>定时作业ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_7">请求参数示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;bk_app_code&quot;</span><span class="p">:</span> <span class="s2">&quot;esb_test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_app_secret&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_token&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bk_biz_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;cron_status&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;cron_id&quot;</span><span class="p">:</span> <span class="mi">2</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="_8">返回结果示例</h3>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;cron_id&quot;</span><span class="p">:</span> <span class="mi">2</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+    </body>
+    </html>
+    

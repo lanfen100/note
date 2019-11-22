@@ -1,0 +1,6347 @@
+
+    <html lang="zh-cn">
+    <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <link href="F:\bkdoc\md_to_pdf/default.css" rel="stylesheet">
+    </head>
+    <body>
+    <h1 id="_1">产品简介</h1>
+<p>蓝鲸监控是蓝鲸智云官方推出的一款针对主机/互联网应用进行监控的产品，具有丰富的数据采集能力，支持采集主机（系统基础性能、组件服务、数据库、日志等）、中间件、网络设备等数据源的监控指标，可精准探测互联网应用服务的可用性。</p>
+<p>通过大规模的数据处理性能，灵活的视图展示、智能监控的能力，蓝鲸监控可对采集到的指标进行视图/报表展示，告警检测、收敛、通知以及联动蓝鲸体系的应用——故障自愈完成故障处理的闭环。</p>
+<p>用户可以基于蓝鲸监控建立起一个监控的生态。 未来监控将建立一套全方位 360 度无死角，满足不同的监控场景，深化场景能力，推出更多的智能监控，提升运维人员的洞察能力，为在线业务保驾护航。</p>
+<ul>
+<li>产品特点及优势：</li>
+</ul>
+<p><img alt="Advantage" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Advantage.png" /></p>
+<blockquote>
+<blockquote>
+<p>由于产品在进一步优化中，<strong>操作审计功能暂时下线</strong>，其余功能皆可正常使用！</p>
+</blockquote>
+</blockquote><h1 id="_1">术语解释</h1>
+<p>指标与维度：</p>
+<ul>
+<li>
+<p>指标：行业里一般称为 Metric(s)、Item 或度量，即监控的内容，一般是坐标系中的纵坐标，比如 CPU 使用率、在线人数等，在 SQL 语句中一般是 <code>select 指标</code></p>
+</li>
+<li>
+<p>维度：行业里一般称为 Dimension，区分指标的条件，比如 IP、主机名或平台（IOS、Andriod），在 SQL 语句中一般是 <code>Group by 维度</code></p>
+<ul>
+<li>
+<p>示例：在仪表盘配置出图前设置
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/dashboard_panel_set.jpg" /></p>
+</li>
+<li>
+<p>配置后的视图展示（Panel）
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/dashboard_panel.jpg" /></p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>如在阅读该文档或使用蓝鲸监控产品的过程中有任何不理解的地方，请您联系我们进行<a href=".">反馈</a>，我们会尽快添加解释内容到文档和产品中！</strong></p>
+</blockquote><h1 id="_1">产品架构</h1>
+<p>是否需要添加产品后台逻辑说明</p>
+<p><img alt="Architecture" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/product_Architecture_new.png" /></p>
+<p>图 1. 蓝鲸监控产品架构图</p>
+<hr />
+<p><img alt="Architecture" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Architecture.png" /></p>
+<p>图 2. 蓝鲸数据链路架构图</p>
+<p>蓝鲸监控是蓝鲸体系数据链路的重要一环，根据用户的配置，从蓝鲸基础平台（配置平台、管控平台和作业平台）获取数据源，数据传递到数据基础模块进行分析和计算处理后，将数据分发入库，蓝鲸监控后台服务在数据库（InfluxDB）获取数据二次处理后提取到 SaaS 以供用户使用。</p>
+<p><img alt="Architecture" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor_backstage_logic.jpg" /></p>
+<p>图 3. 蓝鲸监控数据链路架构图</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor_backstage_logic2.jpg" /></p>
+<p>图 4. 蓝鲸监控数据链路架构图 - 清洗配置生流程</p><h1 id="_1">功能概述</h1>
+<p>蓝鲸监控目前已覆盖网络层、主机层、组件层、应用层、服务层，主动拨测监控。对于无法开箱即用的监控对象，用户可以通过脚本采集、日志采集以及组件二次开发实现自定义监控，通过仪表盘实现自定义可视化视图呈现。</p>
+<p>基于 IPaaS 的产品设计（关联配置平台、作业执行、数据平台等），天然打破“竖井式”产品设计理念，依托于蓝鲸体系中的故障自愈实现告警的无人值守。</p>
+<p>以下文档会对上述功能进行详细说明，产品的使用请参考 <a href="../快速入门/Getting_started.md">快速入门</a>。</p><h1 id="_1">主机监控</h1>
+<p>蓝鲸监控支持以主机为单元的基础性能指标查看、告警策略配置等功能。指标支持 CPU、内存、磁盘、网络、进程、系统、事件（ Corefile 产生 、主机重启等）等 7 类共 30~40 项指标，满足用户对主机层的精准监控。</p>
+<p><img alt="主机监控" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/host_monitor.gif" />
+图 1. 主机监控视图</p>
+<h2 id="_2">主机基础性能采集方式</h2>
+<p><a href="5.1/节点管理/快速入门/agent0.md">部署蓝鲸 Agent</a> 后，默认会拉起 <code>basereport</code> 进程自动上报主机性能指标（CPU、内存、网络、磁盘、TCP 连接数等指标），关于采集器详情可参考附录文档 <a href="../二次开发/plugins.md">采集器概述</a></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367250851552.jpg" />
+图 2. 基础性能采集器工作状态示意图</p>
+<p>主机性能指标默认采集周期为 1 分钟。</p>
+<h2 id="_3">主机基础性能指标定义</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>类型</th>
+<th>单位</th>
+<th>含义</th>
+<th>采集方法(Linux)</th>
+<th>采集方法(Windows)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5 分钟平均负载</td>
+<td>CPU</td>
+<td>%</td>
+<td>五分钟内同时处于就绪状态的平均进程数</td>
+<td _2="$2" print="print">awk ‘</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>cpu 总使用率</td>
+<td>CPU</td>
+<td>%</td>
+<td>当前消耗的总 CPU 百分比</td>
+<td>delta(busy) / delta(total) * 100 busy = user + sys + nice + iowait + irq + softirq + steal + guest + guestnice + stolen total = busy + idle</td>
+<td>for /f “tokens=1,2,* delims==” %i in (‘wmic path Win32_PerfFormattedData_Counters_ProcessorInformation where "Name=’_Total’" get PercentIdleTime/value &#124; findstr PercentIdleTime’) do (set /a 100-%j)</td>
+</tr>
+<tr>
+<td>cpu 单核使用率</td>
+<td>CPU</td>
+<td>%</td>
+<td>当前单个 CPU 消耗的百分比</td>
+<td>delta(busy) / delta(total) * 100 busy = user + sys + nice + iowait + irq + softirq + steal + guest + guestnice + stolen total = busy + idle</td>
+<td>for /f “tokens=1,2,* delims==” %i in (‘wmic path Win32_PerfFormattedData_Counters_ProcessorInformation where “not name like ‘%Total%’” get PercentIdleTime/value &#124; findstr PercentIdleTime’) do (set /a 100-%j)</td>
+</tr>
+<tr>
+<td>接收字节流量</td>
+<td>网络</td>
+<td>KB/s</td>
+<td>网卡每秒接收的比特数，即网卡的上行带宽</td>
+<td>读取/proc/net/dev 文件 第 1 项 SpeedRecv = delta(new.BytesRecv, old.BytesRecv) / interval</td>
+<td>wmic path Win32_PerfRawData_Tcpip_NetworkInterface get BytesReceivedPersec/value &#124; findstr BytesReceivedPersec</td>
+</tr>
+<tr>
+<td>发送字节流量</td>
+<td>网络</td>
+<td>KB/s</td>
+<td>网卡每秒发送的比特数，即网卡的下行带宽</td>
+<td>读取/proc/net/dev 文件第 9 项 SpeedSent = delta(new.BytesSent, old.BytesSent) / interval</td>
+<td>wmic path Win32_PerfRawData_Tcpip_NetworkInterface get BytesSentPersec/value &#124; findstr BytesSentPersec</td>
+</tr>
+<tr>
+<td>发送包速率</td>
+<td>网络</td>
+<td>个/s</td>
+<td>网卡每秒接收的数据包数</td>
+<td>读取/proc/net/dev 文件 第 10 项 SpeedPacketsSent = (counterDiff(once.Stat[i].PacketsSent, val.PacketsSent, NetCoutnerMaxSize)) / interval</td>
+<td>wmic path Win32_PerfRawData_Tcpip_NetworkInterface get PacketsSentPersec/value &#124; findstr PacketsSentPersec</td>
+</tr>
+<tr>
+<td>接收包速率</td>
+<td>网络</td>
+<td>个/s</td>
+<td>网卡每秒发送的数据包数</td>
+<td>读取/proc/net/dev 文件 第 2 项 SpeedPacketsRecv = delta(new.PacketsRecv, old.PacketsRecv) / interval</td>
+<td>wmic path Win32_PerfRawData_Tcpip_NetworkInterface get PacketsReceivedPersec/value &#124; findstr PacketsReceivedPersec</td>
+</tr>
+<tr>
+<td>established 连接数</td>
+<td>网络</td>
+<td>个</td>
+<td>当前服务器下 TCP 链接处于 ESTABLISHED 状态的连接数</td>
+<td>系统 netlink 实现 验证方法 netstat -pant&#124;grep ESTABLISHED</td>
+<td>netstat -ano -p tcp &#124; more +4 &#124; find " ESTABLISHED "</td>
+</tr>
+<tr>
+<td>time_wait 连接数</td>
+<td>网络</td>
+<td>个</td>
+<td>当前服务器下 TCP 链接处于 TIME_WAIT 状态的连接数</td>
+<td>系统 netlink 实现 验证方法 netstat -pant&#124;grep TIME_WAIT</td>
+<td>netstat -ano -p tcp &#124; more +4 &#124; find " TIME_WAIT "</td>
+</tr>
+<tr>
+<td>listen 连接数</td>
+<td>网络</td>
+<td>个</td>
+<td>当前服务器下 TCP 链接处于 LISTEN 状态的连接数</td>
+<td>系统 netlink 实现 验证方法 netstat -pant&#124;grep LISTEN</td>
+<td>netstat -ano -p tcp &#124; more +4 &#124; find " LISTENING "</td>
+</tr>
+<tr>
+<td>last_ack 连接数</td>
+<td>网络</td>
+<td>个</td>
+<td>当前服务器下 TCP 链接处于 LAST_ACK 状态的连接数</td>
+<td>系统 netlink 实现 验证方法 netstat -pant&#124;grep LAST_ACK</td>
+<td>netstat -ano -p tcp &#124; more +4 &#124; find " LAST_ACK "</td>
+</tr>
+<tr>
+<td>syn_recv 连接数</td>
+<td>网络</td>
+<td>个</td>
+<td>当前服务器下 TCP 链接处于 SYN_RECV 状态的连接数</td>
+<td>系统 netlink 实现 验证方法 netstat -pant&#124;grep SYNC_RECV</td>
+<td>netstat -ano -p tcp &#124; more +4 &#124; find " SYN_RECV "</td>
+</tr>
+<tr>
+<td>syn_sent 连接数</td>
+<td>网络</td>
+<td>个</td>
+<td>当前服务器下 TCP 链接处于 SYN_SENT 状态的连接数</td>
+<td>系统 netlink 实现 验证方法 netstat -pant&#124;grep SYNC_SENT</td>
+<td>netstat -ano -p tcp &#124; more +4 &#124; find " SYN_SENT "</td>
+</tr>
+<tr>
+<td>fin_wait1 连接数</td>
+<td>网络</td>
+<td>个</td>
+<td>当前服务器下 TCP 链接处于 FIN_WAIT1 状态的连接数</td>
+<td>系统 netlink 实现 验证方法 netstat -pant&#124;grep FIN_WAIT1</td>
+<td>netstat -ano -p tcp &#124; more +4 &#124; find " FIN_WAIT_1 "</td>
+</tr>
+<tr>
+<td>fin_wait2 连接数</td>
+<td>网络</td>
+<td>个</td>
+<td>当前服务器下 TCP 链接处于 FIN_WAIT2 状态的连接数</td>
+<td>系统 netlink 实现 验证方法 netstat -pant&#124;grep FIN_WAIT2</td>
+<td>netstat -ano -p tcp &#124; more +4 &#124; find " FIN_WAIT_2 "</td>
+</tr>
+<tr>
+<td>closing 连接数</td>
+<td>网络</td>
+<td>个</td>
+<td>当前服务器下 TCP 链接处于 CLOSING 状态的连接数</td>
+<td>系统 netlink 实现 验证方法 netstat -pant&#124;grep CLOSING</td>
+<td>netstat -ano -p tcp &#124; more +4 &#124; find " CLOSING "</td>
+</tr>
+<tr>
+<td>closed 状态连接数</td>
+<td>网络</td>
+<td>个</td>
+<td>当前服务器下 TCP 链接处于 CLOSED 状态的连接数</td>
+<td>系统 netlink 实现 验证方法 netstat -pant&#124;grep CLOSED</td>
+<td>netstat -ano -p tcp &#124; more +4 &#124; find " CLOSE "</td>
+</tr>
+<tr>
+<td>UDP 接收包量</td>
+<td>网络</td>
+<td>个</td>
+<td>UDP 包接受数</td>
+<td _2="$2" print="print">读取 /proc/net/snmp 文件 InDatagrams 项 cat /proc/net/snmp&#124;grep Udp:&#124;grep -v ‘InDatagrams’&#124;awk ‘</td>
+<td>wmic path Win32_PerfFormattedData_Tcpip_UDPv4 get DatagramsReceivedPersec/value</td>
+</tr>
+<tr>
+<td>UDP 发送包量</td>
+<td>网络</td>
+<td>个</td>
+<td>UDP 包发送数</td>
+<td _5="$5" print="print">读取 /proc/net/snmp 文件 OutDatagrams 项 cat /proc/net/snmp&#124;grep Udp:&#124;grep -v ‘InDatagrams’&#124;awk ‘</td>
+<td>读取/proc/net/dev 文件 第 2 项 SpeedPacketsRecv = delta(new.PacketsRecv, old.PacketsRecv) / interval</td>
+</tr>
+<tr>
+<td>可用物理内存</td>
+<td>内存</td>
+<td>MB</td>
+<td>可用内存容量</td>
+<td _2="$2" print="print">读取 /proc/meminfo 文件 MemTotal 字段*1024 cat /proc/meminfo &#124;grep ‘MemTotal’&#124;awk -F ‘:’ ‘</td>
+<td>for /f “tokens=1,2,* delims==” %i in (‘wmic OS get FreePhysicalMemory/value&#124; findstr FreePhysicalMemory’) do (set /a %j/1024)</td>
+</tr>
+<tr>
+<td>交换分区已用量</td>
+<td>内存</td>
+<td>MB</td>
+<td>交换分区使用容量</td>
+<td>读取 /proc/meminfo 文件 golang 系统调用 syscall.Sysinfo sysinfo.Totalswap - sysinfo.Freeswap 验证方法 free -m</td>
+<td>wmic os get TotalSwapSpaceSize/value</td>
+</tr>
+<tr>
+<td>物理内存使用率</td>
+<td>内存</td>
+<td>%</td>
+<td>内存使用百分比</td>
+<td>读取 /proc/meminfo 文件[MemTotal-MemFree]/MemTotal*100.0</td>
+<td>wmic os get FreePhysicalMemory,TotalVisibleMemorySize/value</td>
+</tr>
+<tr>
+<td>物理内存使用量</td>
+<td>内存</td>
+<td>MB</td>
+<td>已经使用的内存容量</td>
+<td>读取 /proc/meminfo 文件[MemTotal-MemFree]*1024</td>
+<td>wmic os get FreePhysicalMemory,TotalVisibleMemorySize/value &#124; findstr “FreePhysicalMemory TotalVisibleMemorySize”</td>
+</tr>
+<tr>
+<td>应用内存使用量</td>
+<td>内存</td>
+<td>MB</td>
+<td>应用进程使用的内存量</td>
+<td>读取 /proc/meminfo 文件 如果有 MemAvailable 字段（不同系统版本有差异）(MemTotal-MemAvailable)/1024,如果没有该字段，MemAvailable=MemFree+Buffers+Cached</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>应用内存使用率</td>
+<td>内存</td>
+<td>%</td>
+<td>应用进程内存量占总内存的百分比</td>
+<td>读取 /proc/meminfo 文件 (MemTotal-MemAvailable)/（MemTotal*100.0），如果没有 MemAvailable 字段，则 MemAvailable=MemFree+Buffers+Cached</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>磁盘使用率</td>
+<td>磁盘</td>
+<td>%</td>
+<td>磁盘已用空间的百分占比</td>
+<td>golang 系统调用 syscall.Statfs 相当于 df</td>
+<td>for /f “tokens=1,2,* delims==” %i in (‘wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk where “name like ‘%:%’” get PercentFreeSpace/value &#124; findstr PercentFreeSpace’) do (set /a 100-%j)</td>
+</tr>
+<tr>
+<td>读速率</td>
+<td>磁盘</td>
+<td>次/s</td>
+<td>磁盘每秒输出次数</td>
+<td>读取 /proc/diskstats 每一行的第四项 float64((new_stat.ReadCount - stat.ReadCount)) / 60 只上报逻辑分区</td>
+<td>wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk get DiskReadsPersec/value</td>
+</tr>
+<tr>
+<td>写速率</td>
+<td>磁盘</td>
+<td>次/s</td>
+<td>磁盘每秒写入次数</td>
+<td>读取 /proc/diskstats 第 8 项 float64((new_stat.WriteCount - stat.WriteCount)) / 60 只上报逻辑分区</td>
+<td>wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk get DiskWritesPersec/value</td>
+</tr>
+<tr>
+<td>磁盘 IO 使用率</td>
+<td>磁盘</td>
+<td>%</td>
+<td>磁盘处于活动时间的百分比</td>
+<td>读取 /proc/diskstats 文件读取 /proc/diskstats 第 13 项 （new_stat.IoTime - stat.IoTime）/60.0 / 1000.0</td>
+<td>for /f “tokens=1,2,* delims==” %i in (‘wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk where "Name=’_Total’" get PercentIdleTime/value &#124; findstr PercentIdleTime’) do (set /a 100-%j)</td>
+</tr>
+<tr>
+<td>系统进程数</td>
+<td>进程</td>
+<td>个</td>
+<td>系统已启动进程数量</td>
+<td>抓取/proc 目录下所有子目录数量</td>
+<td>wmic path win32_process get ProcessId/value</td>
+</tr>
+<tr>
+<td>Agent 心跳丢失-GSE</td>
+<td>事件</td>
+<td>/</td>
+<td>监测 GSE 的 Agent 是否正常</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>磁盘只读-GSE</td>
+<td>事件</td>
+<td>/</td>
+<td>监测磁盘状态</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>磁盘写满-GSE</td>
+<td>事件</td>
+<td>/</td>
+<td>监测磁盘状态</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Corefile 产生-GSE</td>
+<td>事件</td>
+<td>/</td>
+<td>监测/proc/sys/kernel/core_pattern 中目录内文件的变化</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>PING 不可达告警-GSE</td>
+<td>事件</td>
+<td>/</td>
+<td>监测 PING 不可达事件告警</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>进程端口</td>
+<td>事件</td>
+<td>/</td>
+<td>进程对应端口</td>
+<td>N/A</td>
+<td>wmic path win32_process get */value 和 netstat -ano</td>
+</tr>
+<tr>
+<td>自定义字符型</td>
+<td>事件</td>
+<td>/</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>系统启动时间异常</td>
+<td>事件</td>
+<td>/</td>
+<td>监测系统启动异常告警</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table><h1 id="_1">进程端口监控</h1>
+<p>蓝鲸监控会采集上报主机中 <code>应用程序</code> 的进程运行状态、端口监听状态、占用系统资源。配置进程监控的方法请参考 <a href="../快速入门/进程监控/process_monitor_front.md">快速入门文档</a>。</p>
+<blockquote>
+<p>同时适用于 <code>Linux</code> 和 <code>Windows</code></p>
+</blockquote>
+<p><img alt="进程资源监控_Linux" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Process_Resource_Monitor.gif" />
+图 1. 进程监控视图</p>
+<h2 id="_2">监控指标说明</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Process.CPU</td>
+<td>%</td>
+<td>CPU 使用率</td>
+<td>进程当前占用 CPU 的使用率</td>
+</tr>
+<tr>
+<td>Process.Mem</td>
+<td>%</td>
+<td>内存使用率</td>
+<td>进程当前占用内存的是使用率</td>
+</tr>
+<tr>
+<td>Process.FileDescriptor</td>
+<td></td>
+<td>文件句柄数</td>
+<td pid="pid">lsof -p $</td>
+</tr>
+<tr>
+<td>Process.RES</td>
+<td>MB</td>
+<td>物理内存</td>
+<td>任务已使用的物理内存大小</td>
+</tr>
+<tr>
+<td>Process.VIRT</td>
+<td>MB</td>
+<td>虚拟内存</td>
+<td>任务已使用的虚拟内存大小</td>
+</tr>
+</tbody>
+</table><h1 id="_1">组件监控</h1>
+<p>蓝鲸监控支持对常见开源组件及商业中间件的性能指标监控，比如 Nginx 的每分钟客户端请求数(req_per_min)、等待中的连接数(waiting)等，或 Oracle 的并发等待时间(CONCURRENCY_WAIT_TIME)等，通过监控这些指标，防止出现进程状态存活，工作状态已经异常的情况。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15365875823211.jpg" />
+图 1. 组件监控</p>
+<p><img alt="Nginx_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Nginx_metrics.gif" />
+图 2. Nginx 关键性能指标监控</p>
+<p><img alt="Oracle_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Oracle_metrics.gif" />
+图 3. Oracle 关键性能指标监控</p>
+<p>蓝鲸监控除内置组件性能指标的采集能力，同时兼容 Prometheus Exporter 的导入及开发能力，用户通过自主开发采集器对接蓝鲸监控，可全面覆盖组件的采集能力。</p>
+<blockquote>
+<blockquote>
+<p>自定义开发组件采集器文档请参考：
+- <a href="5.1/开发指南/扩展开发/monitor.md">蓝鲸体系开发指南 - 拓展开发 - 蓝鲸监控组件采集器开发文档</a>
+- <a href="https://prometheus.io/docs/instrumenting/exporters/">Prometheus Exporter 官方介绍</a>
+- <a href="https://prometheus.io/docs/instrumenting/writing_exporters/">Prometheus Exporter 开发说明</a></p>
+</blockquote>
+</blockquote><h1 id="_1">服务拨测</h1>
+<p>服务拨测是探测服务（应用）可用性的监控方式，通过拨测节点对目标服务进行周期性探测，主要通过<code>可用性</code>和<code>响应时间</code>来度量服务（应用）的状态。</p>
+<p>服务拨测通过模拟用户的登陆/查询，实现<strong>从被动投诉到主动发现的运维方式转变</strong>，当前支持的拨测协议有 HTTP (包含 HTTPS ， GET 和 POST 方法）、 TCP 、 UDP 。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/uptime_check_monitor_desc.png" />
+图 1. 服务拨测界面</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15300012217288.jpg" />
+图 2. 服务拨测可用率视图</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15300011945142.jpg" />
+图 3. 服务拨测响应时间视图</p>
+<h2 id="1">1. 支持自助管理节点</h2>
+<p>支持将部署了蓝鲸 Gse_Agent 的主机作为拨测节点，也可以在拨测节点管理对中节点进行删改。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor001.jpg" />
+图 4. 新增拨测节点</p>
+<h2 id="2">2. 支持内网服务探测</h2>
+<p>通过将部署 Gse_Agent 的主机作为拨测节点，实现对内网服务的探测。比如对公司 OA 网站可用性监测、后台模块间访问延迟监测。</p>
+<h2 id="3">3. 支持三种主流协议</h2>
+<p>支持 HTTP(S) 、 TCP 、 UDP 三种主流协议的探测</p>
+<p><img alt="新增拨测任务选择协议" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15300081359480.jpg" /></p>
+<p>图 5. 新增拨测任务选择协议</p>
+<h2 id="4">4. 支持关联配置平台</h2>
+<p>关联配置平台，主机变动，自动维护拨测策略。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor013.png" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor014.png" /></p>
+<p>图 6. 关联配置平台新增拨测任务</p>
+<h2 id="5">5. 地图大屏展示</h2>
+<p>可适配大屏，满足展示需求。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15300002084642.jpg" />
+图 7. 拨测可用率 大屏展示</p><h1 id="_1">自定义监控</h1>
+<p>自定义监控是蓝鲸监控预置的监控对象之外的监控方案。当你需要对业务指标或蓝鲸监控未内置的监控对象做监控时，通过自定义监控可实现你的监控需求。</p>
+<p>目前支持的监控源有 <code>脚本采集</code> 、 <code>日志采集</code> 和 <code>服务拨测</code> 。用户通过采集中心配置监控源后，在自定义监控页面配置数据视图。</p>
+<p><img alt="Advantage" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/自定义监控流程.png" /></p>
+<ul>
+<li>
+<p>日志采集，是从日志文件中解析上报的字段进行采集上报和监控。</p>
+</li>
+<li>
+<p>当前版本日志检索仅能在自定义监控页面配置视图。</p>
+</li>
+<li>
+<p>脚本采集，通过在服务器上执行 Shell 、 Bat 、 Python 、等脚本，获取执行结果参数上报和监控。</p>
+</li>
+<li>
+<p>当前版本可在仪表盘或自定义监控中配置视图。</p>
+</li>
+</ul><h1 id="_1">仪表盘</h1>
+<p>通过仪表盘，可以对当前业务下的各个监控对象做可视化分析，实现你的个性化大屏展示和监控需求。</p>
+<p>{% video %}Visualization.mp4{% endvideo %}</p><h1 id="_1">权限管理</h1>
+<p>蓝鲸监控的权限体系分 2 个层面：<code>业务隔离</code>、<code>业务下角色隔离</code>，均是基于蓝鲸配置平台（CMDB）实现。提供了 <strong>业务访问角色控制</strong> 和  <strong>业务配置查看或变更权限控制</strong> 的功能。</p>
+<h2 id="_2">业务隔离</h2>
+<p>配置平台业务间的权限通过业务管理中的角色配置实现业务隔离，不同业务中，拥有对应业务权限的人员才能访问。</p>
+<p>如 <code>monitor</code> 在配置中心拥有 <code>蓝鲸</code> 和 <code>业务3</code> 的运维人员业务权限</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366502177069.jpg" /></p>
+<p>他在蓝鲸监控中也只有这 2 个业务的权限，因为蓝鲸监控集成了配置平台对角色的业务权限管理。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366501008132.jpg" /></p>
+<h2 id="_3">业务下角色隔离</h2>
+<p>业务中角色权限又分为 <code>查询</code> 和 <code>变更</code> 权限， <code>查询</code> 仅能查看当前业务中监控配置及告警信息，无法修改，<code>变更</code> 则可以修改业务中的监控配置，该角色同样继承于蓝鲸配置平台（CMDB）业务中设置的 <code>运维人员</code> 、 <code>产品人员</code> 、 <code>测试人员</code> 、 <code>开发人员</code> 权限。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366501925075.jpg" /></p>
+<p>默认运维拥有 <code>查询</code> 和 <code>变更</code> 权限，其他人员拥有 <code>查询</code> 权限。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366502446589.jpg" /></p>
+<p>根据实际使用场景，可以针对单个角色做权限调整。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366502906499.jpg" /></p><h1 id="_1">快速入门</h1>
+<p>以下入门指南文档包含监控对象的多类场景：网络层、主机层、组件层、服务拨测、自定义监控的快速接入，指南维度中包含采集、视图、策略配置、告警自动化处理这 4 个核心流程，此外还包含告警通知渠道等设置，用户通过阅读以下文档可以快速掌握蓝鲸监控基本功能的使用。</p><h1 id="_1">进程与端口监控</h1>
+<p>如何通过蓝鲸监控对主机内<code>应用程序</code>的进程状态、端口及资源占用进行监控。</p>
+<p>方案：配置平台注册进程 → 自动下发采集配置 → 设定策略  → 产生告警 → 故障自愈</p>
+<h2 id="_2">前置步骤</h2>
+<p>社区版 V5.0 及以上版本支持进程参数精确匹配及自动下发配置，社区版 V5.0 的用户请参考旧版<a href="">文档</a>。</p>
+<p>依赖组件：配置平台、管控平台、节点管理</p>
+<ul>
+<li>需要进程监控的机器必须安装蓝鲸 Agent</li>
+<li>Agent 安装完成后，检查 Agent 端进程 processbeat 是否自动拉起，如果没有可先通过作业平台执行作业或者到后台手动拉起采集进程，采集失败原因可通过 <a href="5.1/常见问题/SaaS/bk_monitor.md">常见问题文档</a> 排查。</li>
+</ul>
+<div class="codehilite"><pre><span></span><span class="c1"># 通过作业平台或者在 Agent 端后台执行手动拉起操作</span>
+./usr/local/gse/plugins/bin/start.sh  processbeat
+</pre></div><h1 id="_1">配置平台注册进程</h1>
+<ul>
+<li>进程信息配置</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/process_monitor_cmdb_config.png" />
+  图 1. 配置平台配置进程信息</p>
+<ul>
+<li>
+<p>进程名称（必填）：对外显示的服务名，用户自定义，一般与进程实际服务名称对应，会在蓝鲸监控-主机监控-主机详情-进程服务中用于区分不同进程。</p>
+</li>
+<li>
+<p>功能名称（必填）：程序的二进制名称，比如 Kafka 的二进制是 java ，就填写 java 。</p>
+</li>
+<li>
+<p>启动参数匹配规则（非必填、重点）：实现精确匹配进程的重要规则，主要应用于如 Java 或 Python 等二进制名重复的进程， Agent 端采集器会通过该规则去识别进程 <code>cmdline</code> 符合参数的唯一进程。如果填入的参数不唯一就会识别到多个进程，如果进程二进制名本身唯一，可不填。</p>
+</li>
+<li>
+<p>绑定 IP（非必填）：进程实际监听的 IP 地址，可不填，如果填必须是准确对应 IP 的 地址，如 IP 错误，采集器会无法匹配进程导致数据上报异常。</p>
+</li>
+<li>
+<p>端口（非必填）：同“绑定 IP”。</p>
+</li>
+<li>
+<p>协议（非必填）：同“绑定 IP”。</p>
+</li>
+<li>
+<p>多同名二进制进程时，通过作业平台后者后台校验参数是否唯一。</p>
+</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15372540828019.jpg" />
+  图 2. 作业平台检查进程 <code>cmdline</code> 是否唯一 <strong>截图待替换</strong></p>
+<ul>
+<li>检查完唯一后，将进程绑定至主机所属模块下</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15372541510652.jpg" />
+  图 3. 进程绑定模块</p><h1 id="_1">自动下发采集器配置</h1>
+<p>在配置平台上对进程的修改，会通过配置平台的事件推送功能自动下发至 Agent 上的 <code>/etc/gse/host/hostid</code> ，监控的进程端口采集器会捕获文件变化，做异常检测，并且将内容更新到采集器中，下发时间预计在 2 分钟内，页面进程端口更新信息在 5 分钟内。</p>
+<p>配置平台事件推送说明：</p>
+<ul>
+<li>检查推送：gse_agentID 是否存在（推送人应为：migrate）</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/process_monitor_cmdb_gse_push.png" /></p>
+<ul>
+<li>
+<p>修改进程管理信息后，该推送会在 1 分钟内将修改的配置推送到 Agent 端，因此每次修改完进程管理信息后，可到此处确认推送数是否有新增。</p>
+</li>
+<li>
+<p>到 Agent 端检查配置是否及时下发至正确目录：</p>
+<p>```bash</p>
+<h1 id="linux-agent">Linux Agent 配置文件路径</h1>
+<p>/var/lib/gse/host/hostid</p>
+<h1 id="windows-agent">Windows Agent 配置文件路径</h1>
+<p>/gse/data/host/hostid</p>
+<h1 id="base64-3">检查文件内容，如果是 base64 编码，不可直接识别，说明推送异常，配置内容不符合进程管理页面的配置内容或者推送时间超过3分钟说明推送异常</h1>
+<h1 id="hostidprocessbeatconfhostid">确认hostid更新正常后，切换到以下目录检查processbeat.conf是否跟随hostid更新配置内容</h1>
+<h1 id="linux">Linux</h1>
+<p>/usr/local/gse/plugins/etc/processbeat.conf</p>
+<h1 id="windows">Windows</h1>
+<p>C:/gse/plugins/etc/processbeat.conf
+```</p>
+</li>
+</ul><h1 id="_1">查看进程监控，配置告警策略</h1>
+<p>查看进程监控</p>
+<ul>
+<li>
+<p>确认 processbeat 进程配置更新后，在监控页面刷新页面，在主机监控页面-进程服务中查看进程端口资源上报是否正常</p>
+<ul>
+<li>
+<p>进程：正常时标绿显示</p>
+</li>
+<li>
+<p>端口：点击进程，正常时标绿显示，端口不存在以红色显示，被占用则是黄色，灰色说明采集器未上报数据，需要按照数据未上报流程检查。</p>
+</li>
+<li>
+<p>资源/性能：正常时图表有连续不断的数据。</p>
+</li>
+<li>
+<p>检查进程是否精确匹配：</p>
+<ul>
+<li>如果是二进制为 java 或 python 的服务，检查进程端口资源是否只上报了配置的进程，如果配置的进程是唯一的，上报进程出现复数，说明精确匹配失败，需要确认匹配参数是否唯一。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>配置告警策略：</p>
+</li>
+</ul>
+<p>在监控配置页，找到告警类型-进程端口，配置策略。策略配置流程参考<a href="5.1/蓝鲸监控/快速入门/主机监控/host_monitor_config.md">主机层监控</a>文档。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor002.png" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15372522856813.jpg" /></p><h1 id="_1">在故障自愈配置自愈套餐</h1>
+<p>在 <a href="http://docs.bk.tencent.com/product_white_paper/fta/">故障自愈</a> SaaS 中选择 <code>接入自愈</code>，告警类型选择 <code>进程端口</code>，模块选择该进程所属模块（不同进程的处理方式不一样）
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor003.png" />
+图 1. 接入自愈</p><h1 id="_1">产生告警触发自愈动作</h1>
+<p>手动或使用「作业平台」将刚才配置的进程停掉，从而产生一条告警记录：
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15372522856813.jpg" />
+图 1. 告警产生</p>
+<p>产生告警后，故障自愈执行处理套餐，完成告警的自动化处理。
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15372532508822.jpg" />
+图 2. 自愈详情</p><h1 id="_1">主机监控</h1>
+<p>如何通过蓝鲸监控简单快速保障业务基础主机的稳定运行。</p>
+<h2 id="_2">前置步骤</h2>
+<p>依赖组件：配置平台，管控平台，节点管理</p>
+<p>用户需要将受控主机导入配置平台并安装 Agent （超链配置平台快速入门），或通过节点管理直接在对应业务下安装 Agent 导入主机（超链节点管理快速入门）。</p><h1 id="_1">通过视图查看主机基础性能</h1>
+<p>蓝鲸监控从配置平台的接口中拉取主机信息，受控机安装 Agent 后，采集器会发现并定时上报（1 次/分钟）主机基础性能信息，经过蓝鲸数据链路处理后，在主机监控页面即可查看对应主机的基础性能数据。</p>
+<ul>
+<li>
+<p>视图：包含主机监控列表页、主机监控详情页、进程资源监控页</p>
+</li>
+<li>
+<p>主机监控列表页</p>
+<p>支持对当前业务的指标的 CPU 使用率、磁盘 IO 使用率、CPU5 分钟平均负载进行排序，了解当前业务下使用资源最多的主机。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367262171256.jpg" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367265482031.jpg" /></p>
+<ul>
+<li>查询条件支持关联配置平台</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367266647004.jpg" /></p>
+<ul>
+<li>按照配置凭条标准属性分组展示</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367437077809.jpg" /></p>
+</li>
+<li>
+<p>主机监控详情页</p>
+<p>主机监控包含 CPU、内存、磁盘、系统、网络 5 类共 32 项指标，满足用户对主机基础性能的实时精准查询。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367418510768.jpg" /></p>
+</li>
+<li>
+<p>进程端口及资源监控</p>
+<p>进程端口监控配置完成后，会根据所属的主机，在主机监控列表页-进程服务中展示，点击进程可查看 <a href="5.1/蓝鲸监控/快速入门/进程监控/process_monitor_front.md">进程监控</a></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367426268275.jpg" /></p>
+</li>
+</ul><h1 id="_1">主机监控策略配置</h1>
+<ul>
+<li><strong>1. 系统默认策略</strong></li>
+</ul>
+<p>为方便用户使用，新建业务导入主机后系统会自动创建 Corefile 产生、 CPU 总使用率、系统重新启动等 11 项指标的常见监控策略，用户根据实际场景可以创建新的策略，以产生告警。</p>
+<blockquote>
+<p>默认策略详情请查看 <a href="host_monitor_end.md">附录</a></p>
+</blockquote>
+<ul>
+<li><strong>2. 用户自定义策略</strong></li>
+</ul>
+<p>2.1 可在主机监控勾选主机后选择批量增加策略，或者到监控配置-主机监控中选择指标类型编辑策略。</p>
+<ul>
+<li>批量增加策略。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/host_monitor_config.png" />  </p>
+<ul>
+<li>在监控配置中找到需要配置的指标。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367439293084.jpg" /></p>
+<ul>
+<li>
+<p><strong>3. 选择监控对象</strong></p>
+</li>
+<li>
+<p>按主机 IP ，通过 IP 选择器选择单台或多台主机，一般测试时会使用。</p>
+</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/host_monitior_object.png" /></p>
+<ul>
+<li>按业务拓扑，根据你选择的配置平台集群和模块自动拉取主机信息，主机移入/移除将自动适应监控策略。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor004.png" /></p>
+<ul>
+<li>
+<p><strong>4. 检测规则</strong></p>
+</li>
+<li>
+<p>分级告警：多个告警级别勾选上时，分别可以配置不同的算法和触发条件。</p>
+<ul>
+<li>例：配置 CPU 总使用率告警策略，可在同一条策略中配置当前值&gt;50%触发提醒级别告警，当前值&gt;70%触发预警级别告警，当前值&gt;90%时触发致命级别告警。高级别的告警会覆盖低级别的告警。</li>
+</ul>
+</li>
+<li>
+<p>检测算法：根据用户需求提供多种算法规则。</p>
+<ul>
+<li>如 CPU 使用率一类指标可采用静态阈值检测，如服务器在线人数等指标可采用同比/环比算法进行检测。</li>
+</ul>
+</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor005.png" /></p>
+<blockquote>
+<p>建议 : 默认选择 5 个周期满足 N 次检测算法
+（1）抖动类的指标如 CPU 总使用率，N 可选择 3；非抖动类的如磁盘使用率，N 可选择 1。
+（2）为告警收敛的恢复检测做准备。比如 5 分钟内满足 2 次检测算法，则恢复检测的触发条件是<code>检查前5个周期满足少于2次检测算法</code>。</p>
+</blockquote>
+<ul>
+<li><strong>5. 触发条件</strong></li>
+</ul>
+<p>时序类指标( CPU 、内存等)的检测周期默认为采集周期，事件类告警固定为 1 分钟。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor006.png" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor007.png" /></p>
+<ul>
+<li>
+<p><strong>6. 告警收敛</strong></p>
+</li>
+<li>
+<p>为避免因一段时间内持续触发告警导致的告警风暴，告警产生后如状态未恢复，在“N”小时内不会再次发出该告警，比如“N”= 24 ，则发出告警通知后，24 小时内不再产生该告警，如业务需要告警持续产生（触发一次告警，发出一条通知），请将“N”设置为 0 。</p>
+</li>
+<li>
+<p>告警恢复检测：和告警检测条件相反，例如触发条件为<code>“5个周期内，满足3次检测算法”</code>，则 告警恢复检测的触发条件是“当满足触发条件时，会检查是否满足 <code>前5个周期少于3次检测算法</code>"。</p>
+</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor008.png" /></p>
+<blockquote>
+<p>默认再次产生告警时间是 24 小时。
+告警收敛后，事件中心会默认只显示发出的告警，收敛告警不会再展示。</p>
+</blockquote>
+<ul>
+<li>无数据告警：如果勾选上该项，指标持续产生数据，突然不上报数据时，会产生无数据告警，建议用于 CPU、内存、磁盘等本身会长期上报，不上报代表异常的数据。</li>
+</ul>
+<blockquote>
+<p>无数据检测周期即数据上报周期，用户没有配置的情况下一般默认为 1 次/分钟。</p>
+</blockquote>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor009.png" /></p>
+<blockquote>
+<p>若上报数据本身不连续，则不建议开启。</p>
+</blockquote>
+<ul>
+<li>
+<p>告警收敛触发和示例：</p>
+<ul>
+<li>触发条件和告警收敛设置如下：</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor010.png" /></p>
+<ul>
+<li>
+<p>在第 15 周期满足触发条件（第 11-15 周期有 2 次满足检测算法：阈值&gt;=100），同时在前 5 个周期满足恢复检测条件（第 10-14 周期满足少于 2 次检测算法），于是在第 15 个周期产生告警。</p>
+</li>
+<li>
+<p>在第 21 周期满足触发条件（第 17-21 周期有 2 次满足检测算法），但在前 5 个周期不满足恢复检测条件（第 16-20 周期不满足少于 2 次检测算法，告警未恢复），于是在第 21 个周期不产生告警。</p>
+</li>
+<li>
+<p>如果从第 16 个周期开始至未来 24 小时一直满足触发条件，则期间不再产生告警，直到 24 小时后重新满足触发条件则产生告警，此处是考虑一直满足触发条件但仅通知一次，用户可能会遗漏处理。</p>
+</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15391535322210.jpg" /></p>
+</li>
+<li>
+<p><strong>7. 通知方式</strong></p>
+</li>
+<li>
+<p>分级告警：</p>
+<ul>
+<li>勾选上分级告警即可对不同级别告警分配不同的通知方式和通知角色。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/host_monitor_notice.png" /></p>
+<ul>
+<li>不勾选则该策略下告警统一配置通知方式和通知角色。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/host_monitor_notice2.png" /></p>
+</li>
+<li>
+<p>告警方式：可选择告警产生/恢复时是否发出通知。</p>
+</li>
+<li>
+<p>通知方式：角色自动从配置平台同步，角色联系方式会从 PaaS 平台的用户管理中获取。</p>
+</li>
+<li>
+<p>通知方式：通知方式分为：邮件/企业微信&amp;微信公众号/短信/电话，配置方式请参考 <a href="5.1/蓝鲸监控/快速入门/自定义监控/Alarm_Notice.md">文档</a></p>
+</li>
+</ul>
+<blockquote>
+<p>主/备份 负责人代表配置平台中，主机配置的 主/备份 负责人字段对应的人员角色。</p>
+</blockquote>
+<ul>
+<li><strong>8. 告警屏蔽</strong></li>
+</ul><h1 id="_1">告警查询</h1>
+<p>在蓝鲸监控主菜单 - 事件中心处可以不同的形式查看历史告警数据</p>
+<ul>
+<li>
+<ol>
+<li>列表模式：通过列表形式展示历史告警数据，提供多种维度让用户可以精确过滤展示相应的告警</li>
+</ol>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor_check_alarm.png" /></p>
+</li>
+<li>
+<ol>
+<li>日历模式：通过日历形式展示历史告警数据，方便用户通过时间维度展示历史告警数据</li>
+</ol>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor_check_alarm2.png" /></p>
+</li>
+</ul><h1 id="_1">附录</h1>
+<ul>
+<li>5.1 默认策略详情：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>监控名称</th>
+<th>类型</th>
+<th>Linux</th>
+<th>Windows</th>
+<th>检测阈值</th>
+<th>触发条件</th>
+<th>收敛规则</th>
+<th>通知</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU 总使用率</td>
+<td>CPU</td>
+<td>✔️</td>
+<td>✔️</td>
+<td>95%</td>
+<td>5 周期 3 次</td>
+<td>告警未恢复，24 小时内不再产生告警</td>
+<td>微信、邮件</td>
+</tr>
+<tr>
+<td>磁盘使用率</td>
+<td>磁盘</td>
+<td>✔️</td>
+<td>✔️</td>
+<td>95%</td>
+<td>5 周期 1 次</td>
+<td>同上</td>
+<td>微信、邮件、电话</td>
+</tr>
+<tr>
+<td>磁盘 IO 使用率</td>
+<td>磁盘</td>
+<td>✔️</td>
+<td>✔️</td>
+<td>80%</td>
+<td>5 周期 3 次</td>
+<td>同上</td>
+<td>微信、邮件</td>
+</tr>
+<tr>
+<td>应用内存使用率</td>
+<td>内存</td>
+<td>✔️</td>
+<td>✔️</td>
+<td>90%</td>
+<td>5 周期 3 次</td>
+<td>同上</td>
+<td>微信、邮件</td>
+</tr>
+<tr>
+<td>Corefile 产生</td>
+<td>事件</td>
+<td>✔️</td>
+<td>X</td>
+<td></td>
+<td>5 分钟 1 次</td>
+<td>同上</td>
+<td>微信、邮件</td>
+</tr>
+<tr>
+<td>进程端口</td>
+<td>事件</td>
+<td>✔️</td>
+<td>✔️</td>
+<td></td>
+<td>5 周期 1 次</td>
+<td>同上</td>
+<td>微信、邮件、电话</td>
+</tr>
+<tr>
+<td>自定义字符型</td>
+<td>事件</td>
+<td>✔️</td>
+<td>✔️</td>
+<td></td>
+<td>5 分钟 1 次</td>
+<td>同上</td>
+<td>微信、邮件</td>
+</tr>
+<tr>
+<td>系统重新启动</td>
+<td>事件</td>
+<td>✔️</td>
+<td>✔️</td>
+<td></td>
+<td>5 周期 1 次</td>
+<td>同上</td>
+<td>微信、邮件</td>
+</tr>
+<tr>
+<td>磁盘只读</td>
+<td>事件</td>
+<td>✔️</td>
+<td>X</td>
+<td></td>
+<td>20 分钟 1 次</td>
+<td>同上</td>
+<td>微信、邮件、电话</td>
+</tr>
+<tr>
+<td>PING 不可达告警</td>
+<td>事件</td>
+<td>✔️</td>
+<td>✔️</td>
+<td></td>
+<td>5 分钟 3 次</td>
+<td>同上</td>
+<td>微信、邮件、电话</td>
+</tr>
+<tr>
+<td>Agent 心跳丢失</td>
+<td>事件</td>
+<td>✔️</td>
+<td>✔️</td>
+<td></td>
+<td>10 分钟 1 次</td>
+<td>同上</td>
+<td>微信、邮件</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>5.2 事件类型告警逻辑说明</p>
+</li>
+<li>
+<p>Ping 告警：对所有纳入配置平台管理的主机定期进行 Ping 检查</p>
+</li>
+<li>磁盘只读告警：因某种故障原因导致磁盘呈只读状态，影响数据正常写入</li>
+<li>Corefile 产生：程序异常 core 退出产生的相应 corefile 文件</li>
+<li>磁盘写满：磁盘使用空间占比 100%</li>
+<li>Agent 心跳丢失：GSE Server 无法正常监测到 Agent 的心跳产生的事件</li>
+</ul><h1 id="_1">组件监控</h1>
+<p>如何使用蓝鲸监控快速对开源组件、中间件服务进行监控，保障业务的应用服务运行正常。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/component_monitor_homepage.png" />
+图例: 组件监控页面</p>
+<h2 id="_2">前置步骤</h2>
+<p>依赖组件：配置平台，管控平台，节点管理</p>
+<p>用户需要将受控主机导入配置平台并安装 Agent ，或通过节点管理直接在对应业务下安装 Agent 导入主机，在组件监控配置完成后，Agent 端提供的采集器会对主机进行持续规律的数据采集和上报。</p><h1 id="_1">组件接入指引</h1>
+<p>蓝鲸监控目前覆盖 （Apache 、 Nginx 、Tomcat 、MySQL） 等开源组件、中间件服务的性能指标监控，具体配置请参照以下接入指引。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/component_acesess_tips.png" />
+ 图 1. 接入指引</p>
+<ul>
+<li>组件名称：</li>
+<li>采集类型：说明该组件由什么采集器上报，采集器说明参考 <a href="5.1/蓝鲸监控/二次开发/Plugins.md">文档</a></li>
+<li>支持系统：支持该组件采集的系统类型</li>
+<li>已验证版本：已验证的组件版本，若组件版本不一致，可能会导致采集异常或部分数据上报异常</li>
+<li>组件接入指引：蓝鲸监控根据每个组件不同的数据和采集方式提供的接入说明</li>
+</ul>
+<p>如果你使用的组件不在此列，或者是组件提供的接入提示说明不清晰/按说明无法成功接入，请联系蓝鲸助手 QQ: <a href="http://wpa.b.qq.com/cgi/wpa.php?ln=1&amp;key=XzgwMDgwMjAwMV80NDMwOTZfODAwODAyMDAxXzJf">800802001</a> 反馈给蓝鲸监控团队。（文档中心反馈功能也可以接入这个反馈）</p><h1 id="_1">组件采集上报</h1>
+<p>组件采集流程分为四步：</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/component_collect.png" />
+图 2. 采集流程</p>
+<p>以下以 Nginx 的性能指标采集为例：</p>
+<p>3.1 准备环境及选择采集主机</p>
+<p>大部分情况下需要组件支持和开启性能指标的访问方式，按照组件接入指引操作即可。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367474576034.jpg" />
+图 3. 接入指引</p>
+<p>3.2 填写采集参数</p>
+<p>目标 IP 填入组件所在的主机 IP ，端口需要填写配置文件中配置 <code>/nginx_status</code> 的端口，探测 URI 默认即可。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367474906275.jpg" />
+图 4. 配置组件采集参数</p>
+<p>3.3 测试连通性</p>
+<p>蓝鲸监控会根据填入的参数对目标主机下发采集器配置文件，启动采集器进行一次尝试性采集，并将采集结果展示到“详细信息”中，该步骤主要是为了检查采集器获取组件数据，上报回到蓝鲸监控的整个流程是否通畅正常，连通性检查通过后，用户通过“详细信息”中的上报结果可二次确认参数是否正确。如果该步骤中报错，请参考 <a href="5.1/常见问题/SaaS/bk_monitor.md">常见问题</a> 解决。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367475205722.jpg" />
+图 5. 测试连通性</p>
+<p>3.4 启动采集器进程和保存配置</p>
+<p>确认测试连通性成功，并且上报数据正确无误后，用户即可正式启动采集器进程，并且保存配置，保存成功说明采集上报成功，用户可以继续下一步：策略配置</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15367475492586.jpg" />
+图 6. 启动采集器并保存配置</p><h1 id="_1">组件数据视图查看</h1>
+<p>按照正常配置采集完成后，即可在对应的组件页面内看到刚才的采集目标（实例），以及指标数据视图。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/component_redis_views.png" />
+图例: Redis 指标视图</p><h1 id="_1">组件策略配置</h1>
+<p>配置组件采集上报成功后，在监控配置 - 组件监控页面配置告警策略</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/compoent_configs.png" />
+图 7. 配置组件告警策略</p>
+<blockquote>
+<blockquote>
+<p>注：成功配置采集上报的组件才会在此显示</p>
+</blockquote>
+</blockquote>
+<p>每条策略可选择一个指标进行监控，如需监控同一个组件的多个指标，目前需要配置多条策略，其他具体配置规则可参考 <a href="5.1/蓝鲸监控/快速入门/主机监控/host_monitor_config.md">主机监控告警策略说明</a></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/compoent_configs2.png" /></p><h1 id="_1">告警自动化处理</h1>
+<p>组件出现告警后，可以在 <a href="5.1/FTA/Intro/README.md">故障自愈</a> 中配置组件监控的告警自动化处理方案。</p>
+<h2 id="1">1. 接入自愈</h2>
+<p>在故障自愈中接入自愈，告警类型选择 <code>[组件]MySQL</code>，通过<code>按内容筛选</code>功能区分不同的性能指标，在<code>自愈处理</code>中选择创建好的自愈套餐（一般你可以使用作业平台套餐，自己编写好作业）</p>
+<blockquote>
+<p>此处以MySQL的2个关键性能指标(线程数、每分钟删行数)为例。</p>
+</blockquote>
+<p><img alt="-w1219" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor011.png" />
+图1. 组件监控（MySQL:线程数）接入自愈示例</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor012.png" />
+图2. 组件监控（MySQL:每分钟删行数）接入自愈示例</p>
+<blockquote>
+<p>自愈场景的<code>按内容筛选</code>填写监控名称，从这里获取
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371908871438.jpg" />
+图3. 获取组件监控的监控名称方法</p>
+</blockquote>
+<h2 id="2">2.自愈详情</h2>
+<p>可以看到，不同的监控项执行了对应的自愈套餐
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371873424765.jpg" />
+图4. 组件监控（MySQL:线程数）接入自愈详情</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371916430164.jpg" />
+图5. 组件监控（MySQL:每分钟删行数）接入自愈详情</p>
+<h2 id="3">3.注意事项</h2>
+<p>接入自愈选择<code>组件监控</code>的告警类型时，提示<code>蓝鲸监控的指标配置时维度包含IP、bk_cloud_id，否则在套餐中指定执行的IP</code>，意思是要确定故障自愈执行自愈套餐的执行IP。</p>
+<h2 id="31-ip">3.1 蓝鲸监控传递执行IP</h2>
+<blockquote>
+<p>在指标配置时维度必须包含IP、bk_cloud_id，如此监控才能传递执行IP</p>
+</blockquote>
+<p>在仪表盘配置视图时，group by 添加 <code>IP</code>、<code>bk_cloud_id</code>
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371902227574.jpg" />F:\BlueKingDocsTest\5.1\FTA\Scenes\Solutions_Parameters.md
+图6.仪表盘配置视图添加维度</p>
+<p>在作业平台套餐中，默认勾选用<code>用告警IP替代作业执行IP</code>
+ <img alt="-w693" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371901676580.jpg" />
+图7. 在作业平台套餐中，默认勾选用<code>用告警IP替代作业执行IP</code></p>
+<h2 id="32-ip">3.2 套餐中指定执行IP</h2>
+<p>另一种场景是，求大盘均值，而不是单台服务器，则无法传递IP，则直接在套餐中固定IP。</p>
+<p>在仪表盘中未指定group by
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371902911352.jpg" />
+图8. 在仪表盘中未指定group by</p>
+<p>在作业平台套餐中，取消勾选<code>用告警IP替代作业执行IP</code>
+<img alt="-w698" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371903334155.jpg" />
+图9. 取消勾选作业平台套餐的<code>用告警IP替代作业执行IP</code></p>
+<p>在作业中固定执行主机
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371906331344.jpg" />
+图10. 在作业中固定执行主机</p>
+<h2 id="4">4. 高级特性：向作业平台自定义传参</h2>
+<p>当A主机出现告警，可以在B主机上执行作业，并把A主机IP作为参数传给作业在B主机上执行，具体请访问 <a href="5.1/FTA/Scenes/Solutions_Parameters.md">套餐传入变量</a></p><h1 id="_1">组件导入</h1>
+<p>兼容<a href="https://prometheus.io/docs/instrumenting/exporters/">Prometheus Exporter</a>的导入能力，从 Github 获取源码编译二进制或直接获取 release，按照蓝鲸监控的组件导入规范，即可实现组件的一键导入、出图、监控及自动处理，同时你也可以将其分享至蓝鲸的<a href="http://bk.tencent.com/s-mart/market">S-mart 市场</a>供行业伙伴使用，提升你的影响力。</p>
+<p><img alt="exporter_timing_graph" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/exporter_timing_graph.png" /></p>
+<h2 id="1">1. 下载组件</h2>
+<p>从<a href="http://bk.tencent.com/s-mart/market">S-mart 市场</a>下载组件采集器</p>
+<p>接下来上传</p>
+<p><img alt="import_component-w356" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/import_component.png" /></p>
+<h2 id="2">2. 填写配置项</h2>
+<p>填写蓝鲸采集器获取 prometheus exporter metrics 的访问地址的参数（下图中 1、2、3） 和 exporter 启动的运行参数（下图中 4、5）
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/config_schema.jpg" />
+上述参数请在组件采集器对应的 <a href="http://bk.tencent.com/s-mart/market">S-mart</a>说明中获取。</p>
+<h2 id="3">3. 采集测试</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/collection_test.jpg" /></p>
+<h2 id="4">4. 设置采集周期</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/collection_policy_set.jpg" />
+注： 趋势数据保存周期正在开发中.</p>
+<h2 id="5">5. 自动出图</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/component_graph.jpg" /></p>
+<h2 id="6">6. 设定策略</h2>
+<p>在仪表盘中选中刚导入的组件名称，然后设定监控策略。
+<img alt="-w705" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/component_monitor_policy.jpg" /></p><h1 id="_1">自定义组件采集导入教程</h1>
+<h2 id="1">1 数据链路</h2>
+<h3 id="11">1.1 监控整体链路图</h3>
+<p><img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s1.png" /></p>
+<h3 id="12">1.2 自定义组件采集流程</h3>
+<p><img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s2.png" /></p>
+<p><strong>蓝鲸监控通过 job 部署 prometheus 社区的 exporter，对目标组件进行性能数据采集。接着 bkmetricbeat 从 exporter 上周期拉取性能数据并通过数据通道上报。</strong></p>
+<h2 id="2">2 自定义组件采集导入流程</h2>
+<p><strong>蓝鲸监控当前支持使用 go 编写 exporter。</strong></p>
+<p>(1)在<a href="https://promet heus.io/docs/instrumenting/exporters/">社区</a>找到适合自己的 exporter 或者编写新的 exporter。</p>
+<p>(2)将源码编译成二进制文件。</p>
+<p>(3)将编译的 exporter 打成 zip 包</p>
+<p>(4)上传配置文件。</p>
+<h3 id="21-exporter">2.1 蓝鲸监控 Exporter 开发指引</h3>
+<h4 id="211-exporter">2.1.1 Exporter 简介</h4>
+<p><strong>Exporter 本质上就是将收集的数据，转化为对应的文本格式，并提供 http 接口，供蓝鲸监控采集器定期采集数据</strong></p>
+<h4 id="212-exporter">2.1.2 Exporter 基础</h4>
+<p><strong>指标介绍</strong></p>
+<p>Prometheus 中主要使用的四类指标类型，如下所示
+- Counter (累加指标)
+- Gauge (测量指标)
+- Summary (概略图)
+- Histogram (直方图)</p>
+<p>最常使用的是 Gauge，Gauge 代表了采集的一个单一数据，这个数据可以增加也可以减少，比如 CPU 使用情况，内存使用量，硬盘当前的空间容量等。</p>
+<p>Counter 一个累加指标数据，这个值随着时间只会逐渐的增加，比如程序完成的总任务数量，运行错误发生的总次数等，代表了持续增加的数据包或者传输字节累加值。</p>
+<p>【<strong>注</strong>】：所有指标的值仅支持 float64 类型</p>
+<p><strong>文本格式</strong></p>
+<p>以下面得输出为例：</p>
+<div class="codehilite"><pre><span></span><span class="c1"># metric:</span>
+sample_metric1 <span class="m">12</span>.47
+sample_metric2<span class="o">{</span><span class="nv">partition</span><span class="o">=</span><span class="s2">&quot;c:&quot;</span><span class="o">}</span> <span class="m">0</span>.44
+</pre></div>
+
+
+<p><strong>其中</strong>：
+- <code>#</code>表示注释
+- <code>sample_metric1</code>和<code>sample_metric2</code>表示指标名称
+- <code>partition</code>表示指标得作用维度，例如磁盘分区使用率，维度就是磁盘分区，即每个磁盘分区都有一个磁盘分区使用率的值
+- <code>xxx</code>表示维度的值，例如磁盘分区的 C 盘/D 盘等
+- <code>12.47</code>和<code>0.44</code>表示对应指标的值</p>
+<h3 id="22-exporter">2.2 蓝鲸监控 Exporter 开发</h3>
+<h4 id="221">2.2.1 依赖</h4>
+<p>首先引入 Prometheus 的依赖库</p>
+<div class="codehilite"><pre><span></span>go get github.com/prometheus/client_golang/prometheus
+</pre></div>
+
+
+<h4 id="222">2.2.2 开发实例</h4>
+<p>(1)新建一个 exporter 项目：
+一个 exporter 只需要一个文件即可；新建一个 test_exporter 目录和一个 test_exporter.go 文件:</p>
+<p><img alt="e1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/e1-1.png" /></p>
+<p>(2)导入依赖模块</p>
+<div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;flag&quot;</span>
+    <span class="s">&quot;log&quot;</span>
+    <span class="s">&quot;net/http&quot;</span>
+    <span class="s">&quot;github.com/prometheus/client_golang/prometheus&quot;</span>
+    <span class="s">&quot;github.com/prometheus/client_golang/prometheus/promhttp&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+
+<p>(3)定义 exporter 的版本（Version）、监听地址（listenAddress）、采集 url（metricPath）以及首页（landingPage）</p>
+<div class="codehilite"><pre><span></span><span class="kd">var</span> <span class="p">(</span>
+    <span class="nx">Version</span>       <span class="p">=</span> <span class="s">&quot;1.0.0.dev&quot;</span>
+    <span class="nx">listenAddress</span> <span class="p">=</span> <span class="nx">flag</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;web.listen-address&quot;</span><span class="p">,</span> <span class="s">&quot;:9601&quot;</span><span class="p">,</span> <span class="s">&quot;Address to listen on for web interface and telemetry.&quot;</span><span class="p">)</span>
+    <span class="nx">metricPath</span>    <span class="p">=</span> <span class="nx">flag</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;web.telemetry-path&quot;</span><span class="p">,</span> <span class="s">&quot;/metrics&quot;</span><span class="p">,</span> <span class="s">&quot;Path under which to expose metrics.&quot;</span><span class="p">)</span>
+    <span class="nx">landingPage</span>   <span class="p">=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;SYS Exporter &quot;</span> <span class="o">+</span> <span class="nx">Version</span> <span class="o">+</span>
+        <span class="s">&quot;&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;h1&gt;SYS Exporter &quot;</span> <span class="o">+</span> <span class="nx">Version</span> <span class="o">+</span> <span class="s">&quot;&lt;/h1&gt;&lt;p&gt;&lt;a href=&#39;&quot;</span> <span class="o">+</span> <span class="o">*</span><span class="nx">metricPath</span> <span class="o">+</span> <span class="s">&quot;&#39;&gt;Metrics&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+
+<p>(4)定义 Exporter 结构体</p>
+<div class="codehilite"><pre><span></span><span class="kd">type</span> <span class="nx">Exporter</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="kt">error</span>        <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Gauge</span>
+    <span class="nx">scrapeErrors</span> <span class="o">*</span><span class="nx">prometheus</span><span class="p">.</span><span class="nx">CounterVec</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>(5)定义结构体实例化的函数 NewExporter</p>
+<div class="codehilite"><pre><span></span><span class="kd">func</span> <span class="nx">NewExporter</span><span class="p">()</span> <span class="o">*</span><span class="nx">Exporter</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">Exporter</span><span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>(6)Describe 函数，传递指标描述符到 channel，这个函数不用动，直接使用即可，用来生成采集指标的描述信息</p>
+<div class="codehilite"><pre><span></span><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">Exporter</span><span class="p">)</span> <span class="nx">Describe</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="o">*</span><span class="nx">prometheus</span><span class="p">.</span><span class="nx">Desc</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">metricCh</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Metric</span><span class="p">)</span>
+    <span class="nx">doneCh</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{})</span>
+
+    <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="nx">m</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">metricCh</span> <span class="p">{</span>
+            <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">m</span><span class="p">.</span><span class="nx">Desc</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="nb">close</span><span class="p">(</span><span class="nx">doneCh</span><span class="p">)</span>
+    <span class="p">}()</span>
+
+    <span class="nx">e</span><span class="p">.</span><span class="nx">Collect</span><span class="p">(</span><span class="nx">metricCh</span><span class="p">)</span>
+    <span class="nb">close</span><span class="p">(</span><span class="nx">metricCh</span><span class="p">)</span>
+    <span class="o">&lt;-</span><span class="nx">doneCh</span>
+
+<span class="p">}</span>
+</pre></div>
+
+
+<p>(7)Collect 函数将执行抓取函数并返回数据，返回的数据传递到 channel 中，并且传递的同时绑定原先的指标描述符，以及指标的类型（Guage）；需要将所有的指标获取函数在这里写入。</p>
+<div class="codehilite"><pre><span></span><span class="c1">//collect函数，采集数据的入口</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">Exporter</span><span class="p">)</span> <span class="nx">Collect</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Metric</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">err</span> <span class="kt">error</span>
+    <span class="c1">//每个指标值的采集逻辑，在对应的采集函数中</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">ScrapeMem</span><span class="p">(</span><span class="nx">ch</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">e</span><span class="p">.</span><span class="nx">scrapeErrors</span><span class="p">.</span><span class="nx">WithLabelValues</span><span class="p">(</span><span class="s">&quot;Mssql_Connections per sec&quot;</span><span class="p">).</span><span class="nx">Inc</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">ScrapeDisk</span><span class="p">(</span><span class="nx">ch</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nx">e</span><span class="p">.</span><span class="nx">scrapeErrors</span><span class="p">.</span><span class="nx">WithLabelValues</span><span class="p">(</span><span class="s">&quot;localtime&quot;</span><span class="p">).</span><span class="nx">Inc</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>(8)指标仅有单条数据，不带维度信息示例如下：</p>
+<div class="codehilite"><pre><span></span><span class="kd">func</span> <span class="nx">ScrapeMem</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Metric</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="c1">//指标获取逻辑，此处不做具体操作，仅仅赋值进行示例</span>
+    <span class="nx">mem_usage</span> <span class="o">:=</span> <span class="nb">float64</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+    <span class="c1">//生成采集的指标名</span>
+    <span class="nx">metric_name</span> <span class="o">:=</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">BuildFQName</span><span class="p">(</span><span class="s">&quot;sys&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;mem_usage&quot;</span><span class="p">)</span>
+    <span class="c1">//生成NewDesc类型的数据格式，该指标无维度，[]string{}为空</span>
+    <span class="nx">new_desc</span> <span class="o">:=</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">NewDesc</span><span class="p">(</span><span class="nx">metric_name</span><span class="p">,</span> <span class="s">&quot;Gauge metric with mem_usage&quot;</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{},</span> <span class="kc">nil</span><span class="p">)</span>
+    <span class="c1">//生成具体的采集信息并写入ch通道</span>
+    <span class="nx">metric_mes</span> <span class="o">:=</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">MustNewConstMetric</span><span class="p">(</span><span class="nx">new_desc</span><span class="p">,</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">GaugeValue</span><span class="p">,</span> <span class="nx">mem_usage</span><span class="p">)</span>
+    <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">metric_mes</span>
+    <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>(9)指标有多条数据，带维度信息示例如下：</p>
+<div class="codehilite"><pre><span></span><span class="kd">func</span> <span class="nx">ScrapeDisk</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">Metric</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="nx">disks_mes</span> <span class="o">:=</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{}{</span>
+        <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+            <span class="s">&quot;name&quot;</span><span class="p">:</span>      <span class="s">&quot;C:/&quot;</span><span class="p">,</span>
+            <span class="s">&quot;disk_size&quot;</span><span class="p">:</span> <span class="nb">float64</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+        <span class="p">},</span>
+        <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}{</span>
+            <span class="s">&quot;name&quot;</span><span class="p">:</span>      <span class="s">&quot;D:/&quot;</span><span class="p">,</span>
+            <span class="s">&quot;disk_size&quot;</span><span class="p">:</span> <span class="nb">float64</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">disk_mes</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">disks_mes</span> <span class="p">{</span>
+        <span class="nx">disk_name</span> <span class="o">:=</span> <span class="nx">disk_mes</span><span class="p">.(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{})[</span><span class="s">&quot;name&quot;</span><span class="p">].(</span><span class="kt">string</span><span class="p">)</span>
+        <span class="nx">disk_size</span> <span class="o">:=</span> <span class="nx">disk_mes</span><span class="p">.(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{})[</span><span class="s">&quot;disk_size&quot;</span><span class="p">].(</span><span class="kt">float64</span><span class="p">)</span>
+        <span class="nx">metric_name</span> <span class="o">:=</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">BuildFQName</span><span class="p">(</span><span class="s">&quot;sys&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;disk_size&quot;</span><span class="p">)</span>
+        <span class="c1">//该例子具有disk_name的维度，须在[]string{&quot;disk_name&quot;}</span>
+        <span class="nx">new_desc</span> <span class="o">:=</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">NewDesc</span><span class="p">(</span><span class="nx">metric_name</span><span class="p">,</span> <span class="s">&quot;Gauge metric with disk_size&quot;</span><span class="p">,</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;disk_name&quot;</span><span class="p">},</span> <span class="kc">nil</span><span class="p">)</span>
+        <span class="nx">metric_mes</span> <span class="o">:=</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">MustNewConstMetric</span><span class="p">(</span><span class="nx">new_desc</span><span class="p">,</span> <span class="nx">prometheus</span><span class="p">.</span><span class="nx">GaugeValue</span><span class="p">,</span> <span class="nx">disk_size</span><span class="p">,</span> <span class="nx">disk_name</span><span class="p">)</span>
+        <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">metric_mes</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>(10)主函数</p>
+<div class="codehilite"><pre><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//解析定义的监听端口等信息</span>
+    <span class="nx">flag</span><span class="p">.</span><span class="nx">Parse</span><span class="p">()</span>
+    <span class="c1">//生成一个Exporter类型的对象，该exporter需具有collect和Describe方法</span>
+    <span class="nx">exporter</span> <span class="o">:=</span> <span class="nx">NewExporter</span><span class="p">()</span>
+    <span class="c1">//将exporter注册入prometheus，prometheus将定期从exporter拉取数据</span>
+    <span class="nx">prometheus</span><span class="p">.</span><span class="nx">MustRegister</span><span class="p">(</span><span class="nx">exporter</span><span class="p">)</span>
+    <span class="c1">//接收http请求时，触发collect函数，采集数据</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nx">Handle</span><span class="p">(</span><span class="o">*</span><span class="nx">metricPath</span><span class="p">,</span> <span class="nx">promhttp</span><span class="p">.</span><span class="nx">Handler</span><span class="p">())</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nx">HandleFunc</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">r</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">w</span><span class="p">.</span><span class="nx">Write</span><span class="p">(</span><span class="nx">landingPage</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">http</span><span class="p">.</span><span class="nx">ListenAndServe</span><span class="p">(</span><span class="o">*</span><span class="nx">listenAddress</span><span class="p">,</span> <span class="kc">nil</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>(11)编译 Exporter</p>
+<div class="codehilite"><pre><span></span><span class="k">go</span> <span class="nx">build</span> <span class="nx">test_exporter</span><span class="p">.</span><span class="k">go</span>
+</pre></div>
+
+
+<p>(12)cmd/shell 中运行即可，访问http://127.0.0.1:9601/metrics 即可验证</p>
+<p><img alt="e2" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/e2-1.png" /></p>
+<p>至此 Exporter 开发完成，其中 8，9 两步中的函数是重点，目前仅仅写了一些数据进行示例，其中的监控指标获取数据就是该部分的主要功能，需要编写对应逻辑获取指标的值。</p>
+<h3 id="23-exporter">2.3 exporter 编译</h3>
+<p><strong>蓝鲸监控 exporter 默认只支持 64 位机器运行 exporter。</strong>
+- windows</p>
+<p><code>env CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./exporter-windows.exe test_exporter.go</code>
+- linux</p>
+<p><code>env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./exporter-linux test_exporter.go</code></p>
+<h3 id="24-exporter">2.4 exporter 打包</h3>
+<ul>
+<li>
+<p>上传的 exporter 文件限定为 zip 压缩包</p>
+</li>
+<li>
+<p>上传后，后台会读取相应的压缩包特定名称的文件，因此必须保证命名的准确性。读取的文件如下：
+<code>exporter-linux</code>: linux 采集器</p>
+</li>
+</ul>
+<p><code>exporter-windows.exe</code>: windows 采集器</p>
+<ul>
+<li>
+<p>至少提供以上任意一种采集器，否则会报错；如果只上传了一种采集器，那视为该组件不支持其他系统。</p>
+</li>
+<li>
+<p>上传成功后如下图：
+<img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s3.png" /></p>
+</li>
+</ul>
+<h3 id="25">2.5 配置文件开发</h3>
+<h4 id="251">2.5.1 指标项</h4>
+<ul>
+<li>通常，Exporter 上报的指标(metric)种类非常多，而用户只会关心其中一部分重要指标。因此用户需要通过编写指标配置文件来配置自己关注的指标。同时，配置文件也决定了结果表的格式。</li>
+</ul>
+<p>`指标配置文件是 JSON 格式的文件。</p>
+<p><img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s4.png" />
+- 配置文件样例</p>
+<div class="codehilite"><pre><span></span><span class="p">[{</span>
+    <span class="s">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="s">&quot;monitor_type&quot;</span><span class="p">:</span> <span class="s">&quot;metric&quot;</span><span class="p">,</span>
+        <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;double&quot;</span><span class="p">,</span>
+        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;sys_disk_size&quot;</span><span class="p">,</span>
+        <span class="s">&quot;unit&quot;</span><span class="p">:</span> <span class="s">&quot;%&quot;</span><span class="p">,</span>
+        <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;磁盘使用率&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+        <span class="s">&quot;monitor_type&quot;</span><span class="p">:</span> <span class="s">&quot;dimension&quot;</span><span class="p">,</span>
+        <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;string&quot;</span><span class="p">,</span>
+        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;mountpoint&quot;</span><span class="p">,</span>
+        <span class="s">&quot;unit&quot;</span><span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+        <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;挂载点&quot;</span>
+    <span class="p">}],</span>
+    <span class="s">&quot;table_name&quot;</span><span class="p">:</span> <span class="s">&quot;disk&quot;</span><span class="p">,</span>
+    <span class="s">&quot;table_desc&quot;</span><span class="p">:</span> <span class="s">&quot;磁盘&quot;</span>
+<span class="p">},</span>
+<span class="p">{</span>
+    <span class="s">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="s">&quot;monitor_type&quot;</span><span class="p">:</span> <span class="s">&quot;metric&quot;</span><span class="p">,</span>
+        <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;double&quot;</span><span class="p">,</span>
+        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;sys_mem_usage&quot;</span><span class="p">,</span>
+        <span class="s">&quot;unit&quot;</span><span class="p">:</span> <span class="s">&quot;%&quot;</span><span class="p">,</span>
+        <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;内存使用率&quot;</span>
+    <span class="p">}],</span>
+    <span class="s">&quot;table_name&quot;</span><span class="p">:</span> <span class="s">&quot;mem&quot;</span><span class="p">,</span>
+    <span class="s">&quot;table_desc&quot;</span><span class="p">:</span> <span class="s">&quot;内存&quot;</span>
+<span class="p">}]</span>
+</pre></div>
+
+
+<ul>
+<li>数据结构说明
+首先，最外层为列表，列表的每个元素为 Object，每个元素均代表一个结果表。</li>
+</ul>
+<p>每个元素的字段说明和取值见下表：</p>
+<table>
+<thead>
+<tr>
+<th align="left">字段名</th>
+<th align="left">解释</th>
+<th align="left">是否必填</th>
+<th align="left">取值</th>
+<th align="left">最大长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">table_name</td>
+<td align="left">结果表英文名</td>
+<td align="left">是</td>
+<td align="left">^[a-zA-Z][a-zA-Z0-9_]*$</td>
+<td align="left">15</td>
+</tr>
+<tr>
+<td align="left">table_desc</td>
+<td align="left">结果表中文描述</td>
+<td align="left">是</td>
+<td align="left"></td>
+<td align="left">15</td>
+</tr>
+<tr>
+<td align="left">fields[].monitor_type</td>
+<td align="left">字段类型</td>
+<td align="left">是</td>
+<td align="left">可选"metric"和"dimension"</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">fields[].type</td>
+<td align="left">字段数据类型</td>
+<td align="left">是</td>
+<td align="left">可选"long", "double"和"string"</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">fields[].name</td>
+<td align="left">字段名称，不能超过 50 个字符</td>
+<td align="left">是</td>
+<td align="left">^[a-zA-Z][a-zA-Z0-9_]*$</td>
+<td align="left">50</td>
+</tr>
+<tr>
+<td align="left">fields[].unit</td>
+<td align="left">字段单位，可空</td>
+<td align="left">是</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">fields[].description</td>
+<td align="left">字段描述</td>
+<td align="left">是</td>
+<td align="left"></td>
+<td align="left">15</td>
+</tr>
+<tr>
+<td align="left">fields[].is_diff_metric</td>
+<td align="left">是否为差值指标</td>
+<td align="left">否</td>
+<td align="left">true 或 false</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="252-exporter">2.5.2 配置项（exporter 启动参数配置）</h4>
+<ul>
+<li>大多数 exporter 在启动时，需要提供额外的参数，如服务地址等。因此用户需要对启动所需参数项进行配置，在 exporter 启动时才能提供对应参数值。
+<code>参数配置文件是**JSON格式**的文件。</code></li>
+</ul>
+<p><img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s5.png" />
+配置项将直接体现在配置表单中
+<img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s6.png" />
+- 配置文件样例</p>
+<div class="codehilite"><pre><span></span><span class="p">[{</span>
+    <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="s">&quot;http://localhost:9601/metrics&quot;</span><span class="p">,</span>
+    <span class="s">&quot;mode&quot;</span><span class="p">:</span> <span class="s">&quot;collector&quot;</span><span class="p">,</span>
+    <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;text&quot;</span><span class="p">,</span>
+    <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;_exporter_url_&quot;</span><span class="p">,</span>
+    <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;采集URL&quot;</span><span class="p">,</span>
+    <span class="s">&quot;visible&quot;</span><span class="p">:</span> <span class="kc">false</span>
+<span class="p">},{</span>
+    <span class="s">&quot;default&quot;</span><span class="p">:</span> <span class="s">&quot;localhost:9601&quot;</span><span class="p">,</span>
+    <span class="s">&quot;mode&quot;</span><span class="p">:</span> <span class="s">&quot;cmd&quot;</span><span class="p">,</span>
+    <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="s">&quot;text&quot;</span><span class="p">,</span>
+    <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;--web.listen-address&quot;</span><span class="p">,</span>
+    <span class="s">&quot;description&quot;</span><span class="p">:</span> <span class="s">&quot;监听地址&quot;</span><span class="p">,</span>
+    <span class="s">&quot;visible&quot;</span><span class="p">:</span> <span class="kc">false</span>
+<span class="p">}]</span>
+</pre></div>
+
+
+<ul>
+<li>数据结构说明</li>
+</ul>
+<p>首先，最外层为列表，列表的每个元素为 Object，每个元素均代表一个配置项。</p>
+<p>每个元素的字段说明和取值见下表：</p>
+<table>
+<thead>
+<tr>
+<th align="left">字段名</th>
+<th align="left">解释</th>
+<th align="left">是否必填</th>
+<th align="left">取值</th>
+<th align="left">最大长度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">name</td>
+<td align="left">配置名称，可空，为空时必须将该项置于首位</td>
+<td align="left">是</td>
+<td align="left"></td>
+<td align="left">50</td>
+</tr>
+<tr>
+<td align="left">mode</td>
+<td align="left">传参方式</td>
+<td align="left">是</td>
+<td align="left">可选"cmd"(命令行参数)，"env"(环境变量)或"collector"(_exporter_url_字段专用)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">数据类型</td>
+<td align="left">是</td>
+<td align="left">可选"text"，"password"或"file"(需要上传文件)</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">description</td>
+<td align="left">配置描述</td>
+<td align="left">是</td>
+<td align="left"></td>
+<td align="left">50</td>
+</tr>
+<tr>
+<td align="left">default</td>
+<td align="left">配置默认值，可空</td>
+<td align="left">是</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>命令行参数拼接规则</li>
+</ul>
+<p>(1)当配置名称以 <code>--</code>开头，参数名称和参数值的拼接方式为用<code>=</code>拼接，如<code>--settings=something</code></p>
+<p>(2)当配置名称不以<code>--</code>开头，参数名称和参数值的拼接方式为用空格拼接，如 <code>-settings something</code></p>
+<ul>
+<li>重要提示</li>
+</ul>
+<p>配置文件中，必须提供<code>_exporter_url_</code>参数。该参数为获取 metric 的完整 url。且该参数必须设置默认值。出于安全考虑，监听地址的 IP 只能设置为<code>127.0.0.1</code>或<code>localhost</code>，配置方式参见上述样例。</p>
+<h4 id="253-logo">2.5.3 logo</h4>
+<p>155*65 的图片即可</p>
+<h4 id="254">2.5.4 描述</h4>
+<p>使用 Markdown 语法编写组件描述，在用户组件接入时提供指导。</p>
+<p><img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s7.png" /></p>
+<h4 id="255">2.5.5 保存自定义组件采集</h4>
+<ul>
+<li>填写组件名</li>
+</ul>
+<p>(1)上传 exporter</p>
+<p>(2)上传 metrics.json</p>
+<p>(3)上传 config_schema.json</p>
+<p>(4)上传 logo.png</p>
+<p>(5)上传 description.md</p>
+<ul>
+<li>
+<p>选择服务器</p>
+</li>
+<li>
+<p>填写配置</p>
+</li>
+<li>
+<p>采集测试</p>
+</li>
+<li>
+<p>设置采集周期</p>
+</li>
+<li>
+<p>完成并下发采集器</p>
+</li>
+</ul>
+<p>以上动作完成后，在组件监控页面，将会多一个组件。选择自定义分类，可以看到所有自定义采集的组件。</p>
+<p><img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s8.png" /></p>
+<h3 id="3">3 自定义组件一键导入</h3>
+<p>为了方便自己开发的组件采集 exporter 可以共享给更多的用户，蓝鲸监控支持一键导入。
+已经添加成功的自定义组件，可以按照以下格式打成 zip 压缩包：</p>
+<p>(1)后台解析文件时，无视文件目录结构，直接扫描符合命名规则的文件。</p>
+<p>(2)不得出现相同文件名的文件，否则会报错。</p>
+<table>
+<thead>
+<tr>
+<th align="left">文件名</th>
+<th align="left">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">exporter-linux</td>
+<td align="left">linux exporter 的二进制文件 （至少提供一种 exporter）</td>
+</tr>
+<tr>
+<td align="left">exporter-windows.exe</td>
+<td align="left">windows exporter 的二进制文件 （至少提供一种 exporter）</td>
+</tr>
+<tr>
+<td align="left">logo.png</td>
+<td align="left">组件 Logo，限定 PNG 格式</td>
+</tr>
+<tr>
+<td align="left">description.md</td>
+<td align="left">组件描述，限定 Markdown 格式</td>
+</tr>
+<tr>
+<td align="left">metrics.json</td>
+<td align="left">指标项配置文件，配置格式参见 指标配置文件</td>
+</tr>
+<tr>
+<td align="left">config_schema.json</td>
+<td align="left">配置项配置文件，配置格式参见 exporter 启动参数配置文件</td>
+</tr>
+<tr>
+<td align="left">info.json</td>
+<td align="left">exporter 包信息，需要提供 name(必须)和 display_name(可选)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="infojson">info.json</h4>
+<p>以上文件列表，有一个新的文件<code>info.json</code>
+info.json 文件示例</p>
+<div class="codehilite"><pre><span></span><span class="p">{</span>
+    <span class="s">&quot;name&quot;</span><span class="p">:</span><span class="s">&quot;example&quot;</span><span class="p">,</span>
+    <span class="s">&quot;display_name&quot;</span><span class="p">:</span><span class="s">&quot;example&quot;</span><span class="p">,</span>
+    <span class="s">&quot;supported_version&quot;</span><span class="p">:</span><span class="s">&quot;linux&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<table>
+<thead>
+<tr>
+<th align="left">字段名</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">name</td>
+<td align="left">组件名称，唯一标识符，只能由字母和数字组成</td>
+</tr>
+<tr>
+<td align="left">display_name</td>
+<td align="left">组件显示名称</td>
+</tr>
+<tr>
+<td align="left">supported_version</td>
+<td align="left">采集器支持版本，版本信息会显示在配置页面上</td>
+</tr>
+<tr>
+<td align="left">显示效果如下</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p><img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s10.png" /></p>
+<h3 id="4">4 自定义组件更新</h3>
+<p>如果需要更新组件，进入编辑模式，选择相应文件进行更新即可</p>
+<p><img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s9.png" /></p>
+<p><a href="http://bkopen-1252002024.file.myqcloud.com/public/exporter_example.zip">附件</a>是一个样例 exporter 一键导入包，另外包含了打包好的 exporter 以及源码</p>
+<p>使用附件导入后，选择主机下发后，效果如下：</p>
+<p><img alt="s1" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/s11.png" /></p><h1 id="-">组件监控 - 各组件指标说明</h1>
+<h2 id="jmx">JMX 组件指标说明</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jvm_buffer_pool_used_bytes</td>
+<td>MB</td>
+<td>已使用缓冲池的大小</td>
+</tr>
+<tr>
+<td>jvm_buffer_pool_capacity_bytes</td>
+<td>MB</td>
+<td>缓冲池的字节容量</td>
+</tr>
+<tr>
+<td>jvm_buffer_pool_used_buffers</td>
+<td></td>
+<td>已经使用的缓冲数量</td>
+</tr>
+<tr>
+<td>jmx_config_reload_success_total</td>
+<td></td>
+<td>已成功重新加载配置的次数</td>
+</tr>
+<tr>
+<td>jvm_threads_current</td>
+<td></td>
+<td>当前线程数</td>
+</tr>
+<tr>
+<td>jvm_threads_daemon</td>
+<td></td>
+<td>当前后台线程数</td>
+</tr>
+<tr>
+<td>jvm_threads_peak</td>
+<td></td>
+<td>当前峰值线程数</td>
+</tr>
+<tr>
+<td>jvm_threads_started_total</td>
+<td></td>
+<td>已经启动的线程计数</td>
+</tr>
+<tr>
+<td>jvm_threads_deadlocked</td>
+<td></td>
+<td>等待获取对象监视器或自己的同步器的死锁线程数</td>
+</tr>
+<tr>
+<td>jvm_threads_deadlocked_monitor</td>
+<td></td>
+<td>等待获取对象监视器的死锁线程数</td>
+</tr>
+<tr>
+<td>jmx_scrape_duration_seconds</td>
+<td>秒</td>
+<td>scrape 的时间</td>
+</tr>
+<tr>
+<td>jmx_scrape_error</td>
+<td></td>
+<td>scrape 失败次数</td>
+</tr>
+<tr>
+<td>jvm_classes_loaded</td>
+<td></td>
+<td>当前加载的类数量</td>
+</tr>
+<tr>
+<td>jvm_classes_loaded_total</td>
+<td></td>
+<td>从 JVM 开始执行以来已经加载的类的总数</td>
+</tr>
+<tr>
+<td>jvm_classes_unloaded_total</td>
+<td></td>
+<td>从 JVM 开始执行以来未加载的类的总数</td>
+</tr>
+<tr>
+<td>jvm_info</td>
+<td></td>
+<td>JVM 版本信息</td>
+</tr>
+<tr>
+<td>jvm_memory_bytes_used</td>
+<td>MB</td>
+<td>已经使用的内存</td>
+</tr>
+<tr>
+<td>jvm_memory_bytes_committed</td>
+<td>MB</td>
+<td>已经提交的内存</td>
+</tr>
+<tr>
+<td>jvm_memory_bytes_max</td>
+<td>MB</td>
+<td>最大内存</td>
+</tr>
+<tr>
+<td>jvm_memory_bytes_init</td>
+<td>MB</td>
+<td>初始化内存</td>
+</tr>
+<tr>
+<td>jvm_memory_pool_bytes_used</td>
+<td>MB</td>
+<td>内存池中已经使用的内存</td>
+</tr>
+<tr>
+<td>jvm_memory_pool_bytes_committed</td>
+<td>MB</td>
+<td>内存池中已经提交的内存</td>
+</tr>
+<tr>
+<td>jvm_memory_pool_bytes_max</td>
+<td>MB</td>
+<td>内存池中最大内存</td>
+</tr>
+<tr>
+<td>jvm_memory_pool_bytes_init</td>
+<td>MB</td>
+<td>内存池中初始化内存</td>
+</tr>
+<tr>
+<td>jmx_config_reload_failure_total</td>
+<td></td>
+<td>配置 reload 失败的次数</td>
+</tr>
+<tr>
+<td>jvm_gc_collection_seconds_count</td>
+<td>秒</td>
+<td>gc 时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="apache">Apache 组件指标说明</h2>
+<p><img alt="Apache_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Apache_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>apache.net.bytes</td>
+<td>bytes</td>
+<td>总计传输的字节数</td>
+</tr>
+<tr>
+<td>apache.net.bytes_per_s</td>
+<td>bytes/second</td>
+<td>每秒传输字节数</td>
+</tr>
+<tr>
+<td>apache.net.hits</td>
+<td>requests</td>
+<td>总的请求数</td>
+</tr>
+<tr>
+<td>apache.net.request_per_s</td>
+<td>requests/second</td>
+<td>每秒请求数</td>
+</tr>
+<tr>
+<td>apache.performance.busy_workers</td>
+<td>threads</td>
+<td>活动线程数</td>
+</tr>
+<tr>
+<td>apache.performance.cpu_load</td>
+<td>percent</td>
+<td>CPU 负载</td>
+</tr>
+<tr>
+<td>apache.performance.idle_workers</td>
+<td>threads</td>
+<td>空闲线程数</td>
+</tr>
+<tr>
+<td>apache.performance.uptime</td>
+<td>seconds</td>
+<td>Apache 运行时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="nginx">Nginx 组件指标说明</h2>
+<p><img alt="Nginx_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Nginx_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nginx.connections.accepted</td>
+<td>connections</td>
+<td>接受的客户端连接的总数</td>
+</tr>
+<tr>
+<td>nginx.connections.active</td>
+<td>connections</td>
+<td>当前客户端连接数</td>
+</tr>
+<tr>
+<td>nginx.connections.dropped</td>
+<td>connections</td>
+<td>删除的客户端连接的总数</td>
+</tr>
+<tr>
+<td>nginx.connections.idle</td>
+<td>connections</td>
+<td>当前空闲客户端连接数</td>
+</tr>
+<tr>
+<td>nginx.generation</td>
+<td></td>
+<td>配置(configuration)重新加载的总数</td>
+</tr>
+<tr>
+<td>nginx.load_timestamp</td>
+<td>milliseconds</td>
+<td>上次重新加载配置（configuration）的时间（自 Epoch 以来的时间）</td>
+</tr>
+<tr>
+<td>nginx.net.conn_dropped_per_s</td>
+<td>connections/second</td>
+<td>连接丢失率</td>
+</tr>
+<tr>
+<td>nginx.net.conn_opened_per_s</td>
+<td>connections/second</td>
+<td>打开连接的速率</td>
+</tr>
+<tr>
+<td>nginx.net.connections</td>
+<td>connections</td>
+<td>活动连接的总数</td>
+</tr>
+<tr>
+<td>nginx.net.reading</td>
+<td>connections</td>
+<td>读取客户端请求的连接数</td>
+</tr>
+<tr>
+<td>nginx.net.request_per_s</td>
+<td>requests/second</td>
+<td>请求的处理速率</td>
+</tr>
+<tr>
+<td>nginx.net.waiting</td>
+<td>connections</td>
+<td>等待工作的 keep-alive 连接的数量</td>
+</tr>
+<tr>
+<td>nginx.net.writing</td>
+<td>connections</td>
+<td>等待上行（upstream）响应 和/或 将响应写回客户端的连接数</td>
+</tr>
+<tr>
+<td>nginx.pid</td>
+<td></td>
+<td>处理状态请求的工作进程的 ID</td>
+</tr>
+<tr>
+<td>nginx.processes.respawned</td>
+<td>processes</td>
+<td>异常终止并重新生成的子进程的总数</td>
+</tr>
+<tr>
+<td>nginx.requests.current</td>
+<td>requests</td>
+<td>当前客户端请求数</td>
+</tr>
+<tr>
+<td>nginx.requests.total</td>
+<td>requests</td>
+<td>客户端请求的总数</td>
+</tr>
+<tr>
+<td>nginx.server_zone.discarded</td>
+<td>requests</td>
+<td>未发送响应而完成的请求总数</td>
+</tr>
+<tr>
+<td>nginx.server_zone.processing</td>
+<td>requests</td>
+<td>当前正在处理的客户端请求数</td>
+</tr>
+<tr>
+<td>nginx.server_zone.received</td>
+<td>bytes</td>
+<td>从客户端接收的数据总量</td>
+</tr>
+<tr>
+<td>nginx.server_zone.requests</td>
+<td>requests</td>
+<td>从客户端接收的客户端请求的总数</td>
+</tr>
+<tr>
+<td>nginx.server_zone.responses.1xx</td>
+<td>responses</td>
+<td>具有 1xx 状态码的响应数</td>
+</tr>
+<tr>
+<td>nginx.server_zone.responses.2xx</td>
+<td>responses</td>
+<td>具有 2xx 状态码的响应数</td>
+</tr>
+<tr>
+<td>nginx.server_zone.responses.3xx</td>
+<td>responses</td>
+<td>具有 3xx 状态码的响应数</td>
+</tr>
+<tr>
+<td>nginx.server_zone.responses.4xx</td>
+<td>responses</td>
+<td>具有 4xx 状态码的响应数</td>
+</tr>
+<tr>
+<td>nginx.server_zone.responses.5xx</td>
+<td>responses</td>
+<td>具有 5xx 状态码的响应数</td>
+</tr>
+<tr>
+<td>nginx.server_zone.responses.total</td>
+<td>responses</td>
+<td>发送到客户端的响应总数</td>
+</tr>
+<tr>
+<td>nginx.server_zone.sent</td>
+<td>bytes</td>
+<td>发送到客户端的数据总量</td>
+</tr>
+<tr>
+<td>nginx.ssl.handshakes</td>
+<td></td>
+<td>成功的 SSL 握手总数</td>
+</tr>
+<tr>
+<td>nginx.ssl.handshakes_failed</td>
+<td></td>
+<td>失败的 SSL 握手总数</td>
+</tr>
+<tr>
+<td>nginx.ssl.session_reuses</td>
+<td></td>
+<td>SSL 握手期间的会话重用总数</td>
+</tr>
+<tr>
+<td>nginx.timestamp</td>
+<td>milliseconds</td>
+<td>自 Epoch 以来的时间</td>
+</tr>
+<tr>
+<td>nginx.upstream.keepalive</td>
+<td>connections</td>
+<td>当前空闲的 keepalive 连接数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.active</td>
+<td>connections</td>
+<td>当前活动连接数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.backup</td>
+<td></td>
+<td>指示服务器是否为备份服务器的布尔值</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.downstart</td>
+<td>milliseconds</td>
+<td>服务器变成 “unavail” 或 “unhealthy” 的时间（自 Epoch 开始）</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.downtime</td>
+<td>milliseconds</td>
+<td>服务器处于 “unavail” 或 “unhealthy” 状态的总时间</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.fails</td>
+<td></td>
+<td>与服务器通信失败的总次数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.health_checks.checks</td>
+<td></td>
+<td>health check 请求总数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.health_checks.fails</td>
+<td></td>
+<td>health check 的失败数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.health_checks.last_passed</td>
+<td></td>
+<td>布尔值，指示上次运行状况检查请求是否成功并通过了测试</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.health_checks.unhealthy</td>
+<td></td>
+<td>服务器变得不健康 (state “unhealthy”) 的次数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.id</td>
+<td></td>
+<td>服务器的 ID</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.received</td>
+<td>bytes</td>
+<td>从此服务器接收的总数据量</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.requests</td>
+<td>requests</td>
+<td>转发到此服务器的客户端请求总数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.responses.1xx</td>
+<td>responses</td>
+<td>具有 1xx 状态码的响应数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.responses.2xx</td>
+<td>responses</td>
+<td>具有 2xx 状态码的响应数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.responses.3xx</td>
+<td>responses</td>
+<td>具有 3xx 状态码的响应数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.responses.4xx</td>
+<td>responses</td>
+<td>具有 4xx 状态码的响应数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.responses.5xx</td>
+<td>responses</td>
+<td>具有 5xx 状态码的响应数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.responses.total</td>
+<td>responses</td>
+<td>从此服务器获取的响应总数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.selected</td>
+<td>milliseconds</td>
+<td>上次选择服务器以处理请求（1.7.5）的时间（自 Epoch 开始）</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.sent</td>
+<td>bytes</td>
+<td>发送到此服务器的数据总量</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.unavail</td>
+<td></td>
+<td>由于失败尝试次数达到 max_fails 阈值，服务器对客户端请求不可用 (state “unavail”) 的次数</td>
+</tr>
+<tr>
+<td>nginx.upstream.peers.weight</td>
+<td></td>
+<td>Weight of the server</td>
+</tr>
+<tr>
+<td>nginx.version</td>
+<td></td>
+<td>nginx 的版本</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tomcat">Tomcat 组件指标说明</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tomcat.bytes_rcvd</td>
+<td>bytes/second</td>
+<td>每秒接收的字节数</td>
+</tr>
+<tr>
+<td>tomcat.bytes_sent</td>
+<td>bytes/second</td>
+<td>每秒发送的字节数</td>
+</tr>
+<tr>
+<td>tomcat.cache.access_count</td>
+<td>gets/second</td>
+<td>每秒访问缓存的次数</td>
+</tr>
+<tr>
+<td>tomcat.cache.hits_count</td>
+<td>hits/second</td>
+<td>每秒缓冲命中的次数</td>
+</tr>
+<tr>
+<td>tomcat.error_count</td>
+<td>errors/second</td>
+<td>发生错误的请求数</td>
+</tr>
+<tr>
+<td>tomcat.jsp.count</td>
+<td>pages/second</td>
+<td>web 模块中加载的 JSP 数量</td>
+</tr>
+<tr>
+<td>tomcat.jsp.reload_count</td>
+<td>pages/second</td>
+<td>web 模块中重新加载的 JSP 数量</td>
+</tr>
+<tr>
+<td>tomcat.max_time</td>
+<td>milliseconds</td>
+<td>最长的请求处理时间 (milliseconds)</td>
+</tr>
+<tr>
+<td>tomcat.processing_time</td>
+<td></td>
+<td>每秒所有请求的处理时间之和</td>
+</tr>
+<tr>
+<td>tomcat.request_count</td>
+<td>requests/second</td>
+<td>每秒总请求数</td>
+</tr>
+<tr>
+<td>tomcat.servlet.error_count</td>
+<td>errors/second</td>
+<td>servlet 接收的错误请求数 /s</td>
+</tr>
+<tr>
+<td>tomcat.servlet.processing_time</td>
+<td></td>
+<td>每秒经过 servlet 的所有请求的处理时间之和</td>
+</tr>
+<tr>
+<td>tomcat.servlet.request_count</td>
+<td>requests/second</td>
+<td>每秒经过 servlet 的总请求数</td>
+</tr>
+<tr>
+<td>tomcat.threads.busy</td>
+<td>threads</td>
+<td>正在使用的线程数</td>
+</tr>
+<tr>
+<td>tomcat.threads.count</td>
+<td>threads</td>
+<td>当前线程池的线程数</td>
+</tr>
+<tr>
+<td>tomcat.threads.max</td>
+<td>threads</td>
+<td>线程池最大可以产生的线程数</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mysql">MySQL 组件指标说明</h2>
+<p><img alt="MySQL_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/MySQL_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mysql.galera.wsrep_cluster_size</td>
+<td>nodes</td>
+<td>在 Galera 集群中的节点数.</td>
+</tr>
+<tr>
+<td>mysql.innodb.buffer_pool_free</td>
+<td>pages</td>
+<td>InnoDB 缓冲池空闲页面数</td>
+</tr>
+<tr>
+<td>mysql.innodb.buffer_pool_total</td>
+<td>pages</td>
+<td>InnoDB 缓冲池的总页数</td>
+</tr>
+<tr>
+<td>mysql.innodb.buffer_pool_used</td>
+<td>pages</td>
+<td>InnoDB 缓冲池中已使用的页数</td>
+</tr>
+<tr>
+<td>mysql.innodb.buffer_pool_utilization</td>
+<td>fractions</td>
+<td>InnoDB 的缓冲池的利用率</td>
+</tr>
+<tr>
+<td>mysql.innodb.current_row_locks</td>
+<td>locks</td>
+<td>The number of current row locks.</td>
+</tr>
+<tr>
+<td>mysql.innodb.data_reads</td>
+<td>reads/second</td>
+<td>数据的读取速率 (读的次数/s)</td>
+</tr>
+<tr>
+<td>mysql.innodb.data_writes</td>
+<td>writes/second</td>
+<td>数据的写速率 (写的次数/s)</td>
+</tr>
+<tr>
+<td>mysql.innodb.mutex_os_waits</td>
+<td>events/second</td>
+<td>The rate of mutex OS waits.</td>
+</tr>
+<tr>
+<td>mysql.innodb.mutex_spin_rounds</td>
+<td>events/second</td>
+<td>The rate of mutex spin rounds.</td>
+</tr>
+<tr>
+<td>mysql.innodb.mutex_spin_waits</td>
+<td>events/second</td>
+<td>The rate of mutex spin waits.</td>
+</tr>
+<tr>
+<td>mysql.innodb.os_log_fsyncs</td>
+<td>writes/second</td>
+<td>fsync 写入日志文件的速率（写的次数/s）</td>
+</tr>
+<tr>
+<td>mysql.innodb.row_lock_time</td>
+<td>fractions</td>
+<td>花费在 acquring 行锁上的时间（millisecond/s）</td>
+</tr>
+<tr>
+<td>mysql.innodb.row_lock_waits</td>
+<td>events/second</td>
+<td>行锁每秒要等待的次数（event/s）</td>
+</tr>
+<tr>
+<td>mysql.net.connections</td>
+<td>connections/second</td>
+<td>连接到服务器的速率（连接数量/s）</td>
+</tr>
+<tr>
+<td>mysql.net.max_connections</td>
+<td>connections</td>
+<td>服务器启动同时使用的最大数目连接数</td>
+</tr>
+<tr>
+<td>mysql.performance.com_delete</td>
+<td>queries/second</td>
+<td>删除语句的速率（次数/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.com_delete_multi</td>
+<td>queries/second</td>
+<td>删除多语句的速率（次数/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.com_insert</td>
+<td>queries/second</td>
+<td>插入语句的速率（次数/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.com_insert_select</td>
+<td>queries/second</td>
+<td>插入 SELECT 语句的速率（次数/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.com_replace_select</td>
+<td>queries/second</td>
+<td>代替 SELECT 语句的速度（次数/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.com_select</td>
+<td>queries/second</td>
+<td>SELECT 语句的速度（次数/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.com_update</td>
+<td>queries/second</td>
+<td>更新语句的速度（次数/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.com_update_multi</td>
+<td>queries/second</td>
+<td>更新多语句的速度（次数/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.created_tmp_disk_tables</td>
+<td>tables/second</td>
+<td>执行语句时每秒创建的服务器内部磁盘上的临时表的数量 （表数量/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.created_tmp_files</td>
+<td>files/second</td>
+<td>每秒创建临时文件的数量 (文件数/s)</td>
+</tr>
+<tr>
+<td>mysql.performance.created_tmp_tables</td>
+<td>tables/second</td>
+<td>每秒执行语句时创建的服务器内部临时表的数量（表数量/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.kernel_time</td>
+<td>percent</td>
+<td>MySQL 在内核空间中花费的 CPU 时间占比</td>
+</tr>
+<tr>
+<td>mysql.performance.key_cache_utilization</td>
+<td>fractions</td>
+<td>键缓存利用率 (百分比)</td>
+</tr>
+<tr>
+<td>mysql.performance.open_files</td>
+<td>files</td>
+<td>打开的文件数</td>
+</tr>
+<tr>
+<td>mysql.performance.open_tables</td>
+<td>tables</td>
+<td>打开的表数量</td>
+</tr>
+<tr>
+<td>mysql.performance.qcache_hits</td>
+<td>hits/second</td>
+<td>查询缓存命中率</td>
+</tr>
+<tr>
+<td>mysql.performance.queries</td>
+<td>queries/second</td>
+<td>查询的速率 (次数/s)</td>
+</tr>
+<tr>
+<td>mysql.performance.questions</td>
+<td>queries/second</td>
+<td>服务器执行的语句的速率（次数/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.slow_queries</td>
+<td>queries/second</td>
+<td>慢查询的速率（次数/s）</td>
+</tr>
+<tr>
+<td>mysql.performance.table_locks_waited</td>
+<td></td>
+<td>由于表锁定请求无法处理需要等待的总次数</td>
+</tr>
+<tr>
+<td>mysql.performance.threads_connected</td>
+<td>connections</td>
+<td>当前打开的连接的数量</td>
+</tr>
+<tr>
+<td>mysql.performance.threads_running</td>
+<td>threads</td>
+<td>正在运行的线程数</td>
+</tr>
+<tr>
+<td>mysql.performance.user_time</td>
+<td>percent</td>
+<td>MySQL 在用户空间中花费的 CPU 时间占比</td>
+</tr>
+<tr>
+<td>mysql.replication.seconds_behind_master</td>
+<td>seconds</td>
+<td>主服务器（master）和从服务器（slave）之间的滞后时间</td>
+</tr>
+<tr>
+<td>mysql.replication.slave_running</td>
+<td></td>
+<td>一个布尔值，判断该服务器是否为连接到主服务器（master）的从服务器（slave）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="redis">Redis 组件指标说明</h2>
+<p><img alt="Redis_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Redis_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>redis.aof.buffer_length</td>
+<td>bytes</td>
+<td>AOF 缓冲区大小</td>
+</tr>
+<tr>
+<td>redis.aof.last_rewrite_time</td>
+<td>seconds</td>
+<td>上次 AOF 重写（rewrite）的持续时间</td>
+</tr>
+<tr>
+<td>redis.aof.rewrite</td>
+<td></td>
+<td>AOF 重写（rewrite）的次数</td>
+</tr>
+<tr>
+<td>redis.aof.size</td>
+<td>bytes</td>
+<td>AOF 当前文件大小（aof_current_size）</td>
+</tr>
+<tr>
+<td>redis.clients.biggest_input_buf</td>
+<td></td>
+<td>当前客户端连接的最大输入缓存</td>
+</tr>
+<tr>
+<td>redis.clients.blocked</td>
+<td>connections</td>
+<td>等待阻塞调用的连接数</td>
+</tr>
+<tr>
+<td>redis.clients.longest_output_list</td>
+<td></td>
+<td>当前客户端连接的最长输出列表</td>
+</tr>
+<tr>
+<td>redis.cpu.sys</td>
+<td>seconds</td>
+<td>Redis 服务器消耗的系统 CPU</td>
+</tr>
+<tr>
+<td>redis.cpu.sys_children</td>
+<td>seconds</td>
+<td>后台进程消耗的系统 CPU</td>
+</tr>
+<tr>
+<td>redis.cpu.user</td>
+<td>seconds</td>
+<td>Redis 服务器消耗的用户 CPU</td>
+</tr>
+<tr>
+<td>redis.cpu.user_children</td>
+<td>seconds</td>
+<td>后台进程消耗的用户 CPU</td>
+</tr>
+<tr>
+<td>redis.expires</td>
+<td>keys</td>
+<td>已过期的 key 数量</td>
+</tr>
+<tr>
+<td>redis.expires.percent</td>
+<td>percent</td>
+<td>已过期的 key 百分比</td>
+</tr>
+<tr>
+<td>redis.info.latency_ms</td>
+<td>milliseconds</td>
+<td>Redis info 命令的延迟</td>
+</tr>
+<tr>
+<td>redis.key.length</td>
+<td></td>
+<td>给定 key 中元素的数量</td>
+</tr>
+<tr>
+<td>redis.keys</td>
+<td>keys</td>
+<td>Key 的总数量</td>
+</tr>
+<tr>
+<td>redis.keys.evicted</td>
+<td>keys</td>
+<td>由于最大内存限制被驱逐（evict）的 key 的总数量</td>
+</tr>
+<tr>
+<td>redis.keys.expired</td>
+<td>keys</td>
+<td>数据库中过期的 key 的总数量</td>
+</tr>
+<tr>
+<td>redis.mem.fragmentation_ratio</td>
+<td>fractions</td>
+<td>used_memory_rss 和 used_memory 的比率</td>
+</tr>
+<tr>
+<td>redis.mem.lua</td>
+<td>bytes</td>
+<td>Lua 引擎使用的内存量</td>
+</tr>
+<tr>
+<td>redis.mem.peak</td>
+<td>bytes</td>
+<td>Redis 使用的内存的峰值</td>
+</tr>
+<tr>
+<td>redis.mem.rss</td>
+<td>bytes</td>
+<td>系统给 Redis 分配的内存</td>
+</tr>
+<tr>
+<td>redis.mem.used</td>
+<td>bytes</td>
+<td>已经被 Redis 分配的内存量</td>
+</tr>
+<tr>
+<td>redis.net.clients</td>
+<td>connections</td>
+<td>连接的客户端数 (不包括 slaves)</td>
+</tr>
+<tr>
+<td>redis.net.commands</td>
+<td>commands</td>
+<td>服务器运行的命令数</td>
+</tr>
+<tr>
+<td>redis.net.rejected</td>
+<td>connections</td>
+<td>被拒绝的连接数</td>
+</tr>
+<tr>
+<td>redis.net.slaves</td>
+<td>connections</td>
+<td>连接的 slave 数</td>
+</tr>
+<tr>
+<td>redis.perf.latest_fork_usec</td>
+<td>microseconds</td>
+<td>最新 fork 的持续时间</td>
+</tr>
+<tr>
+<td>redis.persist</td>
+<td>keys</td>
+<td>持久化的 key 数（redis.keys - redis.expires）</td>
+</tr>
+<tr>
+<td>redis.persist.percent</td>
+<td>percent</td>
+<td>持久化的 key 的百分比</td>
+</tr>
+<tr>
+<td>redis.pubsub.channels</td>
+<td></td>
+<td>活跃的发布/订阅的频道数量</td>
+</tr>
+<tr>
+<td>redis.pubsub.patterns</td>
+<td></td>
+<td>活跃的发布/订阅的模式数量</td>
+</tr>
+<tr>
+<td>redis.rdb.bgsave</td>
+<td></td>
+<td>一个标志值，记录了服务器是否正在创建 RDB 文件，正在进行中是 1，否则是 0</td>
+</tr>
+<tr>
+<td>redis.rdb.changes_since_last</td>
+<td></td>
+<td>上次后台保存后，RDB 的改动</td>
+</tr>
+<tr>
+<td>redis.rdb.last_bgsave_time</td>
+<td>seconds</td>
+<td>最近一次 bg_save 操作的持续时间</td>
+</tr>
+<tr>
+<td>redis.replication.backlog_histlen</td>
+<td>bytes</td>
+<td>积压在同步缓冲区的数据量</td>
+</tr>
+<tr>
+<td>redis.replication.delay</td>
+<td>offsets</td>
+<td>复制延迟的偏移</td>
+</tr>
+<tr>
+<td>redis.replication.last_io_seconds_ago</td>
+<td>seconds</td>
+<td>距离最近一次与主服务器行通信已经过去了多少秒钟</td>
+</tr>
+<tr>
+<td>redis.replication.master_link_down_since_seconds</td>
+<td>seconds</td>
+<td>主从服务器连接断开了多少秒</td>
+</tr>
+<tr>
+<td>redis.replication.master_repl_offset</td>
+<td>offsets</td>
+<td>从 master 报告的复制偏移量</td>
+</tr>
+<tr>
+<td>redis.replication.slave_repl_offset</td>
+<td>offsets</td>
+<td>从 slave 报告的复制偏移量</td>
+</tr>
+<tr>
+<td>redis.replication.sync</td>
+<td></td>
+<td>一个标志值，如果同步正在进行，则为 1，否则为 0</td>
+</tr>
+<tr>
+<td>redis.replication.sync_left_bytes</td>
+<td>bytes</td>
+<td>距离同步完成还剩多少数据量</td>
+</tr>
+<tr>
+<td>redis.slowlog.micros.95percentile</td>
+<td>microseconds</td>
+<td>在慢日志中，查询报告的持续时间的第 95 百分位值</td>
+</tr>
+<tr>
+<td>redis.slowlog.micros.avg</td>
+<td>microseconds</td>
+<td>在慢日志中，查询报告的持续时间平均值</td>
+</tr>
+<tr>
+<td>redis.slowlog.micros.count</td>
+<td>queries/second</td>
+<td>在慢日志中，报告的查询速率</td>
+</tr>
+<tr>
+<td>redis.slowlog.micros.max</td>
+<td>microseconds</td>
+<td>在慢日志中，查询报告的持续时间最大值</td>
+</tr>
+<tr>
+<td>redis.slowlog.micros.median</td>
+<td>microseconds</td>
+<td>在慢日志中，查询报告的持续时间中位值</td>
+</tr>
+<tr>
+<td>redis.stats.keyspace_hits</td>
+<td>keys</td>
+<td>在数据库中查找 key 成功的次数</td>
+</tr>
+<tr>
+<td>redis.stats.keyspace_misses</td>
+<td>keys</td>
+<td>在数据库中查找 key 失败的次数</td>
+</tr>
+</tbody>
+</table>
+<h2 id="oracle">Oracle 组件指标说明</h2>
+<p><img alt="Oracle_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Oracle_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>oracle.RWParse.oracledb_Executions</td>
+<td></td>
+<td>SQL 执行速率</td>
+</tr>
+<tr>
+<td>oracle.RWParse.oracledb_HardParse</td>
+<td></td>
+<td>SQL 硬解析率</td>
+</tr>
+<tr>
+<td>oracle.RWParse.oracledb_LogicalReads</td>
+<td></td>
+<td>逻辑块读速率</td>
+</tr>
+<tr>
+<td>oracle.RWParse.oracledb_PhysicalReads</td>
+<td></td>
+<td>物理块读速率</td>
+</tr>
+<tr>
+<td>oracle.RWParse.oracledb_PhysicalWrites</td>
+<td></td>
+<td>物理块写速率</td>
+</tr>
+<tr>
+<td>oracle.RWParse.oracledb_TotalParse</td>
+<td></td>
+<td>SQL 解析速率</td>
+</tr>
+<tr>
+<td>oracle.RWParse.oracledb_Transaction</td>
+<td></td>
+<td>每秒事务数</td>
+</tr>
+<tr>
+<td>oracle.RWParse.oracledb_insstatus</td>
+<td></td>
+<td>实例状态(1 代表 ONLINE，0 代表 OFFLINE)</td>
+</tr>
+<tr>
+<td>oracle.RWParse.oracledb_runhealthtime</td>
+<td>s</td>
+<td>数据库健康运行时长</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_PGAFreeSize</td>
+<td>MB</td>
+<td>PGA 空闲大小</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_PGATotalSize</td>
+<td>MB</td>
+<td>PGA 分配大小</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_PGAUsedRate</td>
+<td>%</td>
+<td>PGA 使用率</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_PGAlUsedSize</td>
+<td>MB</td>
+<td>PGA 使用大小</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_SGAFreeSize</td>
+<td>MB</td>
+<td>SGA 空闲大小</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_SGATotalSize</td>
+<td>MB</td>
+<td>SGA 分配大小</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_SGAUsedRate</td>
+<td>%</td>
+<td>SGA 使用率</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_SGAUsedSize</td>
+<td>MB</td>
+<td>SGA 使用大小</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_SharePoolFreeSize</td>
+<td>MB</td>
+<td>SharePool 空闲大小</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_SharePoolTotalSize</td>
+<td>MB</td>
+<td>SharePool 分配大小</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_SharePoolUsedRate</td>
+<td>%</td>
+<td>SharePool 使用率</td>
+</tr>
+<tr>
+<td>oracle.MemoryInfo.oracledb_SharePoolUsedSize</td>
+<td>MB</td>
+<td>SharePool 使用大小</td>
+</tr>
+<tr>
+<td>oracle.Table_space.oracledb_TablespaceFree</td>
+<td>MB</td>
+<td>表空间空闲大小</td>
+</tr>
+<tr>
+<td>oracle.Table_space.oracledb_TablespaceRate</td>
+<td>%</td>
+<td>表空间使用率</td>
+</tr>
+<tr>
+<td>oracle.Table_space.oracledb_TablespaceStatus</td>
+<td></td>
+<td>表空间状态(1 代表 ONLINE，0 代表 OFFLINE)</td>
+</tr>
+<tr>
+<td>oracle.Table_space.oracledb_TablespaceTotal</td>
+<td>MB</td>
+<td>表空间分配大小</td>
+</tr>
+<tr>
+<td>oracle.Table_space.oracledb_TablespaceUsed</td>
+<td>MB</td>
+<td>表空间使用大小</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_ActiveSession</td>
+<td></td>
+<td>活跃用户会话数</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_InactiveSession</td>
+<td></td>
+<td>非活跃用户会话数</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_SessionMax</td>
+<td></td>
+<td>会话分配数</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_SessionTotal</td>
+<td></td>
+<td>用户会话数</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_BlockNum</td>
+<td></td>
+<td>当前阻塞数量</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_BufferCacheHit</td>
+<td>%</td>
+<td>缓冲区命中率</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_BufferCacheSize</td>
+<td>MB</td>
+<td>缓冲区大小</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_DeadLockNum</td>
+<td></td>
+<td>死锁数量</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_ProcessMax</td>
+<td></td>
+<td>进程分配数</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_ProcessTotal</td>
+<td></td>
+<td>进程总数</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_RedoNum</td>
+<td></td>
+<td>Redo 日志文件组数</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_RedoSize</td>
+<td>MB</td>
+<td>Redo 日志文件总大小</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_SortMemory</td>
+<td>%</td>
+<td>内存排序率</td>
+</tr>
+<tr>
+<td>oracle.sys_param.oracledb_sharepoolhit</td>
+<td>%</td>
+<td>共享池命中率</td>
+</tr>
+<tr>
+<td>oracle.ASMInfo.oracledb_ASMDisk_total</td>
+<td>MB</td>
+<td>ASM 总磁盘大小</td>
+</tr>
+<tr>
+<td>oracle.ASMInfo.oracledb_ASMDisk_free</td>
+<td>MB</td>
+<td>ASM 空闲磁盘大小</td>
+</tr>
+<tr>
+<td>oracle.ASMInfo.oracledb_ASMDisk_state</td>
+<td></td>
+<td>ASM 磁盘状态(1 代表 MOUNT，0 代表其他非正常状态)</td>
+</tr>
+<tr>
+<td>oracle.scanIpInfo.oracledb_ScanIPStatus</td>
+<td></td>
+<td>scanIP 监听状态(1 代表端口连通，0 代表端口不通)</td>
+</tr>
+<tr>
+<td>oracle.InsIpInfo.oracledb_InsIpStatus</td>
+<td></td>
+<td>实例 IP 监听状态(1 代表端口连通，0 代表端口不通)</td>
+</tr>
+<tr>
+<td>oracle.VIPInfo.oracledb_VIPStatus</td>
+<td></td>
+<td>VIP 监听状态(1 代表端口连通，0 代表端口不通)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="weblogic">Weblogic 组件指标说明</h2>
+<p><img alt="Weblogic_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Weblogic_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>weblogic.config.webapp_config_deployment_state</td>
+<td></td>
+<td>部署状态，当前应用的部署状态，如正在部署、部署失败、部署成功等</td>
+</tr>
+<tr>
+<td>weblogic.config.webapp_config_jsppage_check_secs</td>
+<td></td>
+<td>检查 JSP 文件是否发生更改并需要重新编译的频率</td>
+</tr>
+<tr>
+<td>weblogic.config.webapp_config_open_sessions_current_count</td>
+<td></td>
+<td>应用程序当前会话数</td>
+</tr>
+<tr>
+<td>weblogic.config.webapp_config_open_sessions_high_count</td>
+<td></td>
+<td>应用程序最高会话数</td>
+</tr>
+<tr>
+<td>weblogic.config.webapp_config_servlet_reload_check_secs</td>
+<td></td>
+<td>检查 servlet 是否已被修改的频率</td>
+</tr>
+<tr>
+<td>weblogic.config.webapp_config_session_cookie_max_age_secs</td>
+<td>s</td>
+<td>会话缓存保留时长</td>
+</tr>
+<tr>
+<td>weblogic.config.webapp_config_session_idlength</td>
+<td></td>
+<td>会话 id 长度（数字位数）</td>
+</tr>
+<tr>
+<td>weblogic.config.webapp_config_session_invalidation_interval_secs</td>
+<td>s</td>
+<td>将超时和无效会话释放前等待的时间</td>
+</tr>
+<tr>
+<td>weblogic.config.webapp_config_session_timeout_secs</td>
+<td>s</td>
+<td>会话超时设置</td>
+</tr>
+<tr>
+<td>weblogic.config.webapp_config_sessions_opened_total_count</td>
+<td></td>
+<td>应用程序会话打开数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>weblogic.wls_servlet.weblogic_servlet_execution_time_average</td>
+<td>s</td>
+<td>执行各个 servlet 调用的平均时长</td>
+</tr>
+<tr>
+<td>weblogic.wls_servlet.weblogic_servlet_execution_time_high</td>
+<td>s</td>
+<td>执行最长 servlet 调用的时长</td>
+</tr>
+<tr>
+<td>weblogic.wls_servlet.weblogic_servlet_execution_time_low</td>
+<td>s</td>
+<td>执行最短 servlet 调用的时长</td>
+</tr>
+<tr>
+<td>weblogic.wls_servlet.weblogic_servlet_execution_time_total</td>
+<td>s</td>
+<td>执行完所有 servlet 调用的时长</td>
+</tr>
+<tr>
+<td>weblogic.wls_servlet.weblogic_servlet_invocation_total_count</td>
+<td></td>
+<td>servlet 调用总次数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>weblogic.wls_servlet.weblogic_servlet_pool_max_capacity</td>
+<td></td>
+<td>servlet 池的线程最大容量</td>
+</tr>
+<tr>
+<td>weblogic.wls_servlet.weblogic_servlet_reload_total_count</td>
+<td></td>
+<td>servlet 重载的次数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>weblogic.workmanager.workmanager_completed_daemon_requests</td>
+<td></td>
+<td>已处理的守护请求数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>weblogic.workmanager.workmanager_completed_requests</td>
+<td></td>
+<td>已处理的请求数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>weblogic.workmanager.workmanager_pending_daemon_requests</td>
+<td></td>
+<td>挂起的守护请求数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>weblogic.workmanager.workmanager_pending_requests</td>
+<td></td>
+<td>挂起的请求数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>weblogic.workmanager.workmanager_stuck_thread_count</td>
+<td></td>
+<td>假死的线程数</td>
+</tr>
+<tr>
+<td>weblogic.jvm.jvm_heap_free_current</td>
+<td>MB</td>
+<td>堆内存空闲量</td>
+</tr>
+<tr>
+<td>weblogic.jvm.jvm_heap_free_percent</td>
+<td>%</td>
+<td>堆内存使用百分比</td>
+</tr>
+<tr>
+<td>weblogic.jvm.jvm_heap_size_current</td>
+<td>MB</td>
+<td>堆内存使用量</td>
+</tr>
+<tr>
+<td>weblogic.jvm.jvm_heap_size_max</td>
+<td>MB</td>
+<td>堆内存最大允许值</td>
+</tr>
+<tr>
+<td>weblogic.jvm.jvm_process_cpu_load</td>
+<td></td>
+<td>jvm 的 cpu 负载</td>
+</tr>
+<tr>
+<td>weblogic.jvm.jvm_uptime</td>
+<td>s</td>
+<td>jvm 运行时长</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sql-server">SQL Server 组件指标说明</h2>
+<p><img alt="SQLServer_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/SQLServer_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mssql.instance_Lock.mssqldb_LockWaits_sec</td>
+<td></td>
+<td>每秒锁等待次数</td>
+</tr>
+<tr>
+<td>mssql.db_status.mssqldb_database_status</td>
+<td></td>
+<td>数据库状态 0 代表 offline 1 代表 online</td>
+</tr>
+<tr>
+<td>mssql.db_status.mssqldb_used_data_size</td>
+<td>MB</td>
+<td>数据库数据大小</td>
+</tr>
+<tr>
+<td>mssql.db_status.mssqldb_max_data_size</td>
+<td>MB</td>
+<td>数据库数据最大值</td>
+</tr>
+<tr>
+<td>mssql.db_status.mssqldb_log_size</td>
+<td>MB</td>
+<td>日志大小</td>
+</tr>
+<tr>
+<td>mssql.db_status.mssqldb_LogGrowths</td>
+<td>MB</td>
+<td>日志增长量</td>
+</tr>
+<tr>
+<td>mssql.db_status.mssqldb_io_stall_total_ms</td>
+<td>s</td>
+<td>用户等待 IO 总时间</td>
+</tr>
+<tr>
+<td>mssql.db_status.mssqldb_io_stall_read_ms</td>
+<td>s</td>
+<td>用户等待读取总时间</td>
+</tr>
+<tr>
+<td>mssql.db_status.mssqldb_io_stall_write_ms</td>
+<td>s</td>
+<td>用户等待写入总时间</td>
+</tr>
+<tr>
+<td>mssql.db_status.mssqldb_connections</td>
+<td></td>
+<td>数据库连接数</td>
+</tr>
+<tr>
+<td>mssql.db_status.mssqldb_log_space_used</td>
+<td>%</td>
+<td>日志空间使用率</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_up</td>
+<td></td>
+<td>实例状态 0 代表 offline 1 代表 online</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_PageSplits_sec</td>
+<td></td>
+<td>每秒产生的页拆分数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_ProcessesBlocked</td>
+<td></td>
+<td>当前堵塞进程数</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_SqlCompilations_sec</td>
+<td></td>
+<td>SQL 每秒编译次数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_SqlReCompilations_sec</td>
+<td></td>
+<td>SQL 每秒重编译次数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_UserConnections</td>
+<td></td>
+<td>用户连接数</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_deadlocks_sec</td>
+<td></td>
+<td>导致死锁的每秒锁定请求数</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_kill_conn_errors_sec</td>
+<td></td>
+<td>连接错误数</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_local_time</td>
+<td>s</td>
+<td>实例运行时间</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_memory_utilization_percentage</td>
+<td>%</td>
+<td>内存使用率</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_batch_requests_sec</td>
+<td></td>
+<td>每秒查询数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_page_life_expectancy</td>
+<td>s</td>
+<td>数据页在内存中的驻留时间</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_page_fault_count</td>
+<td></td>
+<td>数据页错误数量/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_total_page_file_kb</td>
+<td>MB</td>
+<td>总页面文件</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_available_page_file_kb</td>
+<td>MB</td>
+<td>可用页面文件</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_total_physical_memory_kb</td>
+<td>MB</td>
+<td>总物理内存</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_available_physical_memory_kb</td>
+<td>MB</td>
+<td>可用物理内存</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_hit_radio</td>
+<td>%</td>
+<td>实例缓冲区命中率</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_total_pages</td>
+<td></td>
+<td>实例缓冲区总页数</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_used_rate</td>
+<td>%</td>
+<td>实例缓冲区使用率</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_used_pages</td>
+<td></td>
+<td>实例缓冲区使用页数</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_free_pages</td>
+<td></td>
+<td>实例缓冲区空闲页数</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_tps</td>
+<td></td>
+<td>每秒事务数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_full_scan</td>
+<td></td>
+<td>每秒全表扫描数/周期，周期指设置的数据采集周期</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_sessions</td>
+<td></td>
+<td>用户会话数</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_active_sessions</td>
+<td></td>
+<td>活跃用户会话数</td>
+</tr>
+<tr>
+<td>mssql.db_perform.mssqldb_inactive_sessions</td>
+<td></td>
+<td>非活跃用户会话数</td>
+</tr>
+<tr>
+<td>mssql.cip.mssqldb_ha_ip_status</td>
+<td></td>
+<td>ip 监听状态 0 代表监听端口不通 1 代表监听端口通畅</td>
+</tr>
+</tbody>
+</table>
+<h2 id="haproxy">HAProxy 组件指标说明</h2>
+<p><img alt="HAProxy_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/HAProxy_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>haproxy_backend_bytes_in_total</td>
+<td>B</td>
+<td>后端主机传入字节速率/分</td>
+</tr>
+<tr>
+<td>haproxy_backend_bytes_out_total</td>
+<td>B</td>
+<td>后端主机发送字节速率/分</td>
+</tr>
+<tr>
+<td>haproxy_backend_connection_errors_total</td>
+<td></td>
+<td>连接错误数/分</td>
+</tr>
+<tr>
+<td>haproxy_backend_current_queue</td>
+<td></td>
+<td>未分配的后端请求数</td>
+</tr>
+<tr>
+<td>haproxy_backend_current_server</td>
+<td></td>
+<td>后端服务数</td>
+</tr>
+<tr>
+<td>haproxy_backend_current_sessions</td>
+<td></td>
+<td>活跃后端会话数</td>
+</tr>
+<tr>
+<td>haproxy_backend_up</td>
+<td></td>
+<td>后端服务状态</td>
+</tr>
+<tr>
+<td>haproxy_backend_http_responses_total</td>
+<td></td>
+<td>后端 HTTP 响应码</td>
+</tr>
+<tr>
+<td>haproxy_frontend_bytes_in_total</td>
+<td></td>
+<td>前端主机传入字节速率/分</td>
+</tr>
+<tr>
+<td>haproxy_frontend_bytes_out_total</td>
+<td></td>
+<td>前端主机发送字节速率/分</td>
+</tr>
+<tr>
+<td>haproxy_frontend_current_session</td>
+<td></td>
+<td>前端会话数</td>
+</tr>
+<tr>
+<td>haproxy_frontend_http_requests_total</td>
+<td></td>
+<td>前端 HTTP 请求码</td>
+</tr>
+<tr>
+<td>haproxy_frontend_http_responses_total</td>
+<td></td>
+<td>前端 HTTP 响应码</td>
+</tr>
+</tbody>
+</table>
+<h2 id="zookeeper">Zookeeper 组件指标说明</h2>
+<p><img alt="Zookeeper_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Zookeeper_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>zk_packets_received</td>
+<td></td>
+<td>接收的数据包数量</td>
+</tr>
+<tr>
+<td>zk_packets_sent</td>
+<td></td>
+<td>发送的数据包数量</td>
+</tr>
+<tr>
+<td>zk_avg_latency</td>
+<td></td>
+<td>响应客户端请求的平均时间</td>
+</tr>
+<tr>
+<td>zk_max_latency</td>
+<td></td>
+<td>响应客户端请求的最大时间</td>
+</tr>
+<tr>
+<td>zk_min_latency</td>
+<td></td>
+<td>响应客户端请求的最小时间</td>
+</tr>
+<tr>
+<td>zk_outstanding_requests</td>
+<td></td>
+<td>排队请求数</td>
+</tr>
+<tr>
+<td>zk_pending_syncs</td>
+<td></td>
+<td>等待同步的 follower 数</td>
+</tr>
+<tr>
+<td>zk_synced_followers</td>
+<td></td>
+<td>同步的 follower 数</td>
+</tr>
+<tr>
+<td>zk_num_alive_connections</td>
+<td></td>
+<td>客户端连接总数</td>
+</tr>
+<tr>
+<td>zk_approximate_data_size</td>
+<td></td>
+<td>数据集近似值</td>
+</tr>
+<tr>
+<td>zk_ephemerals_count</td>
+<td></td>
+<td>短暂节点数</td>
+</tr>
+<tr>
+<td>zk_followers</td>
+<td></td>
+<td>followers 数</td>
+</tr>
+<tr>
+<td>zk_max_file_descriptor_count</td>
+<td></td>
+<td>文件句柄上限</td>
+</tr>
+<tr>
+<td>zk_open_file_descriptor_count</td>
+<td></td>
+<td>文件句柄数</td>
+</tr>
+<tr>
+<td>zk_watch_count</td>
+<td></td>
+<td>watches 数</td>
+</tr>
+<tr>
+<td>zk_znode_count</td>
+<td></td>
+<td>节点数</td>
+</tr>
+<tr>
+<td>zk_up</td>
+<td></td>
+<td>ZooKeeper 存活状态</td>
+</tr>
+<tr>
+<td>zk_server_state</td>
+<td></td>
+<td>服务身份</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rabbitmq">RabbitMQ 组件指标说明</h2>
+<p><img alt="RabbitMQ_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/RabbitMQ_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rabbitmq_channelsTotal</td>
+<td></td>
+<td>channels 开启总数</td>
+</tr>
+<tr>
+<td>rabbitmq_connectionsTotal</td>
+<td></td>
+<td>连接开启总数</td>
+</tr>
+<tr>
+<td>rabbitmq_consumersTotal</td>
+<td></td>
+<td>消费者数量</td>
+</tr>
+<tr>
+<td>rabbitmq_exchangesTotal</td>
+<td></td>
+<td>使用中的 exchanges 总数</td>
+</tr>
+<tr>
+<td>rabbitmq_queue_messages_ready_total</td>
+<td></td>
+<td>准备发送给客户端的消息数量</td>
+</tr>
+<tr>
+<td>rabbitmq_queue_messages_total</td>
+<td></td>
+<td>集群中的消息总数</td>
+</tr>
+<tr>
+<td>rabbitmq_queue_messages_unacknowledged_total</td>
+<td></td>
+<td>发送后未被确认的消息数</td>
+</tr>
+<tr>
+<td>rabbitmq_queuesTotal</td>
+<td></td>
+<td>使用中的队列数</td>
+</tr>
+<tr>
+<td>rabbitmq_up</td>
+<td></td>
+<td>存活状态</td>
+</tr>
+<tr>
+<td>rabbitmq_fd_total</td>
+<td></td>
+<td>文件句柄数上限</td>
+</tr>
+<tr>
+<td>rabbitmq_fd_used</td>
+<td></td>
+<td>已用文件句柄数</td>
+</tr>
+<tr>
+<td>rabbitmq_node_mem_used</td>
+<td>MB</td>
+<td>内存使用量</td>
+</tr>
+<tr>
+<td>rabbitmq_partitions</td>
+<td></td>
+<td>此节点可见的网络分区数量</td>
+</tr>
+<tr>
+<td>rabbitmq_running</td>
+<td></td>
+<td>运行 nodes 数</td>
+</tr>
+</tbody>
+</table>
+<h2 id="memcached">Memcached 组件指标说明</h2>
+<p><img alt="Memcached_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Memcached_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>memcached_commands_total</td>
+<td></td>
+<td>请求状态/分</td>
+</tr>
+<tr>
+<td>memcached_connections_total</td>
+<td></td>
+<td>连接速率/分</td>
+</tr>
+<tr>
+<td>memcached_current_bytes</td>
+<td>MB</td>
+<td>当前存储 item 的大小</td>
+</tr>
+<tr>
+<td>memcached_current_connections</td>
+<td></td>
+<td>当前服务器打开的连接数</td>
+</tr>
+<tr>
+<td>memcached_current_items</td>
+<td></td>
+<td>实例当前 item 数</td>
+</tr>
+<tr>
+<td>memcached_items_evicted_total</td>
+<td></td>
+<td>从缓存中给新 item 的速率/分</td>
+</tr>
+<tr>
+<td>memcached_items_total</td>
+<td></td>
+<td>服务启动后存储 item 总数</td>
+</tr>
+<tr>
+<td>memcached_limit_bytes</td>
+<td>MB</td>
+<td>内存使用上限</td>
+</tr>
+<tr>
+<td>memcached_malloced_bytes</td>
+<td>MB</td>
+<td>分配 slab page 内存量</td>
+</tr>
+<tr>
+<td>memcached_max_connections</td>
+<td></td>
+<td>连接数上限</td>
+</tr>
+<tr>
+<td>memcached_read_bytes_total</td>
+<td>bytes</td>
+<td>服务器从网络读取字节的速率/分</td>
+</tr>
+<tr>
+<td>memcached_written_bytes_total</td>
+<td>bytes</td>
+<td>服务器向网络发送字节的速率/分</td>
+</tr>
+<tr>
+<td>memcached_uptime_seconds</td>
+<td>s</td>
+<td>服务运行时长</td>
+</tr>
+<tr>
+<td>memcached_up</td>
+<td></td>
+<td>存活状态</td>
+</tr>
+</tbody>
+</table>
+<h2 id="consul">Consul 组件指标说明</h2>
+<p><img alt="Consul_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Consul_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>consul_net_node_latency_max</td>
+<td>ms</td>
+<td>从该节点到其他节点的最大延迟</td>
+</tr>
+<tr>
+<td>consul_net_node_latency_p25</td>
+<td>ms</td>
+<td>从该节点到其他节点的 p25 延迟</td>
+</tr>
+<tr>
+<td>consul_net_node_latency_p95</td>
+<td>ms</td>
+<td>从该节点到其他节点的 p95 延迟</td>
+</tr>
+<tr>
+<td>consul_net_node_latency_p90</td>
+<td>ms</td>
+<td>从该节点到其他节点的 p90 延迟</td>
+</tr>
+<tr>
+<td>consul_net_node_latency_p99</td>
+<td>ms</td>
+<td>从该节点到其他节点的 p99 延迟</td>
+</tr>
+<tr>
+<td>consul_net_node_latency_min</td>
+<td>ms</td>
+<td>从该节点到其他节点的最小延迟</td>
+</tr>
+<tr>
+<td>consul_net_node_latency_p75</td>
+<td>ms</td>
+<td>从该节点到其他节点的 p75 延迟</td>
+</tr>
+<tr>
+<td>consul_net_node_latency_median</td>
+<td>ms</td>
+<td>从该节点到其他节点的中等延迟</td>
+</tr>
+<tr>
+<td>consul_peers</td>
+<td></td>
+<td>对等体的数量</td>
+</tr>
+<tr>
+<td>consul_catalog_nodes_warning</td>
+<td></td>
+<td>警告节点数量</td>
+</tr>
+<tr>
+<td>consul_catalog_nodes_passing</td>
+<td></td>
+<td>传递节点数量</td>
+</tr>
+<tr>
+<td>consul_catalog_nodes_up</td>
+<td></td>
+<td>节点数</td>
+</tr>
+<tr>
+<td>consul_catalog_nodes_critical</td>
+<td></td>
+<td>关键节点数量</td>
+</tr>
+<tr>
+<td>consul_catalog_services_critical</td>
+<td></td>
+<td>关键服务总数</td>
+</tr>
+<tr>
+<td>consul_catalog_services_passing</td>
+<td></td>
+<td>传递服务总量</td>
+</tr>
+<tr>
+<td>consul_catalog_services_up</td>
+<td></td>
+<td>服务总量</td>
+</tr>
+<tr>
+<td>consul_catalog_services_warning</td>
+<td></td>
+<td>警告服务总数</td>
+</tr>
+</tbody>
+</table>
+<h2 id="elasticsearch">ElasticSearch 组件指标说明</h2>
+<p><img alt="Elasticsearch_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Elasticsearch_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>elasticsearch_docs_deleted</td>
+<td></td>
+<td>集群中所有分片的删除的文档</td>
+</tr>
+<tr>
+<td>elasticsearch_indexing_delete_total</td>
+<td></td>
+<td>从 index 中删除的文档数量</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_generic_queue</td>
+<td></td>
+<td>generic 线程池排队线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_management_active</td>
+<td></td>
+<td>mgt 线程池活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_refresh_active</td>
+<td></td>
+<td>refresh 线程池活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_indexing_index_current</td>
+<td></td>
+<td>index 中被索引的文档数量</td>
+</tr>
+<tr>
+<td>elasticsearch_indexing_delete_time</td>
+<td>s</td>
+<td>从 index 中删除文档花费时间</td>
+</tr>
+<tr>
+<td>elasticsearch_indexing_index_time</td>
+<td>s</td>
+<td>从 index 索引文档花费时间</td>
+</tr>
+<tr>
+<td>elasticsearch_process_open_fd</td>
+<td></td>
+<td>打开和当前进程相关的文件数据</td>
+</tr>
+<tr>
+<td>elasticsearch_indexing_delete_current</td>
+<td></td>
+<td>从 index 中删除的文档数量</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_flush_queue</td>
+<td></td>
+<td>bulk 线程池排队线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_force_merge_queue</td>
+<td></td>
+<td>merge 线程池活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_get_total</td>
+<td></td>
+<td>文档存在时 get 请求次数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_refresh_queue</td>
+<td></td>
+<td>refresh 线程池排队线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_index_queue</td>
+<td></td>
+<td>index 线程池排队线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_search_threads</td>
+<td></td>
+<td>search 线程池线程总数</td>
+</tr>
+<tr>
+<td>elasticsearch_transport_tx_size</td>
+<td>MB</td>
+<td>集群通信中发送的数据大小</td>
+</tr>
+<tr>
+<td>elasticsearch_indexing_index_total</td>
+<td></td>
+<td>index 中被索引的文档数量</td>
+</tr>
+<tr>
+<td>elasticsearch_search_fetch_open_contexts</td>
+<td></td>
+<td>活跃查询次数</td>
+</tr>
+<tr>
+<td>elasticsearch_docs_count</td>
+<td></td>
+<td>集群中所有分片的文档</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_management_queue</td>
+<td></td>
+<td>mgt 线程池排队的线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_bulk_active</td>
+<td></td>
+<td>bulk 线程池活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_search_queue</td>
+<td></td>
+<td>search 线程池排队线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_get_time</td>
+<td>s</td>
+<td>get 请求上的总时间</td>
+</tr>
+<tr>
+<td>elasticsearch_merges_current</td>
+<td></td>
+<td>当前的活跃段合并数量</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_flush_threads</td>
+<td></td>
+<td>bulk 线程池线程总数</td>
+</tr>
+<tr>
+<td>elasticsearch_merges_current_size</td>
+<td>MB</td>
+<td>当前被合并的段的大小</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_snapshot_active</td>
+<td></td>
+<td>snap 线程池活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_search_fetch_current</td>
+<td></td>
+<td>当前运行的查询取回操作的数量</td>
+</tr>
+<tr>
+<td>elasticsearch_flush_total</td>
+<td></td>
+<td>index 刷新到磁盘次数</td>
+</tr>
+<tr>
+<td>elasticsearch_flush_total_time</td>
+<td>s</td>
+<td>index 刷新到磁盘花费时间</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_generic_threads</td>
+<td></td>
+<td>generic 线程池线程总数</td>
+</tr>
+<tr>
+<td>elasticsearch_store_size</td>
+<td>MB</td>
+<td>总的存储大小</td>
+</tr>
+<tr>
+<td>elasticsearch_transport_tx_count</td>
+<td></td>
+<td>在集群通信中发送的包的总数量</td>
+</tr>
+<tr>
+<td>elasticsearch_merges_total</td>
+<td></td>
+<td>所有段的合并数量</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_snapshot_queue</td>
+<td></td>
+<td>snap 线程池排队线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_search_fetch_time</td>
+<td>s</td>
+<td>查询取回操作的总时间</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_search_active</td>
+<td></td>
+<td>search 线程池活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_get_queue</td>
+<td></td>
+<td>get 线程池排队线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_fielddata_evictions</td>
+<td></td>
+<td>field 缓存被驱逐的数据量</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_index_threads</td>
+<td></td>
+<td>index 线程池线程总数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_flush_active</td>
+<td></td>
+<td>flush 队列中活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_search_query_time</td>
+<td>s</td>
+<td>查询操作的总时间</td>
+</tr>
+<tr>
+<td>elasticsearch_get_exists_time</td>
+<td>s</td>
+<td>文档存在时 get 请求时间</td>
+</tr>
+<tr>
+<td>elasticsearch_get_missing_total</td>
+<td></td>
+<td>文档丢失时 get 请求次数</td>
+</tr>
+<tr>
+<td>elasticsearch_transport_rx_count</td>
+<td></td>
+<td>集群通信接受包的总数量</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_bulk_threads</td>
+<td></td>
+<td>bulk 线程池线程总数</td>
+</tr>
+<tr>
+<td>elasticsearch_transport_rx_size</td>
+<td>MB</td>
+<td>集群通信接受的数据大小</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_force_merge_threads</td>
+<td></td>
+<td>merge 线程池线程总数</td>
+</tr>
+<tr>
+<td>elasticsearch_refresh_total</td>
+<td></td>
+<td>总的 index 刷新次数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_snapshot_threads</td>
+<td></td>
+<td>snap 线程池线程总数</td>
+</tr>
+<tr>
+<td>elasticsearch_fielddata_size</td>
+<td>MB</td>
+<td>field 缓存区大小</td>
+</tr>
+<tr>
+<td>elasticsearch_transport_server_open</td>
+<td></td>
+<td>为集群通信打开的连接数</td>
+</tr>
+<tr>
+<td>elasticsearch_search_query_total</td>
+<td></td>
+<td>查询操作的数量</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_bulk_queue</td>
+<td></td>
+<td>bulk 线程池排队的线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_get_threads</td>
+<td></td>
+<td>get 线程池的线程总数</td>
+</tr>
+<tr>
+<td>elasticsearch_get_current</td>
+<td></td>
+<td>正在运行的 get 请求数</td>
+</tr>
+<tr>
+<td>elasticsearch_http_current_open</td>
+<td></td>
+<td>当前打开的 http 连接数</td>
+</tr>
+<tr>
+<td>elasticsearch_get_missing_time</td>
+<td>s</td>
+<td>文档丢失花费 get 请求时间</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_index_active</td>
+<td></td>
+<td>index 线程池活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_refresh_total_time</td>
+<td>s</td>
+<td>index 刷新花费总时间</td>
+</tr>
+<tr>
+<td>elasticsearch_http_total_opened</td>
+<td></td>
+<td>打开 http 的总连接数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_generic_active</td>
+<td></td>
+<td>generic 线程池活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_force_merge_active</td>
+<td></td>
+<td>merge 线程池活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_refresh_threads</td>
+<td></td>
+<td>refresh 线程池线程总数</td>
+</tr>
+<tr>
+<td>elasticsearch_search_fetch_total</td>
+<td></td>
+<td>查询取回操作的数量</td>
+</tr>
+<tr>
+<td>elasticsearch_get_exists_total</td>
+<td></td>
+<td>文档存在时 get 请求数</td>
+</tr>
+<tr>
+<td>elasticsearch_merges_total_size</td>
+<td>MB</td>
+<td>所有合并段的大小</td>
+</tr>
+<tr>
+<td>elasticsearch_merges_current_docs</td>
+<td></td>
+<td>当前跨段合并的文档数量</td>
+</tr>
+<tr>
+<td>elasticsearch_merges_total_docs</td>
+<td></td>
+<td>跨所有合并段的文档数量</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_get_active</td>
+<td></td>
+<td>get 线程池活跃线程数</td>
+</tr>
+<tr>
+<td>elasticsearch_search_query_current</td>
+<td></td>
+<td>当前运行查询操作的数量</td>
+</tr>
+<tr>
+<td>elasticsearch_thread_pool_management_threads</td>
+<td></td>
+<td>mgt 线程池线程总数</td>
+</tr>
+<tr>
+<td>elasticsearch_merges_total_time</td>
+<td>s</td>
+<td>花在合并段上的时间</td>
+</tr>
+<tr>
+<td>elasticsearch_active_primary_shards</td>
+<td></td>
+<td>集群中活跃的主分片数量</td>
+</tr>
+<tr>
+<td>elasticsearch_pending_tasks_total</td>
+<td></td>
+<td>总的未完成的 task 数量</td>
+</tr>
+<tr>
+<td>elasticsearch_unassigned_shards</td>
+<td></td>
+<td>未分配节点的分片数量</td>
+</tr>
+<tr>
+<td>elasticsearch_pending_tasks_priority_urgent</td>
+<td></td>
+<td>紧急优先未完成的 task 数量</td>
+</tr>
+<tr>
+<td>elasticsearch_pending_tasks_priority_high</td>
+<td></td>
+<td>高优先级的未完成的 task 数量</td>
+</tr>
+<tr>
+<td>elasticsearch_cluster_status</td>
+<td></td>
+<td>集群健康数字红=0 黄=1 绿=2</td>
+</tr>
+<tr>
+<td>elasticsearch_relocating_shards</td>
+<td></td>
+<td>节点搬到另一个节点的分片数量</td>
+</tr>
+<tr>
+<td>elasticsearch_number_of_data_nodes</td>
+<td></td>
+<td>集群中 node 数据总数</td>
+</tr>
+<tr>
+<td>elasticsearch_number_of_nodes</td>
+<td></td>
+<td>集群中 node 总数</td>
+</tr>
+<tr>
+<td>elasticsearch_active_shards</td>
+<td></td>
+<td>集群中活跃分片数量</td>
+</tr>
+<tr>
+<td>elasticsearch_initializing_shards</td>
+<td></td>
+<td>当前初始化碎片数量</td>
+</tr>
+</tbody>
+</table>
+<h2 id="kafka">Kafka 组件指标说明</h2>
+<p><img alt="Kafka_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Kafka_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kafka_replication_leader_elections_rate</td>
+<td></td>
+<td>leader 选举频率</td>
+</tr>
+<tr>
+<td>kafka_replication_isr_shrinks_rate</td>
+<td>nodes/s</td>
+<td>副本离开 ISR 池的速率</td>
+</tr>
+<tr>
+<td>kafka_request_handler_avg_idle_pct_rate</td>
+<td></td>
+<td>处理请求线程时间百分比</td>
+</tr>
+<tr>
+<td>kafka_net_bytes_out_rate</td>
+<td>bytes/s</td>
+<td>传出字节速率</td>
+</tr>
+<tr>
+<td>kafka_net_bytes_rejected_rate</td>
+<td>bytes/s</td>
+<td>被拒绝的字节速率</td>
+</tr>
+<tr>
+<td>kafka_messages_in_rate</td>
+<td></td>
+<td>传入消息速率</td>
+</tr>
+<tr>
+<td>kafka_net_bytes_in_rate</td>
+<td>bytes/s</td>
+<td>传入字节速率</td>
+</tr>
+<tr>
+<td>kafka_request_fetch_failed_rate</td>
+<td></td>
+<td>客户端请求失败次数</td>
+</tr>
+<tr>
+<td>kafka_replication_unclean_leader_elections_rate</td>
+<td></td>
+<td>unleader 选举频率</td>
+</tr>
+<tr>
+<td>kafka_replication_isr_expands_rate</td>
+<td>nodes/s</td>
+<td>副本加入 ISR 池的速率</td>
+</tr>
+<tr>
+<td>kafka_request_produce_failed_rate</td>
+<td></td>
+<td>失败的 produce 请求数</td>
+</tr>
+<tr>
+<td>kafka_request_produce_time_99percentile</td>
+<td>ms</td>
+<td>99%produce 请求时间</td>
+</tr>
+<tr>
+<td>kafka_request_metadata_time_99percentile</td>
+<td>ms</td>
+<td>99%元数据请求时间</td>
+</tr>
+<tr>
+<td>kafka_request_update_metadata_time_99percentile</td>
+<td>ms</td>
+<td>更新 99%元数据请求的时间</td>
+</tr>
+<tr>
+<td>kafka_request_produce_time_avg</td>
+<td>ms</td>
+<td>produce 请求数的时间</td>
+</tr>
+<tr>
+<td>kafka_request_update_metadata_time_avg</td>
+<td>ms</td>
+<td>更新元数据请求的时间</td>
+</tr>
+<tr>
+<td>kafka_request_produce_rate</td>
+<td></td>
+<td>produce 请求数</td>
+</tr>
+<tr>
+<td>kafka_request_metadata_time_avg</td>
+<td>ms</td>
+<td>元数据平均请求时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mongodb">Mongodb 组件指标说明</h2>
+<p><img alt="Mongodb_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Mongodb_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mongodb_replset_health</td>
+<td></td>
+<td>副本集状态</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_network_readerscreated</td>
+<td></td>
+<td>oplog 查询进程创建的个数</td>
+</tr>
+<tr>
+<td>mongodb_opcounters_insert</td>
+<td></td>
+<td>插入操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_network_getmores_totalmillis</td>
+<td>ms/s</td>
+<td>getmore 操作收集数据时间</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_buffer_count</td>
+<td></td>
+<td>oplog 缓存中的操作数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_getlasterror_wtime_totalmillis</td>
+<td>ms/s</td>
+<td>执行获取最后错误操作的时间</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_network_getmores_num</td>
+<td></td>
+<td>getmore 操作的个数</td>
+</tr>
+<tr>
+<td>mongodb_connections_available</td>
+<td></td>
+<td>未使用的可用连接数</td>
+</tr>
+<tr>
+<td>mongodb_opcountersrepl_delete</td>
+<td></td>
+<td>副本集删除操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_asserts_regular</td>
+<td></td>
+<td>常规断言数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_queryexecutor_scanned</td>
+<td></td>
+<td>被扫描的索引个数</td>
+</tr>
+<tr>
+<td>mongodb_asserts_msg</td>
+<td></td>
+<td>消息断言数</td>
+</tr>
+<tr>
+<td>mongodb_mem_mapped</td>
+<td>MB</td>
+<td>数据库映射的内存总数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_network_bytes</td>
+<td>MB</td>
+<td>从服务器同步源读取的数据总量</td>
+</tr>
+<tr>
+<td>mongodb_metrics_record_moves</td>
+<td></td>
+<td>文档在磁盘上移动的次数</td>
+</tr>
+<tr>
+<td>mongodb_opcounters_query</td>
+<td></td>
+<td>查询操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_uptime</td>
+<td>s</td>
+<td>mongo 进程启动时长</td>
+</tr>
+<tr>
+<td>mongodb_opcounters_delete</td>
+<td></td>
+<td>删除操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_getlasterror_wtime_num</td>
+<td></td>
+<td>写操作获取最后错误操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_operation_fastmod</td>
+<td></td>
+<td>不导致更新操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_document_updated</td>
+<td></td>
+<td>文档更新数</td>
+</tr>
+<tr>
+<td>mongodb_mem_resident</td>
+<td>MB</td>
+<td>数据库进程在使用的内存总数</td>
+</tr>
+<tr>
+<td>mongodb_mem_virtual</td>
+<td>MB</td>
+<td>数据库进程使用的虚拟内存总数</td>
+</tr>
+<tr>
+<td>mongodb_asserts_user</td>
+<td></td>
+<td>用户断言数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_apply_batches_totalmillis</td>
+<td>ms/s</td>
+<td>执行来自 oplog 的操作的时间</td>
+</tr>
+<tr>
+<td>mongodb_metrics_document_inserted</td>
+<td></td>
+<td>文档增加数</td>
+</tr>
+<tr>
+<td>mongodb_globallock_currentqueue_writers</td>
+<td></td>
+<td>当前在队列中等待写锁的操作数</td>
+</tr>
+<tr>
+<td>mongodb_opcountersrepl_query</td>
+<td></td>
+<td>副本集查询操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_operation_scanandorder</td>
+<td></td>
+<td>返回不能索引排序数字请求次数</td>
+</tr>
+<tr>
+<td>mongodb_connections_totalcreated</td>
+<td></td>
+<td>所有连接数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_operation_idhack</td>
+<td></td>
+<td>包含_id 字段的请求次数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_buffer_sizebytes</td>
+<td>MB</td>
+<td>oplog 缓存的大小</td>
+</tr>
+<tr>
+<td>mongodb_opcountersrepl_command</td>
+<td></td>
+<td>命令的总数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_buffer_maxsizebytes</td>
+<td>MB</td>
+<td>缓存的最大值</td>
+</tr>
+<tr>
+<td>mongodb_metrics_document_returned</td>
+<td></td>
+<td>文档被请求返回数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_ttl_deleteddocuments</td>
+<td></td>
+<td>有 ttl 索引删除的文档数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_network_ops</td>
+<td></td>
+<td>读取操作的个数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_document_deleted</td>
+<td></td>
+<td>文档删除数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_apply_batches_num</td>
+<td></td>
+<td>批处理的个数</td>
+</tr>
+<tr>
+<td>mongodb_asserts_rollovers</td>
+<td></td>
+<td>计数器 rollover 次数</td>
+</tr>
+<tr>
+<td>mongodb_opcounters_command</td>
+<td></td>
+<td>传给数据库的命令的总数</td>
+</tr>
+<tr>
+<td>mongodb_globallock_totaltime</td>
+<td>μs</td>
+<td>全局锁启动时长</td>
+</tr>
+<tr>
+<td>mongodb_opcountersrepl_insert</td>
+<td></td>
+<td>副本集插入操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_opcountersrepl_getmore</td>
+<td></td>
+<td>副本集 getmore 操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_opcountersrepl_update</td>
+<td></td>
+<td>副本集更新操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_opcounters_update</td>
+<td></td>
+<td>更新操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_asserts_warning</td>
+<td></td>
+<td>警告断言数</td>
+</tr>
+<tr>
+<td>mongodb_opcounters_getmore</td>
+<td></td>
+<td>getmore 操作的次数</td>
+</tr>
+<tr>
+<td>mongodb_globallock_currentqueue_total</td>
+<td></td>
+<td>当前在队列中等待锁的操作数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_repl_apply_ops</td>
+<td></td>
+<td>执行的 oplog 操作的个数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_ttl_passes</td>
+<td></td>
+<td>删除文档次数</td>
+</tr>
+<tr>
+<td>mongodb_connections_current</td>
+<td></td>
+<td>从客户端到数据库服务端的连接数</td>
+</tr>
+<tr>
+<td>mongodb_metrics_getlasterror_wtimeouts</td>
+<td></td>
+<td>超时导致操作数</td>
+</tr>
+<tr>
+<td>mongodb_globallock_currentqueue_readers</td>
+<td></td>
+<td>当前在队列中等待读锁的操作数</td>
+</tr>
+<tr>
+<td>mongodb_stats_indexsize</td>
+<td></td>
+<td>库中所有创建的索引总数</td>
+</tr>
+<tr>
+<td>mongodb_stats_objects</td>
+<td></td>
+<td>库中所有的文档数</td>
+</tr>
+<tr>
+<td>mongodb_stats_indexes</td>
+<td></td>
+<td>库中总索引数</td>
+</tr>
+<tr>
+<td>mongodb_stats_storagesize</td>
+<td>MB</td>
+<td>collections 存储空间</td>
+</tr>
+<tr>
+<td>mongodb_stats_datasize</td>
+<td>MB</td>
+<td>库中的数据量</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ceph">Ceph 组件指标说明</h2>
+<p><img alt="Ceph_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Ceph_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ceph_num_in_osds</td>
+<td></td>
+<td>参与存储守护进程的数量</td>
+</tr>
+<tr>
+<td>ceph_aggregate_pct_used</td>
+<td>%</td>
+<td>总体容量使用量</td>
+</tr>
+<tr>
+<td>ceph_num_up_osds</td>
+<td></td>
+<td>在线存储守护进程的数量</td>
+</tr>
+<tr>
+<td>ceph_num_mons</td>
+<td></td>
+<td>监视器守护进程的数量</td>
+</tr>
+<tr>
+<td>ceph_num_pools</td>
+<td></td>
+<td>存储池的数量</td>
+</tr>
+<tr>
+<td>ceph_pgstate_active_clean</td>
+<td></td>
+<td>活动归置组数量</td>
+</tr>
+<tr>
+<td>ceph_num_pgs</td>
+<td></td>
+<td>可用归置组的数量</td>
+</tr>
+<tr>
+<td>ceph_num_near_full_osds</td>
+<td></td>
+<td>几乎完整的 osd 数量</td>
+</tr>
+<tr>
+<td>ceph_num_full_osds</td>
+<td></td>
+<td>完整 osd 数量</td>
+</tr>
+<tr>
+<td>ceph_total_objects</td>
+<td></td>
+<td>对象总数</td>
+</tr>
+<tr>
+<td>ceph_num_osds</td>
+<td></td>
+<td>已知存储守护进程的数量</td>
+</tr>
+<tr>
+<td>ceph_read_op_per_sec</td>
+<td>MB/s</td>
+<td>存储池每秒读字节数</td>
+</tr>
+<tr>
+<td>ceph_num_objects</td>
+<td></td>
+<td>对象个数</td>
+</tr>
+<tr>
+<td>ceph_write_op_per_sec</td>
+<td>MB/s</td>
+<td>存储池每秒写字节数</td>
+</tr>
+<tr>
+<td>ceph_write_bytes_sec</td>
+<td>MB/s</td>
+<td>ceph 每秒写字节数</td>
+</tr>
+<tr>
+<td>ceph_read_bytes_sec</td>
+<td>MB/s</td>
+<td>ceph 每秒读字节数</td>
+</tr>
+<tr>
+<td>ceph_pct_used</td>
+<td>%</td>
+<td>使用量</td>
+</tr>
+<tr>
+<td>ceph_op_per_sec</td>
+<td></td>
+<td>池每秒 IO 操作</td>
+</tr>
+<tr>
+<td>ceph_apply_latency_ms</td>
+<td>s</td>
+<td>磁盘更新所需时间</td>
+</tr>
+<tr>
+<td>ceph_commit_latency_ms</td>
+<td>s</td>
+<td>日志操作所需时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="iis">IIS 组件指标说明</h2>
+<p><img alt="IIS_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/IIS_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iis_httpd_request_method_options</td>
+<td></td>
+<td>options 方法请求数</td>
+</tr>
+<tr>
+<td>iis_httpd_request_method_head</td>
+<td></td>
+<td>head 方法请求数</td>
+</tr>
+<tr>
+<td>iis_httpd_request_method_del</td>
+<td></td>
+<td>del 方法请求数</td>
+</tr>
+<tr>
+<td>iis_requests_cgi</td>
+<td></td>
+<td>cgi 请求执行数</td>
+</tr>
+<tr>
+<td>iis_requests_isapi</td>
+<td></td>
+<td>isapi 请求执行数</td>
+</tr>
+<tr>
+<td>iis_errors_not_found</td>
+<td></td>
+<td>文档未找到导致错误的速数</td>
+</tr>
+<tr>
+<td>iis_net_files_rcvd</td>
+<td></td>
+<td>每秒接收的文件数</td>
+</tr>
+<tr>
+<td>iis_httpd_request_method_put</td>
+<td></td>
+<td>put 方法请求数</td>
+</tr>
+<tr>
+<td>iis_httpd_request_method_trace</td>
+<td></td>
+<td>trace 方法请求数</td>
+</tr>
+<tr>
+<td>iis_net_connection_attempts</td>
+<td></td>
+<td>每秒尝试连接数</td>
+</tr>
+<tr>
+<td>iis_users_nonanon</td>
+<td></td>
+<td>每秒非匿名用户的请求数</td>
+</tr>
+<tr>
+<td>iis_net_bytes_total</td>
+<td></td>
+<td>每秒传输的字节总数</td>
+</tr>
+<tr>
+<td>iis_net_bytes_rcvd</td>
+<td></td>
+<td>每秒接收的字节数</td>
+</tr>
+<tr>
+<td>iis_net_bytes_sent</td>
+<td></td>
+<td>每秒发送的字节数</td>
+</tr>
+<tr>
+<td>iis_net_num_connections</td>
+<td></td>
+<td>活跃连接数</td>
+</tr>
+<tr>
+<td>iis_errors_locked</td>
+<td></td>
+<td>文档锁定导致的错误数</td>
+</tr>
+<tr>
+<td>iis_users_anon</td>
+<td></td>
+<td>每秒匿名用户的请求数</td>
+</tr>
+<tr>
+<td>iis_net_files_sent</td>
+<td></td>
+<td>每秒发送的文件数</td>
+</tr>
+<tr>
+<td>iis_httpd_request_method_post</td>
+<td></td>
+<td>post 方法请求数</td>
+</tr>
+<tr>
+<td>iis_httpd_request_method_get</td>
+<td></td>
+<td>get 方法请求数</td>
+</tr>
+<tr>
+<td>iis_uptime</td>
+<td></td>
+<td>iis 服务器运行时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="active_directory">Active_Directory 组件指标说明</h2>
+<p><img alt="AD_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/AD_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>active_directory_dra_outbound_values_dns_persec</td>
+<td></td>
+<td>发到复制伙伴 DN 属性值数量/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_outbound_bytes_total</td>
+<td></td>
+<td>发送到复制伙伴的总字节数</td>
+</tr>
+<tr>
+<td>active_directory_ldap_searches_persec</td>
+<td></td>
+<td>LDAP 客户端执行搜索操作速率</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_values_dns_persec</td>
+<td></td>
+<td>从复制伙伴接收 DN 属性值数/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_bytes_total</td>
+<td></td>
+<td>从复制伙伴接收的总字节数</td>
+</tr>
+<tr>
+<td>active_directory_dra_outbound_values_total_persec</td>
+<td></td>
+<td>发送到复制伙伴对象属性值数/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_objects_remaining</td>
+<td></td>
+<td>未完成同步的对象数量</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_properties_filtered_p</td>
+<td></td>
+<td>不需要进行更新的对象数量</td>
+</tr>
+<tr>
+<td>active_directory_dra_outbound_objects_persec</td>
+<td></td>
+<td>发送到复制伙伴的对象数量/s</td>
+</tr>
+<tr>
+<td>active_directory_ds_threads_in_use</td>
+<td></td>
+<td>目录服务当前使用的线程数</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_properties_total_pers</td>
+<td></td>
+<td>从复制伙伴接收的对象属性总数</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_objects_applied_perse</td>
+<td></td>
+<td>从复制伙伴接收更新的应用速率</td>
+</tr>
+<tr>
+<td>active_directory_dra_outbound_properties_persec</td>
+<td></td>
+<td>发送到复制伙伴的属性值数量/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_objects_remaining_in</td>
+<td></td>
+<td>未应用于本地服务器的对象更新数</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_bytes_after_compressi</td>
+<td>Byte</td>
+<td>从其他站点（每秒）的目录系统代理（DSA）入站的压缩复制数据的压缩大小（以字节为单位）</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_properties_applied_pe</td>
+<td></td>
+<td>入站复制应用对象属性更改数/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_values_total_persec</td>
+<td></td>
+<td>从复制伙伴接收对象属性值数/s</td>
+</tr>
+<tr>
+<td>active_directory_ldap_successful_binds_persec</td>
+<td></td>
+<td>成功发生的 LDAP 绑定数/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_outbound_bytes_after_compress</td>
+<td>Byte</td>
+<td>压缩复制数据的压缩大小（以字节为单位），其出站到其他站点中的 DSA（每秒）</td>
+</tr>
+<tr>
+<td>active_directory_dra_replication_pending_synchroni</td>
+<td></td>
+<td>等待此服务器未处理目录同步数</td>
+</tr>
+<tr>
+<td>active_directory_dra_outbound_objects_filtered_per</td>
+<td></td>
+<td>出站复制伙伴确认的对象数/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_outbound_bytes_before_compres</td>
+<td>Byte</td>
+<td>出站到其他站点的 DSA 数据/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_objects_persec</td>
+<td></td>
+<td>复制伙伴入站复制接收对象数/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_bytes_not_compressed</td>
+<td>KB</td>
+<td>同一站点其他 DSA 入站数据/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_sync_requests_made</td>
+<td></td>
+<td>启动后向复制伙伴发出同步请求数</td>
+</tr>
+<tr>
+<td>active_directory_ldap_bind_time</td>
+<td>ms</td>
+<td>上次成功 LDAP 绑定所需时间</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_objects_filtered_pers</td>
+<td></td>
+<td>从复制伙伴接收的对象数/s</td>
+</tr>
+<tr>
+<td>active_directory_dra_outbound_bytes_not_compressed</td>
+<td>Byte</td>
+<td>向同一站点中 DSA 出站数据大小</td>
+</tr>
+<tr>
+<td>active_directory_ldap_client_sessions</td>
+<td></td>
+<td>已连接 LDAP 客户端的会话数</td>
+</tr>
+<tr>
+<td>active_directory_dra_inbound_bytes_before_compress</td>
+<td>Byte</td>
+<td>其他站点 DSA 入站数据大小/s</td>
+</tr>
+</tbody>
+</table>
+<h2 id="exchange">Exchange 组件指标说明</h2>
+<p><img alt="Exchange_metrics" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Exchange_metrics.gif" /></p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exchange_database_io_reads_avg_latency</td>
+<td>ms</td>
+<td>数据库读取操作的平均时间</td>
+</tr>
+<tr>
+<td>exchange_database_io_db_reads_attached_persec</td>
+<td></td>
+<td>附加数据库每秒数据库读取操作数</td>
+</tr>
+<tr>
+<td>exchange_netlogon_semaphore_waiters</td>
+<td></td>
+<td>正在等待获取信号的线程数量</td>
+</tr>
+<tr>
+<td>exchange_adaccess_processes_ldap_search</td>
+<td>ms</td>
+<td>发送 LDAP 搜索请求响应的时间</td>
+</tr>
+<tr>
+<td>exchange_netlogon_semaphore_hold_time</td>
+<td>s</td>
+<td>在上个示例中信号停留的平均时间</td>
+</tr>
+<tr>
+<td>exchange_network_outbound_errors</td>
+<td></td>
+<td>因错误而无法传输的出站数据包数</td>
+</tr>
+<tr>
+<td>exchange_adaccess_domain_controllers_ldap_search</td>
+<td>ms</td>
+<td>将 LDAP 读请求发送至域控制器接收响应的时间</td>
+</tr>
+<tr>
+<td>exchange_database_io_db_writes_attached_persec</td>
+<td></td>
+<td>显示每个附加数据库实例的每秒数据库写入操作数量</td>
+</tr>
+<tr>
+<td>exchange_netlogon_semaphore_acquires</td>
+<td></td>
+<td>在安全通道连接的整个生命周期或自系统为 _Total 启动以来，获取信号的总次数</td>
+</tr>
+<tr>
+<td>exchange_ws_current_connections_default_website</td>
+<td></td>
+<td>显示对默认网站建立的当前连接数，此数目对应于命中前端 CAS 服务器角色的连接数</td>
+</tr>
+<tr>
+<td>exchange_netlogon_semaphore_timeouts</td>
+<td></td>
+<td>线程在安全通道连接的整个生命周期或自系统为 _Total 启动以来等待信号期间，线程超时的总次数</td>
+</tr>
+<tr>
+<td>exchange_adaccess_processes_ldap_read</td>
+<td></td>
+<td>显示将 LDAP 读请求接收响应的时间</td>
+</tr>
+<tr>
+<td>exchange_database_io_log_writes_avg_latency</td>
+<td></td>
+<td>显示每个数据库实例每秒写入的日志数量。</td>
+</tr>
+<tr>
+<td>exchange_database_io_db_writes_recovery_avg_latenc</td>
+<td>ms</td>
+<td>显示每个被动数据库写入操作的平均时间长度（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_adaccess_domain_controllers_ldap_read</td>
+<td>ms</td>
+<td>显示将 LDAP 读请求发送至指定域控制器并接收响应的时间",</td>
+</tr>
+<tr>
+<td>exchange_database_io_log_writes_persec</td>
+<td></td>
+<td>显示每个数据库实例每秒写入的日志数量</td>
+</tr>
+<tr>
+<td>exchange_netlogon_semaphore_holders</td>
+<td></td>
+<td>存放信号的线程数量</td>
+</tr>
+<tr>
+<td>exchange_database_io_db_reads_recovery_avg_latency</td>
+<td>ms</td>
+<td>显示每个被动数据库读取操作的平均时间长度</td>
+</tr>
+<tr>
+<td>exchange_database_io_writes_avg_latency</td>
+<td>ms</td>
+<td>显示每个数据库写入操作的平均时间长度（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_is_store_rpc_latency</td>
+<td>ms</td>
+<td>RPC Latency average (msec) 是每个数据库的 RPC 请求的平均延迟（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_is_clienttype_rpc_latency</td>
+<td>ms</td>
+<td>显示针对某个特定客户端协议，过去 1,024 个数据包的平均服务器 RPC 延迟（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_is_clienttype_rpc_ops_persec</td>
+<td>ms</td>
+<td>显示每个客户端类型连接每秒的 RPC 操作数</td>
+</tr>
+<tr>
+<td>exchange_is_store_rpc_requests</td>
+<td>ms</td>
+<td>指示当前在信息存储进程中执行的全部 RPC 请求</td>
+</tr>
+<tr>
+<td>exchange_is_store_rpc_ops_persec</td>
+<td>ms</td>
+<td>显示每个数据库实例每秒的 RPC 操作数</td>
+</tr>
+<tr>
+<td>exchange_activemanager_database_mounted</td>
+<td></td>
+<td>服务器上活动数据库副本的数量。</td>
+</tr>
+<tr>
+<td>exchange_ws_requests_persec</td>
+<td></td>
+<td>显示服务器上活动数据库副本的数量</td>
+</tr>
+<tr>
+<td>exchange_network_tcpv6_connection_failures</td>
+<td></td>
+<td>显示当前状态为 ESTABLISHED 或 CLOSE-WAIT 的 TCP 连接的数目</td>
+</tr>
+<tr>
+<td>exchange_memory_available</td>
+<td>MB</td>
+<td>显示可立即分配给进程或供系统使用的物理内存量 (MB)</td>
+</tr>
+<tr>
+<td>exchange_ws_current_connections_total</td>
+<td></td>
+<td>当前与 Web 服务建立连接的数量</td>
+</tr>
+<tr>
+<td>exchange_rpc_ops_persec</td>
+<td></td>
+<td>显示 RPC 操作发生的速率（每秒）</td>
+</tr>
+<tr>
+<td>exchange_autodiscover_requests_persec</td>
+<td></td>
+<td>每秒处理自动发现服务请求数</td>
+</tr>
+<tr>
+<td>exchange_memory_committed</td>
+<td>%</td>
+<td>显示 Memory\Committed Bytes 与 Memory\Commit Limit 的比率</td>
+</tr>
+<tr>
+<td>exchange_rpc_conn_count</td>
+<td></td>
+<td>显示所维护的客户端连接总数。</td>
+</tr>
+<tr>
+<td>exchange_rpc_requests</td>
+<td></td>
+<td>显示 RPC 客户端访问服务当前正处理的客户端请求数</td>
+</tr>
+<tr>
+<td>exchange_rpc_averaged_latency</td>
+<td></td>
+<td>显示过去 1,024 个数据包的平均延迟（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_processor_queue_length</td>
+<td></td>
+<td>表示每个处理器所服务的线程数</td>
+</tr>
+<tr>
+<td>exchange_network_tcpv4_conns_reset</td>
+<td></td>
+<td>显示 TCP 连接直接从 ESTABLISHED 状态或 CLOSE-WAIT 状态转换为 CLOSED 状态的次数</td>
+</tr>
+<tr>
+<td>exchange_activesync_sync_persec</td>
+<td></td>
+<td>显示每秒处理的同步命令数</td>
+</tr>
+<tr>
+<td>exchange_activesync_ping_pending</td>
+<td></td>
+<td>显示队列中当前挂起的 ping 命令数</td>
+</tr>
+<tr>
+<td>exchange_ws_other_attempts</td>
+<td></td>
+<td>显示没有使用 OPTIONS、GET、HEAD、POST、PUT、DELETE、TRACE、MOVE、COPY、MKCOL、PROPFIND、PROPPATCH、SEARCH、LOCK 或 UNLOCK 方法发出 HTTP 请求的速率</td>
+</tr>
+<tr>
+<td>exchange_ws_connection_attempts</td>
+<td></td>
+<td>显示尝试连接到 Web 服务的速率</td>
+</tr>
+<tr>
+<td>exchange_processor_cpu_time</td>
+<td></td>
+<td>显示处理器执行应用程序或操作系统进程的时间的百分比</td>
+</tr>
+<tr>
+<td>exchange_activesync_requests_persec</td>
+<td></td>
+<td>显示每秒通过 ASP.NET 从客户端接收到的 HTTP 请求数</td>
+</tr>
+<tr>
+<td>exchange_rpc_active_user_count</td>
+<td></td>
+<td>显示最近 2 分钟之内进行过某些活动的唯一用户数</td>
+</tr>
+<tr>
+<td>exchange_processor_cpu_privileged</td>
+<td></td>
+<td>显示花在特权模式上的处理器时间的百分比</td>
+</tr>
+<tr>
+<td>exchange_owa_unique_users</td>
+<td></td>
+<td>显示当前登录到 Outlook Web App 的唯一用户数</td>
+</tr>
+<tr>
+<td>exchange_owa_requests_persec</td>
+<td></td>
+<td>显示每秒由 Outlook Web App 处理的请求数</td>
+</tr>
+<tr>
+<td>exchange_network_tcpv6_conns_reset</td>
+<td></td>
+<td>TCP 连接直接从 ESTABLISHED 状态或 CLOSE-WAIT 状态转换为 CLOSED 状态的次数</td>
+</tr>
+<tr>
+<td>exchange_processor_cpu_user</td>
+<td>%</td>
+<td>在用户模式上处理器时间的百分比</td>
+</tr>
+<tr>
+<td>exchange_rpc_user_count</td>
+<td></td>
+<td>显示连接到服务的用户数</td>
+</tr>
+<tr>
+<td>exchange_ab_nspi_rpc_browse_requests_avg_latency</td>
+<td>ms</td>
+<td>采样完成浏览请求平均时间</td>
+</tr>
+<tr>
+<td>exchange_ab_nspi_rpc_requests_avg_latency</td>
+<td>ms</td>
+<td>采样完成 NSPI 请求平均时间</td>
+</tr>
+<tr>
+<td>exchange_ab_referral_rpc_requests_avg_latency</td>
+<td>ms</td>
+<td>采样完成引用请求平均时间</td>
+</tr>
+<tr>
+<td>exchange_ab_nspi_connections_current</td>
+<td></td>
+<td>当前连接服务器 NSPI 客户端数</td>
+</tr>
+<tr>
+<td>exchange_ab_nspi_connections_per</td>
+<td></td>
+<td>每秒连接服务器 NSPI 客户端数</td>
+</tr>
+<tr>
+<td>exchange_ab_nspi_rpc_requests_per</td>
+<td></td>
+<td>NSPI 请求发生的速率/s</td>
+</tr>
+<tr>
+<td>exchange_ab_referral_rpc_requests_per</td>
+<td></td>
+<td>引用请求发生的速率/s</td>
+</tr>
+<tr>
+<td>exchange_is_store_rpc_client_backoff_per</td>
+<td></td>
+<td>指示发生客户端回退的速率</td>
+</tr>
+<tr>
+<td>exchange_availability_service_avg_time_to_Process</td>
+<td>s</td>
+<td>处理忙/闲请求的平均时间</td>
+</tr>
+<tr>
+<td>exchange_panel_asp_net_request_failures_per</td>
+<td></td>
+<td>控制面板中的 ASP.NET 每秒所检测到的失败数</td>
+</tr>
+<tr>
+<td>exchange_panel_sign_on_inbound_proxy_requests_per</td>
+<td></td>
+<td>显示从主客户端访问服务器每秒接收到的显式登录请求数</td>
+</tr>
+<tr>
+<td>exchange_panel_sign_on_inbound_proxy_sessions_per</td>
+<td></td>
+<td>显示在 Exchange 控制面板中每秒加载的显式登录入站代理会话数</td>
+</tr>
+<tr>
+<td>exchange_panel_sign_on_outbound_proxy_requests_per</td>
+<td></td>
+<td>显示向辅助客户端访问服务器每秒发送的显式登录请求数。</td>
+</tr>
+<tr>
+<td>exchange_panel_inbound_proxy_requests_per</td>
+<td></td>
+<td>显示从主客户端访问服务器每秒接收到的请求数。</td>
+</tr>
+<tr>
+<td>exchange_panel_inbound_proxy_sessions_per</td>
+<td></td>
+<td>显示在 Exchange 控制面板中每秒加载的入站代理会话数</td>
+</tr>
+<tr>
+<td>exchange_panel_outbound_proxy_requests_avg_time</td>
+<td></td>
+<td>显示采样期间完成发送给辅助客户端访问服务器的请求所花费的平均时间（毫秒）。</td>
+</tr>
+<tr>
+<td>exchange_panel_outbound_proxy_requests_per</td>
+<td></td>
+<td>显示向辅助客户端访问服务器每秒发送的请求数。</td>
+</tr>
+<tr>
+<td>exchange_panel_outbound_proxy_sessions_per</td>
+<td></td>
+<td>显示在 Exchange 控制面板中每秒加载的出站代理会话数</td>
+</tr>
+<tr>
+<td>exchange_panel_powershell_runspace_activations_per</td>
+<td></td>
+<td>显示在 Windows 控制面板中每秒激活的 Exchange PowerShell 运行空间数</td>
+</tr>
+<tr>
+<td>exchange_panel_powershell_runspace_avg_active_time</td>
+<td></td>
+<td>显示采样期间在 Exchange 控制面板中执行 cmdlet 时，Windows PowerShell 运行空间处于活动状态的平均时间（秒）</td>
+</tr>
+<tr>
+<td>exchange_panel_powershell_runspaces_per</td>
+<td></td>
+<td>显示在 Exchange 控制面板中每秒创建的 Windows PowerShell 运行空间数</td>
+</tr>
+<tr>
+<td>exchange_panel_rbac_sessions_per</td>
+<td></td>
+<td>显示在 Exchange 控制面板中每秒加载的 RBAC 会话数</td>
+</tr>
+<tr>
+<td>exchange_panel_requests_activations_per</td>
+<td></td>
+<td>显示在 Exchange 控制面板中每秒激活的请求数。</td>
+</tr>
+<tr>
+<td>exchange_panel_requests_avg_response_time</td>
+<td></td>
+<td>期间 Exchange 控制面板响应请求所花费的平均时间（毫秒）。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exchange-2013">Exchange 2013</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>单位</th>
+<th>具体含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exchange_database_io_reads_avg_latency</td>
+<td>ms</td>
+<td>数据库读取操作的平均时间</td>
+</tr>
+<tr>
+<td>exchange_database_io_db_reads_attached_persec</td>
+<td></td>
+<td>附加数据库每秒数据库读取操作数</td>
+</tr>
+<tr>
+<td>exchange_netlogon_semaphore_waiters</td>
+<td></td>
+<td>正在等待获取信号的线程数量</td>
+</tr>
+<tr>
+<td>exchange_adaccess_processes_ldap_search</td>
+<td>ms</td>
+<td>发送 LDAP 搜索请求响应的时间</td>
+</tr>
+<tr>
+<td>exchange_netlogon_semaphore_hold_time</td>
+<td>s</td>
+<td>在上个示例中信号停留的平均时间</td>
+</tr>
+<tr>
+<td>exchange_network_outbound_errors</td>
+<td></td>
+<td>因错误而无法传输的出站数据包数</td>
+</tr>
+<tr>
+<td>exchange_adaccess_domain_controllers_ldap_search</td>
+<td>ms</td>
+<td>将 LDAP 读请求发送至域控制器接收响应的时间</td>
+</tr>
+<tr>
+<td>exchange_database_io_db_writes_attached_persec</td>
+<td></td>
+<td>显示每个附加数据库实例的每秒数据库写入操作数量</td>
+</tr>
+<tr>
+<td>exchange_netlogon_semaphore_acquires</td>
+<td></td>
+<td>在安全通道连接的整个生命周期或自系统为 _Total 启动以来，获取信号的总次数</td>
+</tr>
+<tr>
+<td>exchange_ws_current_connections_default_website</td>
+<td></td>
+<td>显示对默认网站建立的当前连接数，此数目对应于命中前端 CAS 服务器角色的连接数</td>
+</tr>
+<tr>
+<td>exchange_netlogon_semaphore_timeouts</td>
+<td></td>
+<td>线程在安全通道连接的整个生命周期或自系统为 _Total 启动以来等待信号期间，线程超时的总次数</td>
+</tr>
+<tr>
+<td>exchange_adaccess_processes_ldap_read</td>
+<td></td>
+<td>显示将 LDAP 读请求接收响应的时间</td>
+</tr>
+<tr>
+<td>exchange_database_io_log_writes_avg_latency</td>
+<td></td>
+<td>显示每个数据库实例每秒写入的日志数量。</td>
+</tr>
+<tr>
+<td>exchange_database_io_db_writes_recovery_avg_latenc</td>
+<td>ms</td>
+<td>显示每个被动数据库写入操作的平均时间长度（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_adaccess_domain_controllers_ldap_read</td>
+<td>ms</td>
+<td>显示将 LDAP 读请求发送至指定域控制器并接收响应的时间",</td>
+</tr>
+<tr>
+<td>exchange_database_io_log_writes_persec</td>
+<td></td>
+<td>显示每个数据库实例每秒写入的日志数量</td>
+</tr>
+<tr>
+<td>exchange_netlogon_semaphore_holders</td>
+<td></td>
+<td>存放信号的线程数量</td>
+</tr>
+<tr>
+<td>exchange_database_io_db_reads_recovery_avg_latency</td>
+<td>ms</td>
+<td>显示每个被动数据库读取操作的平均时间长度</td>
+</tr>
+<tr>
+<td>exchange_database_io_writes_avg_latency</td>
+<td>ms</td>
+<td>显示每个数据库写入操作的平均时间长度（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_httpproxy_server_locator_latency</td>
+<td>ms</td>
+<td>显示 MailboxServerLocator Web 服务调用的平均延迟（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_httpproxy_clientaccess_processing_latency</td>
+<td>ms</td>
+<td>显示最近 200 个请求中 CAS 处理时间（不包括代理所花费时间）的平均延迟（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_httpproxy_proxy_requests_persec</td>
+<td>ms</td>
+<td>显示每秒处理的代理请求数</td>
+</tr>
+<tr>
+<td>exchange_httpproxy_requests_persec</td>
+<td>ms</td>
+<td>显示每秒处理的请求数</td>
+</tr>
+<tr>
+<td>exchange_httpproxy_mailbox_proxy_failure_rate</td>
+<td>ms</td>
+<td>显示最近 200 个示例中涉及此客户端访问服务器和 MBX 服务器之间失败的连接百分比</td>
+</tr>
+<tr>
+<td>exchange_httpproxy_avg_auth_latency</td>
+<td>ms</td>
+<td>显示最近 200 个示例中对 CAS 请求进行身份验证所花费的平均时间</td>
+</tr>
+<tr>
+<td>exchange_httpproxy_outstanding_requests</td>
+<td>ms</td>
+<td>显示并发未处理代理请求的数量</td>
+</tr>
+<tr>
+<td>exchange_is_store_rpc_latency</td>
+<td>ms</td>
+<td>RPC Latency average (msec) 是每个数据库的 RPC 请求的平均延迟（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_is_clienttype_rpc_latency</td>
+<td>ms</td>
+<td>显示针对某个特定客户端协议，过去 1,024 个数据包的平均服务器 RPC 延迟（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_is_clienttype_rpc_ops_persec</td>
+<td>ms</td>
+<td>显示每个客户端类型连接每秒的 RPC 操作数</td>
+</tr>
+<tr>
+<td>exchange_is_store_rpc_requests</td>
+<td>ms</td>
+<td>指示当前在信息存储进程中执行的全部 RPC 请求</td>
+</tr>
+<tr>
+<td>exchange_is_store_rpc_ops_persec</td>
+<td>ms</td>
+<td>显示每个数据库实例每秒的 RPC 操作数</td>
+</tr>
+<tr>
+<td>exchange_workload_management_completed_tasks</td>
+<td>ms</td>
+<td>显示当前正在排队等待处理的工作负载管理任务数</td>
+</tr>
+<tr>
+<td>exchange_workload_management_queued_tasks</td>
+<td>ms</td>
+<td>显示已经完成的工作负载管理任务数</td>
+</tr>
+<tr>
+<td>exchange_workload_management_active_tasks</td>
+<td>ms</td>
+<td>显示当前工作负载管理在后台运行的活动任务数</td>
+</tr>
+<tr>
+<td>exchange_activemanager_database_mounted</td>
+<td></td>
+<td>服务器上活动数据库副本的数量。</td>
+</tr>
+<tr>
+<td>exchange_ws_requests_persec</td>
+<td></td>
+<td>显示服务器上活动数据库副本的数量</td>
+</tr>
+<tr>
+<td>exchange_network_tcpv6_connection_failures</td>
+<td></td>
+<td>显示当前状态为 ESTABLISHED 或 CLOSE-WAIT 的 TCP 连接的数目</td>
+</tr>
+<tr>
+<td>exchange_memory_available</td>
+<td>MB</td>
+<td>显示可立即分配给进程或供系统使用的物理内存量 (MB)</td>
+</tr>
+<tr>
+<td>exchange_ws_current_connections_total</td>
+<td></td>
+<td>当前与 Web 服务建立连接的数量</td>
+</tr>
+<tr>
+<td>exchange_rpc_ops_persec</td>
+<td></td>
+<td>显示 RPC 操作发生的速率（每秒）</td>
+</tr>
+<tr>
+<td>exchange_autodiscover_requests_persec</td>
+<td></td>
+<td>每秒处理自动发现服务请求数</td>
+</tr>
+<tr>
+<td>exchange_memory_committed</td>
+<td>%</td>
+<td>显示 Memory\Committed Bytes 与 Memory\Commit Limit 的比率</td>
+</tr>
+<tr>
+<td>exchange_rpc_conn_count</td>
+<td></td>
+<td>显示所维护的客户端连接总数。</td>
+</tr>
+<tr>
+<td>exchange_rpc_requests</td>
+<td></td>
+<td>显示 RPC 客户端访问服务当前正处理的客户端请求数</td>
+</tr>
+<tr>
+<td>exchange_rpc_averaged_latency</td>
+<td></td>
+<td>显示过去 1,024 个数据包的平均延迟（毫秒）</td>
+</tr>
+<tr>
+<td>exchange_processor_queue_length</td>
+<td></td>
+<td>表示每个处理器所服务的线程数</td>
+</tr>
+<tr>
+<td>exchange_network_tcpv4_conns_reset</td>
+<td></td>
+<td>显示 TCP 连接直接从 ESTABLISHED 状态或 CLOSE-WAIT 状态转换为 CLOSED 状态的次数</td>
+</tr>
+<tr>
+<td>exchange_activesync_sync_persec</td>
+<td></td>
+<td>显示每秒处理的同步命令数</td>
+</tr>
+<tr>
+<td>exchange_activesync_ping_pending</td>
+<td></td>
+<td>显示队列中当前挂起的 ping 命令数</td>
+</tr>
+<tr>
+<td>exchange_ws_other_attempts</td>
+<td></td>
+<td>显示没有使用 OPTIONS、GET、HEAD、POST、PUT、DELETE、TRACE、MOVE、COPY、MKCOL、PROPFIND、PROPPATCH、SEARCH、LOCK 或 UNLOCK 方法发出 HTTP 请求的速率</td>
+</tr>
+<tr>
+<td>exchange_ws_connection_attempts</td>
+<td></td>
+<td>显示尝试连接到 Web 服务的速率</td>
+</tr>
+<tr>
+<td>exchange_processor_cpu_time</td>
+<td></td>
+<td>显示处理器执行应用程序或操作系统进程的时间的百分比</td>
+</tr>
+<tr>
+<td>exchange_activesync_requests_persec</td>
+<td></td>
+<td>显示每秒通过 ASP.NET 从客户端接收到的 HTTP 请求数</td>
+</tr>
+<tr>
+<td>exchange_rpc_active_user_count</td>
+<td></td>
+<td>显示最近 2 分钟之内进行过某些活动的唯一用户数</td>
+</tr>
+<tr>
+<td>exchange_processor_cpu_privileged</td>
+<td></td>
+<td>显示花在特权模式上的处理器时间的百分比</td>
+</tr>
+<tr>
+<td>exchange_owa_unique_users</td>
+<td></td>
+<td>显示当前登录到 Outlook Web App 的唯一用户数</td>
+</tr>
+<tr>
+<td>exchange_owa_requests_persec</td>
+<td></td>
+<td>显示每秒由 Outlook Web App 处理的请求数</td>
+</tr>
+<tr>
+<td>exchange_network_tcpv6_conns_reset</td>
+<td></td>
+<td>TCP 连接直接从 ESTABLISHED 状态或 CLOSE-WAIT 状态转换为 CLOSED 状态的次数</td>
+</tr>
+<tr>
+<td>exchange_processor_cpu_user</td>
+<td>%</td>
+<td>在用户模式上处理器时间的百分比</td>
+</tr>
+<tr>
+<td>exchange_rpc_user_count</td>
+<td></td>
+<td>显示连接到服务的用户数</td>
+</tr>
+</tbody>
+</table><h1 id="_1">服务拨测</h1>
+<p>如何通过蓝鲸监控主动探测网站/应用服务的可用性。</p>
+<h2 id="_2">前置步骤</h2>
+<p>依赖组件：配置平台，管控平台，节点管理</p>
+<p>用户需要将受控主机导入配置平台并安装 Agent （超链配置平台快速入门），或通过节点管理直接在对应业务下安装 Agent 导入主机（超链节点管理快速入门）。在配置平台中需要为主机属性补充上地区信息</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15369058113400.jpg" /></p><h1 id="_1">采集</h1>
+<p>服务拨测的采集主要分为两个部分，先是：<code>添加拨测节点</code>，然后<code>添加拨测任务</code>。</p>
+<ul>
+<li><strong>2.1 拨测节点</strong></li>
+</ul>
+<p><code>拨测节点</code>是部署蓝鲸 Gse_Agent 的主机，服务拨测的逻辑是从<code>拨测节点</code>向<code>目标地址</code>探测服务可用性。</p>
+<ul>
+<li><strong>2.2 添加拨测节点</strong></li>
+</ul>
+<p>通过主机属性：<code>国家</code>、<code>地区</code> 和 <code>外网运营商</code> 从配置平台中筛选主机作为拨测节点。</p>
+<p><code>外网运营商</code>字段选择<code>内网</code>：为探测内网服务可用性而设，只会使用内网 IP ，不会筛选运营商等外网属性，选择<code>电信</code>等其他运营商：只会使用外网 IP，探测外网服务可用性。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15301111715232.jpg" /></p>
+<blockquote>
+<p>管理员身份可以添加默认节点，供跨业务场景的节点使用。</p>
+</blockquote>
+<ul>
+<li><strong>2.3 拨测任务</strong></li>
+</ul>
+<p>选择节点后，配置不同的协议对网站/应用服务进行主动拨测，就是服务拨测采集的第二步：添加拨测任务</p>
+<p>2.3.1 HTTP(S) 协议</p>
+<p>默认新建的拨测协议为 HTTP(S) ，即 HTTP 或 HTTPS 协议。</p>
+<ul>
+<li>
+<p>GET 方法</p>
+<ul>
+<li>1.在地址栏输入待拨测的 Web 服务 URL 地址</li>
+<li>2.选择节点。如果默认节点不满足，可以新增节点。</li>
+<li>3.设置期望响应时间：设置服务正常的响应时间范围，比如 3000ms ，超过会产生告警。</li>
+<li>4.设置任务分组区分不同类别的拨测任务</li>
+<li>5.设置任务名称便于标识。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15299999202180.jpg" /></p>
+</li>
+<li>
+<p>POST 方法</p>
+<ul>
+<li>与 GET 方法相比多一项<code>提交内容</code>：输入需要提交的请求内容</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15300147159505.jpg" /></p>
+</li>
+</ul>
+<blockquote>
+<blockquote>
+<p>POST 请求可提前通过作业平台在拨测节点本地测试，测试成功后再通过蓝鲸监控进行服务拨测</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>
+<p>高级设置</p>
+<p>此处设置 HTTP 拨测的高级特性，比如拨测周期、期望返回码、期望响应信息、地理位置（用于大屏展示）或请求的头信息。</p>
+<ul>
+<li>期望返回码：可以为： <code>200</code> 、 <code>301</code> 等，如果返回码与填写的期望值不一致，则会产生告警。</li>
+<li>匹配响应信息：例如 <code>Welcome</code> ，如果 Web 页面返回的内容中不包含 <code>Welcome</code> ，则产生告警。</li>
+<li>地理位置：<a href="../../产品功能/Uptime_Check_desc.md">大屏展示</a>功能中中，拨测数据流转的目的地。</li>
+<li>头信息：请求的头信息，比如 <code>Cookies</code> 。</li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15301109148955.jpg" /></p>
+</li>
+</ul>
+<p>2.3.2 TCP 协议</p>
+<ul>
+<li>
+<p>从拨测节点探测 TCP 服务的可用性。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15301099924864.jpg" /></p>
+</li>
+<li>
+<p>高级选项请参照 <code>HTTP 拨测</code> 。</p>
+</li>
+</ul>
+<p>2.3.3 UDP 拨测</p>
+<ul>
+<li>
+<p>从拨测节点探测 UDP 服务的可用性</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15301105986305.jpg" /></p>
+</li>
+<li>
+<p>由于 UDP 无状态，需发送 UDP 服务允许接受的请求内容，同时 UDP 服务返回内容，才能探测服务是否连通。</p>
+</li>
+<li>
+<p>高级选项，请参照 HTTP 拨测</p>
+</li>
+</ul>
+<blockquote>
+<p>请求内容请转换为 16 进制。</p>
+</blockquote><h1 id="_1">视图</h1>
+<p>3.1 服务拨测菜单默认会展示最近 1 小时所有的的服务拨测可用率</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15369065075786.jpg" />
+服务拨测概览图</p>
+<p>3.2 拨测详情页视图</p>
+<p>点击上述拨测任务的方块（block），可以进入单个拨测任务的详情页。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15369067030025.jpg" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15369069022259.jpg" />
+拨测详情页视图</p>
+<p>3.3 可选：在仪表盘添加视图</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15369097029175.jpg" />
+在仪表盘添加视图</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15369096411514.jpg" />
+仪表盘拨测视图</p><h1 id="_1">策略配置</h1>
+<p>4.1 创建拨测任务成功后，默认会创建 2 条策略：可用率小于 100%  和响应时间小于 3000ms （该时间非固定值，取决于拨测任务配置的期望响应时间）。</p>
+<p>4.2 配置服务拨测告警策略</p>
+<p>可以在监控配置页的服务拨测 TAB，创建或修改策略。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15369222694933.jpg" /></p>
+<p>由于 HTTP 状态码和响应内容的策略需要下发至 Gse_Agent ，所以请在拨测任务的高级设置中创建该策略，创建完成后可在策略配置页面修改告警规则、通知方式等。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/uptime_check_monitor_1.png" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15369230465412.jpg" /></p>
+<p>4.3 查看拨测告警</p>
+<p>在事件中心可以找到服务拨测的告警</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15369225447882.jpg" /></p>
+<p>点击告警 ID，可以找到单个拨测任务的告警详情</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15369225011729.jpg" /></p><h1 id="_1">自定义监控</h1>
+<p>自定义监控是蓝鲸监控预置监控对象之外的监控方案，目前有<code>脚本采集</code>和<code>日志采集</code>。</p>
+<ul>
+<li>
+<p>日志采集，是从日志文件中解析上报的字段（比如一行日志的内容是 "2018-09-16 21:46:16 | aqq | 20020"），则可以知道 aqq 在 2018-09-16 21:46:16 的在线人数是 20020，也可以 sum 所有大区在 2018-09-16 21:46 的在线人数是多少。</p>
+<ul>
+<li>当前版本仅能在自定义监控页面配置视图。</li>
+</ul>
+</li>
+<li>
+<p>脚本采集，通过 Shell、bat 脚本上报数据，只要会脚本就能上报数据。</p>
+<ul>
+<li>可在仪表盘和自定义监控页面配置视图。</li>
+</ul>
+</li>
+</ul><h1 id="_1">脚本采集</h1>
+<p>运维在蓝鲸监控 SaaS 上编写 Shell 脚本，集中下发并周期调度，实现数据采集、入库蓝鲸数据平台 influxdb、出图、监控。</p>
+<p><img alt="脚本采集时序图" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Shell_Scripts_Collection_Sequece_Diagram.png" /></p>
+<p>接下来以 <code>上报CPU Loadavg</code> 为例实现脚本采集以及指标监控</p>
+<h2 id="1">1. 定义表结构</h2>
+<p>点击<code>数据源接入</code> 菜单 的 <code>接入数据源</code> ，定义表结构。</p>
+<p>请提前了解 <a href="5.1/蓝鲸监控/术语解释/Concepts_Terminology.md">指标和维度的含义</a>
+<img alt="table_schema_definition" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/table_schema_definition.png" />
+注：默认有一个维度为 IP。</p>
+<h2 id="2">2. 编写采集脚本</h2>
+<p>请使用 BASH 脚本对维度和指标赋值，脚本解释器默认为 <code>/bin/bash</code></p>
+<blockquote>
+<p>提示：由于解析指标和维度存在 Json 序列化过程，采集所在服务器上需要提前部署 jq （后续版本会优化）</p>
+</blockquote>
+<div class="codehilite"><pre><span></span> yum install jq -y  // CentOS部署jq参考方法
+</pre></div>
+
+
+<p><img alt="edit_shellscript" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/edit_shellscript.png" /></p>
+<h2 id="3">3. 选择服务器 和 下发采集器测试</h2>
+<p><code>选择服务器</code> 后，进行 <code>下发采集器测试</code></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/test_shell_collection.jpg" /></p>
+<h2 id="4">4. 设置采集周期</h2>
+<p>设置 <code>脚本采集周期</code> 、<code>原始数据保存周期</code>、<code>趋势数据保存周期</code>
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/Collection_Schedule.png" /></p>
+<ul>
+<li>采集周期：脚本周期调度的频率</li>
+<li>原始数据保存周期：原始数据所有采集点的保存周期</li>
+<li>趋势数据保存周期（功能开发中）：为节省存储空间和加快监控指标出图速度，当时间接近 <code>原始数据保存周期</code> 时，会自动完成数据聚合（每小时的采集点聚合为 3 个点，最大值、最小值、平均值）</li>
+</ul>
+<h2 id="5">5. 仪表盘出图</h2>
+<p>在 <code>仪表盘</code> 菜单中 <code>新建视图</code>，在 <code>脚本采集</code> 服务名称中选择 <a href="5.1/蓝鲸监控/快速入门/自定义监控/Shell_Scripts_Collection.md">5.1.3.1 定义表结构</a> 中定义的 <code>中文含义</code></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/dashboard_panel_set_0.jpg" /></p>
+<ul>
+<li>然后设置出图
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/dashboard_panel_set.jpg" /></li>
+</ul>
+<h2 id="6">6. 配置告警策略</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/monitor_policy_set.jpg" /></p>
+<h2 id="7">7. 效果</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/dashboard.jpg" /></p>
+<h2 id="8">8. 告警自动化处理</h2>
+<p>在 <a href="5.1/FTA/Intro/README.md">故障自愈</a>中接入自愈，告警类型选择 <code>脚本采集</code>，通过 <code>按内容筛选</code> 功能区分不同的监控配置，在 <code>自愈处理</code>中选择创建好的自愈套餐（一般你可以使用作业平台套餐，自己编写好作业）</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15372622832633.jpg" /></p>
+<p>在事件中心可以找到触发告警的监控名称。
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15372623311603.jpg" /></p>
+<p>以下是脚本采集配置的监控项触发自愈的执行历史
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15372625911209.jpg" /></p>
+<h2 id="9">9. 常见问题</h2>
+<ul>
+<li>
+<p>问：如何一次插入多条数据？</p>
+<p>答：你可以使用Shell的循环语句for、while等来一次上报多条数据，只要符合Shell语法即可。
+<img alt="edit_shellscript_while" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/edit_shellscript_while.png" /></p>
+</li>
+<li>
+<p>问：脚本下发到服务器上后，存放在哪里？</p>
+<p>答：脚本位于：/data/MapleLeaf/plugins/shell/目录
+注册在 GseAgent 的进程调度配置中：/usr/local/gse/gseagent/conf/base/procinfo.json</p>
+</li>
+</ul><h1 id="_1">日志采集</h1>
+<p>从日志文件中解析上报的字段（比如一行日志的内容是 "2018-09-16 21:46:16 | aqq | 20020"），做时序数据的监控。</p>
+<p>从上面例子可知道 aqq 在 2018-09-16 21:46 的在线人数是 20020，也可以 sum 所有大区(包含 aqq 在内)在 2018-09-16 21:46 的在线人数是多少，来做总在线监控。</p>
+<p>以下是本次教程的数据示例.（每分钟会自动更新）</p>
+<div class="codehilite"><pre><span></span><span class="c1"># cat /data/bk.monitor.breaking_test2.log</span>
+<span class="m">2018</span>-09-16 <span class="m">21</span>:46:16<span class="p">|</span>aqq<span class="p">|</span><span class="m">20020</span>
+<span class="m">2018</span>-09-16 <span class="m">21</span>:46:16<span class="p">|</span>awx<span class="p">|</span><span class="m">30020</span>
+<span class="m">2018</span>-09-16 <span class="m">21</span>:46:16<span class="p">|</span>iqq<span class="p">|</span><span class="m">40020</span>
+<span class="m">2018</span>-09-16 <span class="m">21</span>:46:16<span class="p">|</span>iwx<span class="p">|</span><span class="m">60020</span>
+</pre></div>
+
+
+<h2 id="_2">采集</h2>
+<p>实时捕获日志文件的变动（借助 Linux 的 inotify 事件)，通过分隔符完成日志格式清洗，将其作为时序数据做监控。</p>
+<p>在<code>采集中心</code>中找到日志采集
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371526106727.jpg" />
+图 1. 采集中心-日志采集</p>
+<h3 id="1">1. 按照提示，填写上报内容</h3>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371526358565.jpg" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371526592941.jpg" />
+图 2. 日志采集-参数填写</p>
+<h3 id="2">2. 保存后，可以在列表页找到采集项</h3>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371526876614.jpg" />
+图 3. 日志采集-列表</p>
+<h3 id="3">3. 点击预览，可以查看数据的上报情况</h3>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371527223615.jpg" /></p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371527730887.jpg" />
+图 4. 日志采集数据上报情况</p>
+<blockquote>
+<p>日志采集的当前版本不支持跨云、Windows，同时数据落地为 MySQL。后续版本会改造以支持。</p>
+</blockquote><h1 id="_1">视图</h1>
+<h2 id="1">1. 添加监控</h2>
+<p>在自定义监控菜单中，点击添加监控</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371528564517.jpg" />
+图 1. 添加监控</p>
+<h2 id="2">2. 配置监控项</h2>
+<ul>
+<li>监控源，选择上一步填写的表名，如 online（同时在线人数）</li>
+<li>选择<a href="../../术语解释/Concepts_Terminology.md">监控指标和维度</a></li>
+</ul>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371564772288.jpg" />
+图 2. 配置监控项</p><h1 id="_1">策略配置</h1>
+<p>在上一步的监控项配置页面，点击<code>新建监控策略</code></p>
+<p>选择合适的检测算法，如果是周期性的时间序列数据，比如今天在线和上周同期在线高度重合，可以使用同比检测算法。</p>
+<p>告警范围（可选）：筛选上一步选择的监控维度，因为可能不需要对所有维度做监控。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371565378100.jpg" /></p><h1 id="_1">告警自动化处理</h1>
+<p>自定义监控出现告警，通过故障自愈可以实现告警自动化处理。</p>
+<h2 id="1">1. 接入自愈</h2>
+<p>在<a href="http://docs.bk.tencent.com/product_white_paper/fta/">故障自愈</a>中接入自愈，告警类型选择 <code>自定义监控</code>，通过<code>按内容筛选</code>功能区分不同的自定义监控，在<code>自愈处理</code>中选择创建好的自愈套餐（一般你可以使用作业平台套餐，自己编写好作业）</p>
+<blockquote>
+<p>此处以<code>同时在线人数</code>和<code>breakingtest</code>自定义监控接入自愈为例。</p>
+</blockquote>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371569255649.jpg" />
+图 1. 自定义监控接入自愈示例 1</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371568683111.jpg" />
+图 2. 自定义监控接入自愈示例 1</p>
+<blockquote>
+<p>自愈场景的<code>按内容筛选</code>填写监控名称，从这里获取
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371616525603.jpg" />
+图 3. 获取自定义监控的监控名称方法</p>
+</blockquote>
+<h2 id="2">2.自愈详情</h2>
+<p>可以看到，不同的监控项执行了对应的自愈套餐</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371566583825.jpg" />
+图 4.自定义监控自愈详情 1</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371566918617.jpg" />
+图 5.自定义监控自愈详情 2</p>
+<h2 id="3">3.注意事项</h2>
+<p>接入自愈选择<code>自定义监控</code>的告警类型时，提示<code>蓝鲸监控的指标配置时维度包含IP、bk_cloud_id，否则在套餐中指定执行的IP</code>，意思是确定故障自愈执行自愈套餐的执行 IP。</p>
+<ul>
+<li>
+<p>蓝鲸监控传递（在指标配置时维度必须包含 IP、bk_cloud_id，如此监控才能传递执行 IP）：图 5 是这种场景</p>
+<ul>
+<li>日志采集当前不支持跨云管理，所以默认将 bk_cloud_id（云区域 ID）传为 0</li>
+</ul>
+</li>
+<li>
+<p>套餐中指定执行 IP：图 4 是这种场景
+<img alt="-w721" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371617303402.jpg" />
+图 6. 套餐中执行执行 IP（取消勾选 <code>用告警IP替代作业执行IP</code>）</p>
+</li>
+</ul><h1 id="_1">告警通知渠道</h1>
+<p>包含<code>告警通知渠道</code>配置 和 <code>接收人（通知群组）</code>设置</p>
+<p><strong>告警通知渠道</strong></p>
+<p>故障自愈是蓝鲸 PaaS 上一个 SaaS，通知渠道使用 PaaS 的通知 ESB 组件，在蓝鲸的独立部署版本（企业版、社区版）需要在开发者中心后台设置。</p>
+<h2 id="1-esb">1. 在通知 ESB 组件中配置通知渠道</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366583245319.jpg" />
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15360429835999.jpg" />
+图 1. 蓝鲸集成平台（PaaS）的消息管理通知设置</p>
+<p>详细设置请访问蓝鲸 PaaS 提供的设置文档</p>
+<ul>
+<li><a href="5.1/PaaS平台/场景案例/noticeWay.md">如何配置通知渠道，如邮件、微信、短信等?</a></li>
+<li>[经验分享] 测试邮件服务是否正常](http://bk.tencent.com/s-mart/community/question/95#/)</li>
+</ul>
+<h2 id="2">2. 告警通知效果</h2>
+<p>通知渠道有 4 种：微信、电话、邮件、短信
+<img alt="-w397" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366583977495.jpg" />
+图 2. 蓝鲸监控告警微信通知</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366586493292.jpg" />
+图 3. 蓝鲸监控告警邮件通知</p>
+<h2 id="3">3. 接收人（通知群组）设置</h2>
+<p>除了从 CMDB 同步运维、测试、产品、开发外，还可以在监控中设立分组。
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366577791964.jpg" />
+图 4. 添加通知群组</p>
+<p>在配置策略的通知方式中可以找到刚添加的通知分组。
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366578359543.jpg" />
+图 5. 选择通知方式</p>
+<blockquote>
+<p>CMDB 在新版中支持用户修改业务模型，支持新增角色，在后续的版本中监控会跟进。</p>
+</blockquote><h1 id="_1">告警查询 : 事件中心</h1>
+<p>在事件中心可以查询告警，筛选条件支持监控类型、当前状态（<code>已通知</code>、<code>通知失败</code>、<code>已收敛</code>、<code>已屏蔽</code>）、告警 ID、告警内容等。
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371663555349.jpg" />
+图 1. 事件中心</p>
+<p>也可以切换到日历模式，查看当月每天的告警量分布，以及其中 1 天的告警详情。
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371665499151.jpg" />
+图 2. 事件中心-日历模式</p>
+<p>点击某一个告警，查看告警详情页
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15371666617234.jpg" />
+图 3. 告警详情页</p><h2 id="_1">场景案例</h2>
+<h3 id="81">8.1 多维度监控：智能监控的数据基础</h3>
+<blockquote>
+<p>以组件监控为例，介绍监控产品的路线图</p>
+</blockquote>
+<p>运维监控系统的作用不言而喻，贯穿运维的 5 项职能：发布、变更、故障处理、体验优化、日常需求，保障上述职能的服务可用性。</p>
+<p>从大数据的特性(数据量大、<strong>多维度</strong>、完备性)[1]来看，运维监控系统的建设可以分为 2 个阶段：<code>多维度监控</code>（积累数据） 和  <code>智能监控</code>(使用数据），通过多维度监控实现出了故障能看、能查，智能监控提前发现风险、找出故障根源。
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15266266168983.jpg" />
+组件监控是多维度监控体系的第 3 层，主要对<strong>常见开源组件、中间件的性能指标做监控</strong>，比如 Nginx 的性能指标有 Active Connections（当前客户端连接数）、Waiting（等待中的连接数）等，Oracle 的性能指标有 SQL 硬解析率、表空间使用率等。</p>
+<p>通过采集组件的关键性能指标，实时获悉组件的运行状况，提前发现问题，而不是仅监控进程或端口是否存活（<strong>进程或端口都正常时，不代表可以提供服务</strong>）。</p>
+<p>本文以建设组件监控为例，从<code>多维度监控的组成</code>、<code>监控产品要解决的3个问题</code>、<code>组件监控的技术选型</code>、<code>云端下发采集器配置</code>、<code>社区的开放能力</code>来介绍监控产品设计路线图。</p>
+<div class="toc">
+<ul>
+<li><a href="#_1">场景案例</a><ul>
+<li><a href="#81">8.1 多维度监控：智能监控的数据基础</a></li>
+</ul>
+</li>
+<li><a href="#1">1. 多维度监控的组成</a></li>
+<li><a href="#2-3">2.  监控产品要解决的 3 个问题</a><ul>
+<li><a href="#21-it">2.1 对 IT 系统的自主掌控能力</a></li>
+<li><a href="#22">2.2 拒绝再造一个烟囱</a></li>
+<li><a href="#23">2.3 组件繁多，完全自研不太现实</a></li>
+</ul>
+</li>
+<li><a href="#3">3. 组件监控的技术选型</a></li>
+<li><a href="#4">4. 体验优化：云端下发采集器配置</a></li>
+<li><a href="#5">5. 社区的开放能力</a></li>
+<li><a href="#_2">结尾</a></li>
+<li><a href="#_3">参考文献</a></li>
+</ul>
+</div>
+<h2 id="1">1. 多维度监控的组成</h2>
+<p>从用户访问链路的角度，将监控指标的维度分为<code>用户层</code>、<code>应用层</code>、<code>组件层</code>、<code>主机层</code>、<code>网络层</code>。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15266173173475.jpg" />
+( 多维度监控的组成)</p>
+<p>用户层，通过服务拨测等方式模拟用户的访问行为，不用等用户投诉上门；应用层，通过调用链等方式追踪应用的调用状态；其他三层较为容易理解就不做介绍了。</p>
+<p>通过这 5 层+其他关键指标（如日志、业务 KPI 曲线等），构筑监控系统的多维度监控能力，<strong>为第二阶段的智能监控提供数据支撑</strong>。</p>
+<h2 id="2-3">2.  监控产品要解决的 3 个问题</h2>
+<p>除了获取关键的性能指标外，监控产品还需要解决 3 个问题， <strong>退可做故障关联分析，进可建设运维的智能化场景</strong>。</p>
+<h3 id="21-it">2.1 对 IT 系统的自主掌控能力</h3>
+<p>由于<strong>对 IT 系统自主掌控能力的缺乏</strong>，"正在更换 IT 系统" 和 "走向更换 IT 系统的路上，是部分中、大型企业在"互联网+"浪潮下积极拥抱互联网的现状。</p>
+<p>鉴于这种情况，部分行业已明确已表明[2][3]必须加大对 IT 系统自主掌控的能力。</p>
+<p>于是，产品设计时，需考虑能让监控系统的使用者可以参与到监控系统的开发或部分开发.</p>
+<h3 id="22">2.2 拒绝再造一个烟囱</h3>
+<p>竖井式的结构估计是大部分企业构建 IT 系统的现状，每个系统间毫无关联，每买一套系统等于多构建一个信息孤岛，附加值极低。
+<img alt="-w341" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15266041494558.jpg" />
+如果想实现<code>退可做故障关联分析，进可建设运维的智能化场景</code>，可在基于 PaaS 的运维平台上建设[4]，通过 iPaaS 打通企业内部的各个 IT 运营系统。</p>
+<h3 id="23">2.3 组件繁多，完全自研不太现实</h3>
+<p>行业中应用的组件种类繁多，从数据库、存储、HTTP 服务到消息队列等共 100+，完全自研肯定不现实。</p>
+<p>好的办法是自研核心、行业支撑不好的组件，剩下的借助行业多年积累的能力，少造一点轮子，为社会省点电。</p>
+<h2 id="3">3. 组件监控的技术选型</h2>
+<p>在 2.3 中提到自研 + 第 3 方开源采集器的思路，这里以开源采集器 Prometheus Exporter 为例。</p>
+<p><img alt="-w319" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15266156093948.jpg" /></p>
+<p>Prometheus Exporter 的社区很活跃[5]，支持 100+ 常见开源组件，部分大厂甚至专门编写对应的 Prometheus Exporter，比如 Oracle 编写的 Weblogic Exporter，IBM 编写的 IBM MQ exporter，k8s、etcd 甚至内置基于 Exporter 规范的 metrics。</p>
+<p>按照这种方案，只需要做一个<strong>协议转换</strong>即可把指标入库。
+<img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15266143922560.jpg" />
+（对接行业采集器 简易时序图）</p>
+<h2 id="4">4. 体验优化：云端下发采集器配置</h2>
+<p>解决基础需求后，需要马上来优化下体验。</p>
+<p>把采集器或配置下发至被监控的主机上，一般需要手动部署或使用第三方的工具（如 Ansible）。</p>
+<p>切换多个系统来完成一件事情，体验非常不好。</p>
+<p>有一个优化方案，<strong>通过 iPaaS 使用管控平台层的文件分发和命令执行能力</strong>[4]，让用户在一个页面完成配置流程，提升效率。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15265483425665.jpg" />
+（蓝鲸体系架构图）</p>
+<h2 id="5">5. 社区的开放能力</h2>
+<p>在满足基础功能和优化产品体验后，接下来考虑<strong>产品的可扩展性</strong>。</p>
+<p>先解决用户一键导入自研组件的便利性，接下来提供一个交流平台让社区用户可以自由分享。</p>
+<p><strong>在获得社区开源能力的同时，也需要反哺社区</strong>。</p>
+<h2 id="_2">结尾</h2>
+<p>属于基础监控范围的多维度监控相对智能监控来说，不太光鲜，但<strong>它是智能监控的数据基础</strong>，没有多维度监控提供的数据，无法落地故障预测、故障根因分析等智能监控场景。</p>
+<p>传统企业或互联网企业在拥抱互联网变革时，需冷静思考，按照路线图逐步实现。</p>
+<h2 id="_3">参考文献</h2>
+<ul>
+<li>[1] 吴军. 智能时代：大数据与智能革命重新定义未来 [M]. 北京：中信出版集团，2016-8.</li>
+<li>[2] 中国人民银行. <a href="http://images.mofcom.gov.cn/coi/201706/20170629110047159.pdf">中国金融业信息技术“十三五” 发展规划</a>  [EB/OL]. 2017.06</li>
+<li>[3] 中国银监会. <a href="http://www.cbrc.gov.cn/chinese/home/docView/1940BD4B2D7740CC90F4FE4C6B3CD316.html">中国银行业信息科技“十三五”发展规划监管指导意见（征求意见稿）</a> [EB/OL]. 2016.07.15</li>
+<li>[4] 中国通信标准化协会.<a href="http://v2.opensourcecloud.cn/article/2">云计算运维平台参考框架及技术要求</a> [EB/OL]. 2017.11.16</li>
+<li>[5] Prometheus. <a href="https://prometheus.io/docs/instrumenting/exporters/">EXPORTERS AND INTEGRATIONS</a> [EB/OL].</li>
+</ul><h2 id="_1">采集器概述</h2>
+<p>蓝鲸除了自研的采集器外，还有有基于 Beats 的基础性能采集器、组件监控采集器，此外组件采集器支持 Prometheus Exporter 及自助导入、 Datadog 开源的 100+款组件。采集器详细内容参考下表：</p>
+<table>
+<thead>
+<tr>
+<th>采集器</th>
+<th>采集范围</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>* Basereport（基础性能采集器）</td>
+<td>主机硬件配置信息、CPU、内存、磁盘、网络等实时状态</td>
+<td>实时检测主机整体状态，应用于 CMDB -主机快照数据展示，蓝鲸监控-主机监控</td>
+</tr>
+<tr>
+<td>* Bkmetricbeat（组件性能采集器）</td>
+<td>开源组件、中间件层服务（提供接入支持，没有覆盖到的组件需用户自行开发 Prometheus 采集器）的状态、性能等实时状态</td>
+<td>采集组件的 Metrics 信息，支持 Redis，Apache，Nginx 等开源组件，也负责托管 Datadog 采集器及 Prometheus 的 Exporter ，应用于蓝鲸监控-组件监控</td>
+</tr>
+<tr>
+<td>Exporter（组件性能采集器）</td>
+<td>托管于 Bkmetricbeat ，内置 Exporter 集成了 Prometheus 成熟的采集器生态，无需像自定义 Exporter 那样需要进行复杂的配置，且可扩展性和可维护性比默认组件强，使用户能够快速用上 Prometheus Exporter 强大的采集能力。</td>
+<td>内置 Exporter 采集器支持：Haproxy 、 Memcache 、 SQL Server 、 Oracle 、 Weglogic 、 RabbitMQ  、 ZooKeeper 等，应用于蓝鲸监控-组件监控</td>
+</tr>
+<tr>
+<td>Datadog（组件性能采集器）</td>
+<td>托管于 Bkmetricbeat ，为进一步增强蓝鲸监控的采集能力，基于现有的组件监控的采集架构拓展了 Datadog 的采集方式。通过在 Datadog Agent Integrations 的基础上封装一层 Datadog Http Server ，从而达到与 Prometheus Exporter 相似的被动采集方式。</td>
+<td>内置 Datadog 采集器支持：Kafka 、 Microsoft AD 、 Ceph 、 Consul 、 Elasticsearch 、 Exchange_Server_2010 、 Microsoft IIS 、 MongoDB 等，应用于蓝鲸监控-组件监控</td>
+</tr>
+<tr>
+<td>* Processbeat（进程性能采集）</td>
+<td>主机内进程的监听端口状态、性能</td>
+<td>及时发现进程异常，避免进程异常导致的连锁反应，应用于蓝鲸监控-主机监控-进程监控汇</td>
+</tr>
+<tr>
+<td>* Unifytlogc（高性能日志采集器）</td>
+<td>主机内用户所选日志文件</td>
+<td>对用户特定日志文件实现过滤、采集上报，从日志中发现问题，应用于蓝鲸监控-自定义监控/仪表盘视图</td>
+</tr>
+<tr>
+<td>* Gsecmdline（自定义上报命令行工具）</td>
+<td>根据用户下发的脚本采集指定数据</td>
+<td>对于其他采集器无法覆盖的数据或者用户自开发的服务，用户可自行编写脚本采集数据通过 Gsecmdline 上报，应用蓝鲸监控-自定义监控/仪表盘视图</td>
+</tr>
+<tr>
+<td>* Uptimecheckbeat（拨测监控采集器）</td>
+<td>定期主动对用户选定的服务进行探测</td>
+<td>用户可通过 HTTP 、 TCP 、 UDP 三种协议对指定服务进行定期请求，监控检测返回内容和响应时间是否符合用户设定，主动发现消除隐患，应用于蓝鲸监控-拨测监控</td>
+</tr>
+</tbody>
+</table><h2 id="6-faq">6. FAQ</h2>
+<ol>
+<li>
+<p>蓝鲸监控产生的告警，如何实现自动化处理？</p>
+<p>答： 请使用蓝鲸配套的告警自动处理 SaaS <a href="5.1/FTA/Intro/README.md">故障自愈</a>，原生对接蓝鲸监控。</p>
+</li>
+<li>
+<p>除了自带的主机、组件、拨测监控外，是否可以接入业务特性的数据？</p>
+<p>答：可以，请使用<a href="5.1/蓝鲸监控/快速入门/自定义监控/Shell_Scripts_Collection.md">脚本采集</a>、<a href="5.1/蓝鲸监控/快速入门/自定义监控/Log_Collection.md">日志采集</a>，以及<a href="5.1/蓝鲸监控/快速入门/组件监控/Write_Component.md">组件的二次开发</a>功能。</p>
+</li>
+<li>
+<p>是否可以设置蓝鲸监控的查看权限？</p>
+<p>答：可以，请在 <a href="5.1/蓝鲸监控/产品功能/Authority_management_desc.md">业务管理</a>页面设置即可。</p>
+</li>
+<li>
+<p>是否可以按照 CMDB 的拓扑分类查看基础性能指标？</p>
+<p>答：可以，请使用主机监控页面的 <a href="5.1/蓝鲸监控/产品功能/Host_monitor_desc.md">条件过滤</a> 功能。</p>
+</li>
+</ol><h2 id="_1">基础性能数据未上报</h2>
+<h3 id="1-cmdb">1. 检测 CMDB 是否有快照数据显示</h3>
+<p>若没有数据，则进入下列步骤检测
+若有数据，先检查 bkdata 所在机器 crontab 里是否有 update_cc_cache.sh 的项目。若无则先运行<code>bkeec install cron</code>。若有联系蓝鲸技术支持同学。</p>
+<hr />
+<h3 id="2">2. 检查进程</h3>
+<p>agent 机器：有进程则 ok</p>
+<h4 id="21-linux">2.1 Linux</h4>
+<blockquote>
+<p>ps -ef | grep basereport</p>
+</blockquote>
+<h4 id="22-windows">2.2 Windows</h4>
+<blockquote>
+<p>tasklist | findstr basereport</p>
+</blockquote>
+<hr />
+<h3 id="3">3. 若进程检测失败</h3>
+<p>查看进程启动失败原因</p>
+<h4 id="31-linux">3.1 Linux</h4>
+<blockquote>
+<p>./basereport -c ../etc/basereport.conf</p>
+</blockquote>
+<h4 id="32-windows">3.2 Windows</h4>
+<blockquote>
+<p>basereport.exe -c ../etc/basereport.conf</p>
+</blockquote>
+<hr />
+<h3 id="4">4. 检查连接</h3>
+<p>agent 机器：有正常连接 ESTABLISHED 则 ok</p>
+<h4 id="41-linux">4.1 Linux</h4>
+<blockquote>
+<p>netstat -tnp | grep 58625</p>
+</blockquote>
+<h4 id="42-windows">4.2 Windows</h4>
+<blockquote>
+<p>netstat -ano | grep 58625</p>
+</blockquote>
+<p>若存在 proxy，proxy 机器：检测 58625 端口同上。并检查 gse_transit 进程是否正常（成对出现）</p>
+<p>GSE_IP 和 GSE_IP1 机器：检测 9092 端口</p>
+<h4 id="43-linux">4.3 Linux</h4>
+<blockquote>
+<p>netstat -tnp | grep 9092</p>
+</blockquote>
+<h4 id="44-windows">4.4 Windows</h4>
+<blockquote>
+<p>netstat -ano | grep 9092</p>
+</blockquote>
+<hr />
+<h3 id="5">5. 检查配置</h3>
+<p>ZK_IP 机器：查看 ZK 节点
+        &gt;/data/bkee/service/zk/bin/zkCli.sh -server ip:2181 (ip通常为zk本机内网IP)
+    get /gse/config/etc/dataserver/data/1001</p>
+<div class="codehilite"><pre><span></span><span class="err">正常会出现类似下面的数据结构</span>
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span>    <span class="o">{</span><span class="s2">&quot;server_id&quot;</span>: -1, <span class="s2">&quot;data_set&quot;</span>: <span class="s2">&quot;snapshot&quot;</span>, <span class="s2">&quot;partition&quot;</span>: <span class="m">1</span>, <span class="s2">&quot;cluster_ind  ex&quot;</span>: <span class="m">0</span>, <span class="s2">&quot;biz_id&quot;</span>: <span class="m">2</span>, <span class="s2">&quot;msg_system&quot;</span>: <span class="m">1</span><span class="o">}</span>
+</pre></div>
+
+
+<p>topic 为 data_set 和 biz_id 组成，则
+topic=snapshot2
+能获取到 topic 则 OK</p>
+<hr />
+<h3 id="6">6. 检查数据</h3>
+<p>KAFKA_IP 机器上：查看 KAFKA 最新数据，等待 1 分钟查看是否有数据，有数据则 OK</p>
+<div class="codehilite"><pre><span></span><span class="err">cd</span> <span class="err">/data/bkee/service/kafka/</span>
+<span class="err">zkaddr=`cat</span> <span class="err">config/server.properties</span> <span class="err">|</span> <span class="err">grep</span> <span class="err">common_kafka</span> <span class="err">|</span> <span class="err">cut</span> <span class="err">-d</span> <span class="err">&#39;=&#39;</span> <span class="err">-f</span> <span class="mi">2</span><span class="err">`</span>
+<span class="err">sh</span> <span class="err">bin/kafka-topics.sh</span> <span class="err">--list</span> <span class="err">--zookeeper</span> <span class="err">$zkaddr</span>
+<span class="err">sh</span> <span class="err">bin/kafka-console-consumer.sh</span> <span class="err">--bootstrap-server</span> <span class="err">$LAN_IP:</span><span class="mi">9092</span><span class="err">--topic</span> <span class="err">$topic（第</span><span class="mi">5</span><span class="err">步查询到的）</span>
+</pre></div>
+
+
+<hr />
+<h3 id="7">7. 检查日志</h3>
+<p>GSE_IP 和 GSE_IP1 机器：</p>
+<blockquote>
+<p>ps -ef | grep gse_data
+cd /data/bkee/public/gse/data
+ls -l</p>
+</blockquote>
+<p>看有没有 gse_datapid 开头命名的日志
+若有，tail 查看日志内容</p><h2 id="connection-refused">脚本采集下发提示 connection refused</h2>
+<h2 id="rabbitmq">判断 rabbitmq 服务是否正常</h2>
+<p>bkeec status rabbitmq</p>
+<h2 id="rabbitmq-bk_monitor">判断 rabbitmq 是否没有添加 bk_monitor 账户信息</h2>
+<ol>
+<li>登陆 rabbitmq 机器，运行<code>rabbitmqctl list_vhosts | grep monitor</code></li>
+<li>运行<code>rabbitmqctl list_users |grep monitor</code></li>
+</ol>
+<p>若账号均没有，解决方法如下：</p>
+<ol>
+<li>中控机上<code>source utils.fc</code>，
+<code>add_app_token bk_monitor "$(_app_token bk_monitor)" "蓝鲸监控- new"</code></li>
+<li><code>./bkeec sync common</code></li>
+<li>rabbitmq 机器上：</li>
+</ol>
+<div class="codehilite"><pre><span></span><span class="nb">source</span> utils.fc
+rabbitmqctl add_user <span class="s2">&quot;bk_monitor&quot;</span> <span class="s2">&quot;</span><span class="k">$(</span>_app_token bk_monitor<span class="k">)</span><span class="s2">&quot;</span><span class="sb">`</span>
+rabbitmqctl set_user_tags bk_monitor  management
+rabbitmqctl set_permissions -p bk_monitor bk_monitor <span class="s2">&quot;.*&quot;</span> <span class="s2">&quot;.*&quot;</span> <span class="s2">&quot;.*&quot;</span>
+</pre></div>
+
+
+<ol>
+<li>重新部署一下监控 SaaS</li>
+</ol><h2 id="exporter-fail-to-restart-process">组件监控启动 exporter 失败,fail to restart process</h2>
+<h2 id="1">1. 问题描述</h2>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366475980839.png" /></p>
+<h2 id="2">2. 排查方法</h2>
+<p>1.进入作业平台，打开“执行历史”页面，按红框内的条件过滤任务列表，筛选出与组件下发时间相近任务，点击“查看详情”</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15366476048793.png" /></p>
+<p>2.进入任务详情后，查看步骤详情。记录组件名称和脚本参数</p>
+<p><img alt="图片描述" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/tapd_20365752_base64_1536201059_26.png" /></p>
+<p>3.使用 job 或登录目标机器，执行脚本</p>
+<div class="codehilite"><pre><span></span><span class="err">假设组件名称为</span><span class="ss">`oracle_exporter`</span><span class="err">，脚本参数为</span><span class="ss">`--port=1521 --host=127.0.0.1`</span><span class="n">plainplainplainplainplainplainplainplainplainplainplainplainplainplainplain</span>
+</pre></div>
+
+
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> /usr/local/gse/external_collector/oracle_exporter
+./oracle_exporter --port<span class="o">=</span><span class="m">1521</span> --host<span class="o">=</span><span class="m">127</span>.0.0.1
+</pre></div>
+
+
+<p>然后根据具体的错误信息解决问题</p>
+<ul>
+<li>端口被占用：exporter 已经启动过，kill 掉进程重新下发即可</li>
+<li>对于 oracle 组件，一般是因为缺少<code>libclntsh.so</code>库</li>
+</ul><h2 id="mysql">MySQL 组件监控不出图</h2>
+<ol>
+<li>检查 mysql 监听的 IP 是否与填写的目标 IP 一致</li>
+<li>检查创建用户所属的 IP 是否与填写的目标 IP 一致</li>
+<li>如果 mysql 监听的是本地 IP，创建用户时请使用 127.0.0.1，避免使用 loccalhost。即<code>bk@127.0.0.1</code>而不是<code>bk@localhost</code></li>
+</ol><h1 id="_1">服务拨测常见问题排查指引</h1>
+<h2 id="_2">一. 拨测节点初始化失败</h2>
+<blockquote>
+<p>可能原因：机器未部署拨测采集器、配置文件有误、数据链路不通</p>
+</blockquote>
+<h3 id="_3">排查思路</h3>
+<ol>
+<li>在蓝鲸监控 -&gt; “主机监控”中，检查该台机器的基础性能数据是否展示正常，若基础性能数据没有显示，可判定该机器数据上报链路有问题。</li>
+<li>登录采集器所在的机器，查看采集器进程是否已正常工作</li>
+</ol>
+<div class="codehilite"><pre><span></span>ps aux <span class="p">|</span> grep uptimecheckbeat
+</pre></div>
+
+
+<p><img alt="15456208356084" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15456208356084.jpg" />
+3. 若采集器进程未启动，请到<code>/usr/local/gse/plugins/bin</code>目录下，查看是否存在 uptimecheckbeat 这个二进制文件（拨测采集器），如果不存在，请联系技术人员提供 gse 版本号，确认此版本是否已内置拨测采集器。
+4. 若步骤 2 没问题，且采集器进程未启动，请到<code>/usr/local/gse/plugins/etc</code>目录下，检查 uptimecheckbeat.conf 文件是否存在。若不存在，请到 job 作业平台查看 api 调用的历史任务，是否有执行失败的记录，给出截图；若 uptimecheckbeat.conf 存在，请执行以下命令手动启动采集器，将输出结果截图提供</p>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> /usr/local/gse/plugins/bin
+./uptimecheckbeat -c ../etc/uptimecheckbeat.conf
+</pre></div>
+
+
+<ol>
+<li>
+<p>若采集器进程正常启动，但前端仍显示拨测节点不可用，请尝试在前端重新部署节点，等待并观察是否有报错提示，提供截图。</p>
+</li>
+<li>
+<p>检查采集器是否已正确上报心跳信息。切换到采集器日志路径，找到最新的日志文件：</p>
+</li>
+</ol>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> /var/log/gse
+ls -rlt uptime* <span class="p">|</span> tail -n1
+</pre></div>
+
+
+<p>假定这里最新的日志文件是<code>uptimecheckbeat.1</code>，从中过滤是否有心跳上报关键字“Publish”，且上报时间是否是最新时间：</p>
+<div class="codehilite"><pre><span></span><span class="n">tail</span> <span class="o">-</span><span class="n">n100</span> <span class="n">uptimecheckbeat</span><span class="p">.</span><span class="mi">1</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">A10</span> <span class="n">Publish</span>
+</pre></div>
+
+
+<p>正常情况下，可观察到最新1分内的采集器心跳上报情况：</p>
+<p><img alt="15456380115265" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15456380115265.jpg" /></p>
+<ol>
+<li>检查异常节点系统时间是否同步。</li>
+<li>若以上检查点均正常，请打包以下文件并提供：</li>
+</ol>
+<div class="codehilite"><pre><span></span><span class="c1"># 配置文件</span>
+/usr/local/gse/plugins/etc/uptimecheckbeat.conf
+<span class="c1"># 日志文件</span>
+/var/log/gse/uptimecheckbeat.*
+</pre></div>
+
+
+<hr />
+<p><br /></p>
+<h2 id="_4">二. 拨测节点正常，保存拨测任务后显示“无数据”</h2>
+<blockquote>
+<p>可能原因：配置文件错误、采集器加载配置失败、数据上报异常等</p>
+</blockquote>
+<h3 id="_5">排查思路</h3>
+<ol>
+<li>登录到拨测节点所在的机器，切换到<code>/usr/local/gse/plugins/etc</code>路径下，使用 grep 命令找出拨测任务配置。若拨测任务的目标地址为“https://www.xxx.xxx.com/ ”，则命令如下：</li>
+</ol>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> /usr/local/gse/plugins/etc
+grep -A3 https://www.xxx.xxx.com/ uptimecheckbeat.conf
+</pre></div>
+
+
+<p>若拨测任务为 TCP/UDP 任务，则此处将目标地址替换为拨测目标 IP 即可。
+正常情况下，可观察到如下过滤结果</p>
+<p><img alt="20181227221111" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/20181227221111.png" /></p>
+<p>如果此处无结果输出，可判断最新的任务配置没有下发到拨测节点上，请尝试在前端页面重新保存拨测任务后再次观察。若还是无果，可联系技术人员反馈。</p>
+<ol>
+<li>若步骤 1 正常，请记录下步骤 1 中 grep 结果中的 task_id（如图中所示，task_id 为 22）。然后切换到采集器日志路径，找到最新的日志文件：</li>
+</ol>
+<div class="codehilite"><pre><span></span><span class="nb">cd</span> /var/log/gse
+ls -rlt uptime* <span class="p">|</span> tail -n1
+</pre></div>
+
+
+<p>假定这里最新的日志文件是<code>uptimecheckbeat.1</code>，从中过滤是否有task_id为22的数据上报，且上报时间是否是最新时间：</p>
+<div class="codehilite"><pre><span></span><span class="n">grep</span> <span class="o">-</span><span class="n">B25</span> <span class="s1">&#39;&quot;task_id&quot;: 22&#39;</span> <span class="n">uptimecheckbeat</span><span class="p">.</span><span class="mi">1</span>
+</pre></div>
+
+
+<p>正常情况下会得到如图所示的结果：</p>
+<p><img alt="20181227221318" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/20181227221318.png" /></p>
+<p>若此处无结果输出，或输出结果中有类似“ERROR“，”Failed”等错误日志，请截图保存并提供给技术支持同学</p>
+<h2 id="_6">三. 新建节点时，无法通过省份、运营商过滤到指定主机</h2>
+<blockquote>
+<p>可能原因：CMDB 信息同步异常，查询异常等</p>
+</blockquote>
+<h3 id="_7">排查思路</h3>
+<ol>
+<li>
+<p>检查 CMDB 中保存的节点地理位置信息是否正确，重新在 CMDB 中保存，过一分钟后再次在监控中尝试拉取机器列表</p>
+</li>
+<li>
+<p>点击监控页面底部“蓝鲸监控运行状态”，检查 CMDB 接口状态是否有异常</p>
+</li>
+</ol>
+<p><img alt="20181227221431" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/20181227221431.png" /></p>
+<p>如有接口状态异常，展示为红色，请点击接口名后的“？”，截图提供给技术人员</p>
+<p><img alt="15457188640688" src="F:\bkdoc\md_to_pdf/5.1/蓝鲸监控/media/15457188640688.jpg" /></p>
+<ol>
+<li>监控 saas 日志，观察是否有查询接口超时等异常。如查询接口超时，请调整 CMDB 查询时限</li>
+</ol>
+    </body>
+    </html>
+    

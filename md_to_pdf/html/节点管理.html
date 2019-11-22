@@ -1,0 +1,769 @@
+
+    <html lang="zh-cn">
+    <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <link href="F:\bkdoc\md_to_pdf/default.css" rel="stylesheet">
+    </head>
+    <body>
+    <h1 id="_1">产品简介</h1>
+<p>用户的业务主机想要与蓝鲸服务体系建立联系，首先要确保每台业务主机安装 Agent 程序。蓝鲸推出节点管理 SaaS，用以解决各类网络环境下 Agent 的快速安装难题。</p>
+<p><strong>节点管理</strong> 是一款用来帮助运维人员实现 Agent 安装、插件管理等后台服务管理的应用。</p>
+<p>和手动安装 Agent 的原理相同，但是节点管理省去了脚本安装命令的手动键入和繁琐执行。用户无需登录服务器，通过可视化的窗口即可直观简便的执行 Agent 安装和插件管理。支持多种环境下的 Agent 安装，支持主机的并发操作、CMDB 导入和批量导入等，支持插件的启动、停止、重启、重载、是否托管等管理操作，高效方便。</p><h1 id="_1">术语解释</h1>
+<ul>
+<li>
+<p><strong>Proxy</strong>：Proxy Server 常被用来建立不同的局域网之间的联系。Proxy Server 与不同云区域下的 GSE Server 和 P-Agent 同时连接，相当于 P-Agent 与 GSE Server 之间的桥梁，可以间接实现 P-Agent 与 GSE Server 之间的通信。</p>
+</li>
+<li>
+<p><strong>P-Agent</strong>：在云区域下，由 Proxy 管理的 Agent 类型，简称 P-Agent。</p>
+</li>
+<li>
+<p><strong>云区域</strong>：一组服务器代表一个云区域，云区域内的服务器之间可以通过局域网相互访问。</p>
+</li>
+<li>
+<p><strong>直连区域</strong>：本篇中，安装 Agent 的受控主机 和 GSE Server 同属一个局域网内（非跨云），此时 Agent 的安装区域叫直连区域。</p>
+</li>
+<li>
+<p><strong>非直连/跨云区域</strong>：本篇中，安装 Agent 的受控主机 和 GSE Server 不属于一个局域网内（跨云），此时 Agent 的安装区域叫非直连/跨云区域。</p>
+</li>
+<li>
+<p><strong>APPO</strong>：蓝鲸 SaaS 运行的正式环境。</p>
+</li>
+<li>
+<p><strong>APPT</strong>：蓝鲸 SaaS 运行的测试环境。</p>
+</li>
+</ul><h1 id="_1">产品架构图</h1>
+<h2 id="_2">相关说明</h2>
+<p>除了节点管理，安装 Agent 还需依赖 Nginx，GSE，JOB，CMDB 等。</p>
+<ul>
+<li>
+<p><strong>GSE</strong>：管控平台，作业下发，Agent 管控通道。</p>
+</li>
+<li>
+<p><strong>JOB</strong>：作业平台，一旦 Agent 安装成功并状态正常，后续的安装，卸载，移除等操作，都通过作业平台进行。</p>
+</li>
+<li>
+<p><strong>CMDB</strong>：配置平台，通过在节点管理的云区域管理功能写入用户的业务主机信息等。</p>
+</li>
+<li>
+<p><strong>Nginx</strong>：异步框架的网页服务器，也可以用作反向代理、负载平衡器和 HTTP 缓存。本篇中，Nginx <code>miniweb/download</code> 目录下，存放了安装 Agent 所需的安装脚本及安装包。</p>
+</li>
+<li>
+<p><strong>HTTP 请求</strong>：从 Nginx 服务器下载安装脚本和安装包的请求。</p>
+</li>
+<li>
+<p><strong>SSH 请求</strong>：APPO 机器 <code>SSH</code> 登录到业务机器( Linux/AIX )的请求。</p>
+</li>
+</ul>
+<h2 id="_3">原理图</h2>
+<p>用户的业务主机和蓝鲸系统所在的局域网或相同或不同，安装 Agent 程序的情况因此分为两种：</p>
+<h3 id="agent">直连区域安装 Agent</h3>
+<p>当安装 Agent 的目标主机（操作系统可以为：Linux/Windows/Windows(Cygwin)/AIX）与蓝鲸系统中的 GSE Server，在同一局域网内（非跨云），受控主机能通过局域网建立与 GSE Server 的 TCP/UDP 链接，这种情况下，选择直连区域安装 Agent 。</p>
+<p>主机的操作系统不同，后台的实现原理不同：</p>
+<p>1、操作系统为：Linux / Windows（含 Cygwin）</p>
+<p><img alt="直连linux" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/直连linux.jpg" /></p>
+<p>2、操作系统为：Windows (无 Cygwin)</p>
+<p><img alt="直连windows" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/直连windows-1560827087409.jpg" /></p>
+<p>3、操作系统为：AIX</p>
+<p><img alt="直连AIX" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/直连AIX.jpg" /></p>
+<blockquote>
+<p><strong>Note</strong>：仅节点管理企业版支持 AIX 操作系统。</p>
+</blockquote>
+<h3 id="agent_1">非直连方式区域安装 Agent</h3>
+<p>当安装 Agent 的受控主机与 GSE Server 不在同一局域网，或网络上无法直连，需要通过 Proxy 建立网络联系时，这种情况下，需要先安装好 Proxy（数量为 1-2 台） , 然后执行安装 P-Agent 。</p>
+<p>1、Proxy 的安装原理：</p>
+<p><img alt="非直连proxy" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/非直连proxy-1560827125738.jpg" /></p>
+<p>2、P-Agent 的安装原理：</p>
+<p><img alt="非直连pagent" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/非直连pagent-1560827135351.jpg" /></p><h1 id="_1">产品功能</h1>
+<p>目前，节点管理支持的功能有：安装 Agent、插件管理和任务管理。</p>
+<h2 id="agent">Agent 管理</h2>
+<p>Agent 是能够自主活动的软件或者硬件系统，是业务主机与蓝鲸建立连接的程序。</p>
+<h2 id="_2">多样支持</h2>
+<ul>
+<li>
+<p>支持目标主机在直连区域（非跨云）和非直连区域（跨云）的 Agent 安装。</p>
+</li>
+<li>
+<p>支持 Linux/Windows/Windows(Cygwin)/AIX 操作系统的主机。</p>
+</li>
+<li>
+<p>支持逐个添加、CMDB 导入和批量导入三种方式添加主机。</p>
+</li>
+</ul>
+<h2 id="_3">操作简单</h2>
+<p>在安装过程中，输入必要的主机信息就可以快速安装 Agent。安装步骤详情查看便于了解安装原理、便于排查安装问题。</p>
+<p><strong>GSE 接口每分钟定时获取一次 Agent 状态，查看定时任务详情前往 <a href="../附录/Agent_Status.md">GSE 定时任务</a></strong></p>
+<p><img alt="952048" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent/image-20190915235952048.png" /></p><h1 id="_1">云区域管理</h1>
+<p>云区域是对分布在不同 IDC 或内网相互隔离的网络环境中一组服务器, 在网络层面的一个统称。 通常是 GSE Server 与受控主机之间的网络无法直接路由的场景。 云区域中至少有一台主机需要能与 GSE 通信。可以通过将这台安装成 Proxy 节点。</p>
+<p>云区域管理功能包含: <strong>隐藏, 删除, 重命名云区域</strong> 各功能使用示例如下图：</p>
+<p><img alt="644089" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent/image-20190915233644089.png" /></p>
+<blockquote>
+<p>Note</p>
+<ol>
+<li>CMDB 通过云区域 ID + 主机 IP 地址 唯一标识一台主机。</li>
+<li>手动安装 Agent 时，需要指定的云区域 ID 可以通过云区域 ID 字段获得。</li>
+<li>直连区域的云区域 ID 为 0。</li>
+</ol>
+</blockquote>
+<h2 id="proxy">Proxy 管理</h2>
+<p>proxy 的管理在云区域管理中。与 Agent 和 P-Agent 一样，可以安装，重装，卸载等操作</p><h1 id="_1">插件管理</h1>
+<p>运行在客户机上，符合 GSE 插件管理规范的进程，可以视为插件，也能在节点管理中进行管理。</p>
+<p>对插件的操作目前支持如下：</p>
+<ol>
+<li>
+<p>状态查看</p>
+</li>
+<li>
+<p>进程管理(启动，停止，重启，托管，取消托管等)</p>
+</li>
+<li>
+<p>更新版本</p>
+</li>
+</ol>
+<p><img alt="112188" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent/image-20190916001112188.png" /></p>
+<p><img alt="157470" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent/image-20190916001157470.png" /></p>
+<p><img alt="239926" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent/image-20190916001239926.png" /></p><h1 id="agent">Agent 安装</h1>
+<p>用户的业务主机和蓝鲸系统所在的局域网或相同或不同，安装 Agent 包含 3 场景：直连区域的 Agent 安装、非直连区域的 Proxy 安装、非直连区域的 P-Agent 安装。</p>
+<h2 id="_1">前置步骤</h2>
+<p>配置 Nginx 服务器地址。<strong>首次使用节点管理，必须先配置 Nginx 服务器地址，否则无法使用其他功能。</strong></p>
+<p><img alt="配置Nginx" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/配置Nginx-1.png" /></p>
+<blockquote>
+<p>Note：</p>
+<ul>
+<li>配置包来源：
+  URL 用于在 Agent/Proxy 所在机器上下载对应的 Agent/Proxy/P-Agent 安装包。填写不含包名的 URL。 对于社区版/企业版， URL 通常是: &gt; &gt;<code>http://&lt;NGINX_IP&gt;:&lt;NGINX_PORT&gt;/download</code>。内网 URL 用于下载直连区域的包，外网 URL 用于下载云区域 ( Proxy 及 P-Agent 节点)的安装包。</li>
+<li>任务安装项目：
+  安装 Proxy 时，需要从 Nginx 所在机器下载 Linux、Windows、AIX 所需要的 Agent 安装包，约 150 - 180 M 大小, 若 Proxy 到 Nginx 之 间的网络带宽较小，容易超时。可以通过增大超时时间进行设置。</li>
+<li>GSE Server 信息：
+  Agent/Proxy 启动后，会尝试连接 GSE, 直连区域通常内网 IP，非直连区域使用外网 IP，这里的内外网不是严格意义上的私有地址或公网地址，只要能让 Agent 连上的 IP 都可以。通常在 NAT 网络环境中需要注意使用 NAT 地址。</li>
+</ul>
+</blockquote>
+<h2 id="agent_1">直连区域安装 Agent</h2>
+<p>当安装 Agent 的受控主机与蓝鲸系统中的 GSE Server，在同一局域网内（非跨云），受控主机能通过局域网建立与 GSE Server 的 TCP/UDP 链接。这种情况下，选择直连区域安装 Agent 。</p>
+<h2 id="_2">安装要求</h2>
+<ul>
+<li>要能正常安装 Agent，除了满足网络策略要求 (参考 <a href="../附录/network_policy.md">开通网络策略要求</a>) 外, 还要满足：</li>
+</ul>
+<blockquote>
+<ul>
+<li>操作系统可以是 <code>Linux/Windows/AIX</code> 。</li>
+<li>目前仅支持 <code>root/Administrator</code> 账户。</li>
+<li>若为 Linux：</li>
+<li>开通网络策略，允许从 APPO 所在机器 SSH 到目标机器(Linux/AIX)</li>
+<li>需要安装好 wget，curl 工具。或者可以使用 yum 或 apt 工具安装 wget，curl</li>
+<li>若为 Windows：开通网络策略，允许 APPO 访问服务器的 139，445 端口</li>
+<li>Windows 必须使用 Administrator 账号，Linux 可以使用 root，或者可以免密 sudo 执行命令的用户</li>
+</ul>
+</blockquote><h1 id="_1">快速安装</h1>
+<p>单 IP 主机安装在直连区域，通常使用快速安装</p>
+<ol>
+<li>选择<code>直连区域</code>标签页，点击 【添加 agent】 按钮，输入 IP，选择操作系统，输入端口号，输入账号，选择校验方式及密码等信息。</li>
+</ol>
+<p><img alt="049123" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/image-20190915205049123.png" /></p>
+<p><img alt="314133" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/image-20190915205314133.png" /></p>
+<p>执行安装前，检查主机信息及网络策略是否与页内提示的要求一致。</p>
+<p>点击【安装】，进入安装过程。</p>
+<blockquote>
+<p>Note:</p>
+<ol>
+<li>输入框可以同时输入多个 IP, 适用于 端口，密码，操作系统相同的主机，可以快速添加</li>
+<li>任务执行过程中，主机处于选中不可编辑状态。在此状态下，可以对正在执行中的任务进行终止。</li>
+</ol>
+</blockquote>
+<ol>
+<li>点击主机对应的任务状态列文字或图表，可以查看安装步骤详情。</li>
+</ol>
+<p><img alt="210129" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent0/image-20190915210210129.png" /></p>
+<p><img alt="606650" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent0/image-20190915211606650.png" /></p>
+<p>检查状态成功后，在列表页可以看到 agent 状态列已经正常。</p>
+<p><img alt="638682" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent0/image-20190915210638682.png" /></p><h1 id="cmdb">从 CMDB 导入</h1>
+<p>若主机信息已录入 CMDB，可以从 CMDB 批量导入主机。</p>
+<p><img alt="401111" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent0/image-20190915212401111.png" /></p>
+<p>进入选择集群模块和 IP 子页面，如下图所示</p>
+<p><img alt="506248" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent0/image-20190915212506248.png" /></p>
+<blockquote>
+<p>Note:</p>
+<ol>
+<li>若主机状态已正常，表示 Agent 已安装，此时可以选择仅导入</li>
+<li>对于主机状态异常的主机，可以在此页面直接点击安装，进入 Agent 安装页面</li>
+</ol>
+</blockquote>
+<ul>
+<li>导入操作系统未知的主机时。</li>
+</ul>
+<p><img alt="818805" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent0/image-20190915214818805.png" /></p><h1 id="excel">从 EXCEL 导入</h1>
+<p>从 EXCEL 文件中批量导入主机信息，适用于所有各主机密码不一致的场景。</p>
+<p><img alt="405127" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent0/image-20190915215405127.png" /></p>
+<blockquote>
+<p>Note：为保证导入的可用性，请下载 Agent 主机导入模板，严格按照模板进行填写。</p>
+</blockquote>
+<h2 id="_1">仅导入机器</h2>
+<p>对于已经通过手动或用其他方式安装 Agent 的主机，此时，在节点管理的列表还看不到这些 IP，这种情况下，可以通过在【快速安装】【从 CMDB 导入】导入的页面点击【仅导入】。</p>
+<p>仅导入不会走安装流程，只是把主机信息录入到节点管理中。</p><h1 id="_1">高级安装</h1>
+<p>在快速安装页面，输入框所在行的右上角有一个【高级添加】按钮。适用于复杂的 NAT 网络环境下安装 Agent。需要填写信息：登录 IP、通信 IP、数据 IP、操作系统及端口和账号密码。</p>
+<p><img alt="538058" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent0/image-20190915231538058.png" /></p>
+<p>在高级安装中,有以下情况需要注意:</p>
+<ol>
+<li>
+<p>登陆 IP，可能是防火墙的上 IP， 需要与企业内的网络管理员确认。</p>
+</li>
+<li>
+<p>通信 IP 必须填写主机物理网卡上的 IP，通常是内网 IP。需要与 GSE Server 建立了链接，因此需要开通网络策略。</p>
+</li>
+</ol>
+<h2 id="_2">操作</h2>
+<ul>
+<li>单台主机操作：</li>
+<li>编辑。可以对当前主机信息进行编辑。如端口号，账号密码等。</li>
+<li>重装：对当前主机进行重装。</li>
+<li>卸载：卸载当前主机上的 Agent。卸载后，状态变为灰色。但不会从节点管理中消失，也不会从 CMDB 中消失。</li>
+<li>移除：先进行卸载，然后从节点管理中移除，主机只能在 CMDB 中找到。</li>
+<li>
+<p>终止：可终止以上的重装，卸载，移除 3 种操作。</p>
+</li>
+<li>
+<p>批量操作</p>
+</li>
+<li>
+<p>选中多台主机时，可以进行批量操作。如重装，卸载，移除，编辑，终止操作。</p>
+<p><img alt="243703" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/agent0/image-20190915231243703.png" /></p>
+</li>
+</ul><h1 id="p-agent">安装 P-Agent</h1>
+<p>在安装好 Proxy，Proxy 节点的状态正常后，才能开始安装 P-Agent。</p>
+<p><strong>安装要求</strong></p>
+<p>在非直连区域安装 P-Agent ，主机要求如下：
+ - 满足网络策略要求，参考 <a href="../附录/network_policy.md">开通网络策略</a>。
+ - 任意 Proxy 所在机器必须能通过 SSH 登陆到 Agent 机器。
+ - Agent 所在机器可以访问到 Proxy 的端口。
+ - 仅支持 <code>Linux / Windows/ AIX（企业版）</code> 操作系统。
+ - 仅支持 <code>root/Administrator</code> 账户。
+ - 若为 <code>Windows</code>，需要开通 SMB 服务（网上邻居）的 <code>139、445</code> 端口，参考 <a href="../附录/smb.md">Windows 开 139,445 端口</a> 。</p>
+<blockquote>
+<p><strong>Note</strong>：目前只有节点管理（企业版）支持 AIX 操作系统。</p>
+</blockquote>
+<p><strong>安装流程</strong></p>
+<p><strong>填写信息 -&gt; 查看满足条件 -&gt;点击开始安装 -&gt; 查看安装步骤详情 -&gt; 查看状态栏，安装成功</strong></p>
+<p>1、点击【 添加 P-Agent 】，输入 IP 等信息，与安装直连区域相似</p>
+<p><img alt="254450" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/pagent/image-20190915234254450.png" /></p>
+<blockquote>
+<p>Note:</p>
+<p>若 添加 P-Agent 按钮为灰色不可点击状态，说明，该云区域下无可用的 Proxy 节点，若无 Proxy 则需要先添加 Proxy。有 Proxy 但状态不正常时，需要先检查安装 Proxy 的条件，网络策略，服务器上的进程情况。确保 Proxy 正常后再进行 P-Agent 的安装</p>
+</blockquote>
+<p>页面与安装直连 Agent 有小小的差异如下图红框中所示。</p>
+<p><img alt="827714" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/pagent/image-20190915234827714.png" /></p>
+<p>2、点击安装即可。后面步骤则与安装 Agent 相同，请参照 <a href="../快速入门/agent0.md">直连区域的 Agent 安装</a> 。</p>
+<p><strong>注意事项</strong></p>
+<p>在安装 Proxy 时，P-Agent 所需的安装包已经下载到 Proxy 机器的/tmp 目录下暂存，因此 升级 P-Agent 必须先重装 Proxy 以更新其下暂存的 P-Agent 安装包。然后再升级 P-Agent 节点。</p><h1 id="_1">云区域管理</h1>
+<p>云区域是 GSE 管控不同网路区域的主机的一个关键属性，用于区分不同网络区域。可以物理上不同 IDC，也可以是通过策略限制的不同 VPC。</p>
+<p>在同一企业内，云区域+IP 共同标识唯一一台主机。</p>
+<p>在管理不同区域的主机时，首先需要为这些网络区域创建一个云区域。并选择一台主机作为这个区域内其他主机与 GSE Server 进行通信的 Proxy。因此管理一个云区域，至少需要一下两个步骤：</p>
+<ol>
+<li>
+<p>创建云区域</p>
+</li>
+<li>
+<p>在云区域中创建中至少一台 Proxy</p>
+</li>
+</ol>
+<blockquote>
+<p>创建好云区域，会分配一个云区域 ID,在云区域列表中可以看到。</p>
+</blockquote><h1 id="_1">创建云区域</h1>
+<p>如下图所示流程：</p>
+<p><img alt="805793" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/cloud_manage/image-20190915224805793.png" /></p>
+<p><img alt="929919" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/cloud_manage/image-20190915224929919.png" /></p><h1 id="proxy">添加 Proxy</h1>
+<p>创建云区域成功后，会进入到该云区域管理页面，新创建的云区域下，没有任何节点，因此，会看到如下的空列表</p>
+<p><img alt="052262" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/cloud_manage/image-20190915225052262.png" /></p>
+<p>到这个页面，管理云区域的第一个步骤已完成，接下来只要完成第二个步骤，创建一台可用的 Proxy 即可。</p>
+<blockquote>
+<p>Note</p>
+<p>若此时进入到 Agent 管理页面，将能这个新建的云区域标签, (若标签过多，可以在云区域管理下的列表中进行隐藏)</p>
+</blockquote>
+<h2 id="proxy_1">快速添加 Proxy</h2>
+<p>通常 Proxy，会有内网 IP 和外网 IP：</p>
+<ol>
+<li>
+<p>外网 IP 用于与 GSE Server 建立连接和通信。</p>
+</li>
+<li>
+<p>内网 IP 可用用于与受控的这个云区域内的其他 Agent 节点(我们称为 P-Agent)通信。</p>
+</li>
+</ol>
+<p>在简单网络情况，可用选择快速安装。</p>
+<blockquote>
+<p>Note</p>
+<p>外网，内网只是一个简单的区域网络的概念，在某些企业中，可能都是多个内网 IP, 没有外网 IP 的情况。</p>
+<p>这里指的外网，通常是说与 GSE Server 的内网 IP 不在同一局域网，但是可以与 GSE Server 连接的 IP。</p>
+</blockquote>
+<p>​       </p>
+<p>点击右上角的 <code>+ 添加 Proxy</code> 按钮，进入快速 Proxy 添加页面，如图所示<img alt="627042" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/cloud_manage/image-20190915225627042.png" /></p>
+<p>GSE Proxy节点共有至少 4 个服务(gse_agent, gse_transit, gse_opts, gse_btsvr) , 这些服务都需要与 GSE Server 通信，为了保证服务可用，需要开通这些 <a href="../附录/network_policy.md">网络策略</a></p>
+<p>点击【安装】后，进入安装状态，界面信息与安装直连区域的 Agent 一致，不再详述</p>
+<blockquote>
+<p>Note: Proxy 节点的 4 个基础服务</p>
+<ul>
+<li><strong>gse_transit：</strong> 扮演 <code>gse_data</code> 角色，如转发数据等。</li>
+<li><strong>gse_agent：</strong> 扮演 <code>gse_task</code> 角色，如任务下发等。</li>
+<li><strong>gse_opts：</strong> 扮演 <code>gse_ops</code> 角色，如告警汇总及转发等。</li>
+<li><strong>gse_btsvr：</strong> 扮演 <code>gse_btsvr</code> 角色，文件分发。</li>
+</ul>
+<p>除以上内容外，在安装过程中，还会：</p>
+<ul>
+<li>在 <code>Proxy</code> 节点上安装 <code>Python</code>，及用于远程管理 <code>Windows</code> 的 python 包 <code>impacket。</code></li>
+<li><code>Linux、Window、AIX</code> 的 Agent 安装包下载到 <code>Proxy</code> 机器上的 <code>/tmp/byproxy</code>目录下。</li>
+</ul>
+</blockquote>
+<h2 id="proxy_2">高级添加 Proxy</h2>
+<p>高级添加 Proxy 用于 Proxy 位于一个特殊的网络下时，比如有主机处于多张独立的网络中或者 NAT 网络中。可以使用这种模式</p>
+<p>在快速添加 Proxy 的页面右侧可以找到高级添加按钮，进入到高级添加 Proxy 页面，如下：</p>
+<p><img alt="825314" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/cloud_manage/image-20190915232825314.png" /></p>
+<p>与高级添加 Agent 页面类型，多了一个级联 IP。</p>
+<p>级联 IP 通常是内网 IP，被云区域内的其他受控主机连接。</p>
+<p>同样需要开通这些 <a href="../附录/network_policy.md">网络策略</a></p><h1 id="_1">管理云区域</h1>
+<ol>
+<li>云区域可以删除，重命名，也可以隐藏(对当前用户)， 点击顶部导航中【云区域管理】可以看到所有云区域列表，如图：</li>
+</ol>
+<p><img alt="644089" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/cloud_manage/image-20190915233644089.png" /></p>
+<p><code>隐藏/显示</code>： 鼠标移动到云区域名称的后面，会有一个眼睛的图标，点击可以设计这个云区域在 Agent 管理页面隐藏或显示情况</p>
+<p><code>编辑</code>： 重命名云区域。但不引起 云区域 ID 的变化。</p>
+<p><code>删除</code>：当且仅当该云区域下没有任何节点时。</p>
+<ol>
+<li>点击云区域名称，进入云区域下的 Proxy 管理子页面。如图所示</li>
+</ol>
+<p><img alt="011296" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/cloud_manage/image-20190915234011296.png" /></p>
+<p>该页面功能设计与管理 Agent 相似。不再赘述</p>
+<ol>
+<li>注意事项</li>
+</ol>
+<blockquote>
+<p>Note</p>
+<ol>
+<li>至少需要有一台 Proxy 节点的 Agent 状态为正常时，才能在该云区域下安装 P-Agent</li>
+</ol>
+</blockquote><h1 id="_1">插件管理</h1>
+<p>插件管理分<code>进程管理</code>和<code>插件更新</code>两个入门场景，让你快速掌握插件的即插即用、管理更新。</p>
+<h2 id="_2">前置步骤</h2>
+<p>平台支持的插件信息是动态加载的，因此在首次使用前，需要先将插件基本信息加载到节点管理中。</p>
+<ul>
+<li>点击右上角的齿轮按钮 -&gt; 滚动到底部后，点击加载插件基础信息。</li>
+</ul>
+<p><img alt="加载插件基础信息" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/加载插件基础信息.png" /></p>
+<ul>
+<li>
+<p>提示成功后，即可开始使用插件管理功能。</p>
+</li>
+<li>
+<p>原理：插件管理功能通过 GSE Agent 的管控通道来实现。</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note :</strong></p>
+<p>从 1.1.X 升级上来的用户，以及从社区版 4.X 升级到 5.X 的用户，该步骤页面加载会失败，原因是，加载的信息不存在。</p>
+<p>加载插件信息来自于安装 GSE 时打包工具生成的配置文件。该配置文件可以通过以下几种方式生成(在中控机执行)：</p>
+<p><code>shell
+./bkcec pack gse_plugin
+./bkcec install gse            # 因为该步骤包含了 pack gse_plugin，所以也可以实现)
+./bkcec pack gse_plugin -u.    # -u 参数会自动调用节点管理接口写入插件信息</code></p>
+</blockquote><h1 id="_1">进程管理</h1>
+<h2 id="_2">操作流程</h2>
+<p><strong>选择目标主机 -&gt; 选择操作类型 -&gt;查看任务详情</strong></p>
+<ol>
+<li>
+<p>选择要操作的目标主机列表</p>
+<blockquote>
+<p><strong>Note:</strong></p>
+<ol>
+<li>GSE Agent 状态不正常的主机不能被选择。</li>
+<li>主机列表过多时，可以根据表头上方的查询条件，来缩小或锁定要操作的目标主机列表。</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<p><img alt="411679" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/image-20190516194411679.png" /></p>
+<ol>
+<li>选择功能及插件(进程管理)，点击立即执行。</li>
+</ol>
+<p><img alt="812207" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/image-20190516194812207-1560514239547.png" /></p>
+<ol>
+<li>查看任务详情。</li>
+</ol>
+<p><img alt="查看任务详情" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/查看任务详情.png" /></p><h1 id="_1">插件更新</h1>
+<h2 id="_2">操作流程</h2>
+<p><strong>选择目标主机 -&gt; 选择操作类型 -&gt;查看任务详情</strong></p>
+<ol>
+<li>
+<p>同 <a href="../快速入门/process_mgr.md">进程管理</a> 。</p>
+</li>
+<li>
+<p>选择要更新的插件信息及插件包，并点击执行下一步。</p>
+</li>
+</ol>
+<p><img alt="插件更新" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/插件更新.png" /></p>
+<ul>
+<li>保留原有配置文件： 插件更新会将原有的配置文件覆盖，勾选该功能，会保留原插件的配置文件，最后重启进程生效。</li>
+<li>仅保留文件，不重启进程：保留原有的插件配置文件，但是更新后不会进行重启进程。</li>
+</ul>
+<blockquote>
+<p><strong>Note :</strong></p>
+<ul>
+<li>上传插件包，请联系运维将插件包上传到中控机的 <code>/data/src/</code> 目录并解压。</li>
+<li>然后执行 <code>./bkeec pack gse_plugin</code> 更新插件信息到 <code>/data/src</code> 下。</li>
+</ul>
+</blockquote>
+<ol>
+<li>查看任务详情。</li>
+</ol>
+<p><img alt="plugins_update_list" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/plugins_update_list.png" /></p><h1 id="_1">常见问题</h1>
+<h2 id="_2">敬请期待</h2><h1 id="gse-agent">GSE 与直连 Agent 之间需要的网络策略</h1>
+<table>
+<thead>
+<tr>
+<th>源地址</th>
+<th>目标地址</th>
+<th>协议</th>
+<th>端口</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>agent</td>
+<td>zk</td>
+<td>TCP</td>
+<td>2181</td>
+<td>获取配置</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>gse_task</td>
+<td>TCP</td>
+<td>48533</td>
+<td>任务服务端口</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>gse_data</td>
+<td>TCP</td>
+<td>58625</td>
+<td>数据上报端口</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>gse_btsvr</td>
+<td>TCP</td>
+<td>59173</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>gse_btsvr</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>gse_btsvr</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>agent</td>
+<td>TCP,UDP</td>
+<td>60020-60030</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>gse_btsvr</td>
+<td>TCP</td>
+<td>58930</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>gse_btsvr</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>gse_btsvr</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>agent</td>
+<td>TCP,UDP</td>
+<td>60020-60030</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td></td>
+<td></td>
+<td>监听随机端口</td>
+<td>bt传输，可不开通</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td></td>
+<td></td>
+<td>监听随机端口</td>
+<td>bt传输，可不开通</td>
+</tr>
+</tbody>
+</table><h1 id="proxy-gse">Proxy 和 GSE 后台之间的网络策略</h1>
+<table>
+<thead>
+<tr>
+<th>源地址</th>
+<th>目标地址</th>
+<th>协议</th>
+<th>端口</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>proxy(gse_agent)</td>
+<td>gse_task</td>
+<td>TCP</td>
+<td>48533</td>
+<td>任务服务端口</td>
+</tr>
+<tr>
+<td>proxy(gse_transit)</td>
+<td>gse_data</td>
+<td>TCP</td>
+<td>58625</td>
+<td>数据上报端口</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>gse_btsvr</td>
+<td>TCP</td>
+<td>58930</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>gse_btsvr</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>gse_btsvr</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP</td>
+<td>58930</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>gse_btsvr</td>
+<td>proxy(gse_btsvr)</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP</td>
+<td>58930</td>
+<td>bt传输（同一子网）</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt传输（同一子网）</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>proxy(gse_btsvr)</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt传输（同一子网）</td>
+</tr>
+<tr>
+<td>proxy(gse_opts)</td>
+<td>gse_ops</td>
+<td>TCP</td>
+<td>58725</td>
+<td>ping告警数据上报端口</td>
+</tr>
+<tr>
+<td>proxy(gse_agent)</td>
+<td></td>
+<td></td>
+<td>监听随机端口</td>
+<td>bt传输，可不开通</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td></td>
+<td></td>
+<td>监听随机端口</td>
+<td>bt传输，可不开通</td>
+</tr>
+</tbody>
+</table><h1 id="p-agent-proxy">P-Agent 与 Proxy 之间需要的网络策略</h1>
+<table>
+<thead>
+<tr>
+<th>源地址</th>
+<th>目标地址</th>
+<th>协议</th>
+<th>端口</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>agent</td>
+<td>proxy(gse_agent)</td>
+<td>TCP</td>
+<td>48533</td>
+<td>任务服务端口</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>proxy(gse_transit)</td>
+<td>TCP</td>
+<td>58625</td>
+<td>数据上报端口</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP</td>
+<td>59173</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>proxy(gse_btsvr)</td>
+<td>TCP,UDP</td>
+<td>10020</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>proxy(gse_btsvr)</td>
+<td>UDP</td>
+<td>10030</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>proxy(gse_btsvr)</td>
+<td>agent</td>
+<td>TCP,UDP</td>
+<td>60020-60030</td>
+<td>bt传输</td>
+</tr>
+<tr>
+<td>agent</td>
+<td>agent</td>
+<td>TCP,UDP</td>
+<td>60020-60030</td>
+<td>bt传输(同一子网)</td>
+</tr>
+<tr>
+<td>agent</td>
+<td></td>
+<td></td>
+<td>监听随机端口</td>
+<td>bt传输，可不开通</td>
+</tr>
+</tbody>
+</table><h1 id="windows-139445">Windows 开 139,445 端口</h1>
+<p>远程操作 Windows 是通过 Netbios 实现。也就是网上邻居功能.</p>
+<p>开启端口的操作步骤如下：</p>
+<ol>
+<li>
+<p>网卡属性设置。
+    <img alt="" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/15316340927055.jpg" />
+    <img alt="" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/15316343891793.jpg" />
+    <img alt="" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/15316345084109.jpg" />
+    <img alt="" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/15316345475886.jpg" /></p>
+</li>
+<li>
+<p>打开 services.msc 启动服务。
+     <img alt="" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/15316450202626.jpg" /></p>
+</li>
+<li>
+<p>检查端口是否在监听状态。</p>
+<p><img alt="" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/15316347734408.jpg" /></p>
+</li>
+</ol><h1 id="_1">多网卡配置</h1>
+<p><strong>目前蓝鲸页面暂不支持多网卡的配置，如有要进行多网卡的获取，需手动修改配置文件。</strong></p>
+<h2 id="_2">操作步骤</h2>
+<ol>
+<li>修改 <code>agent_setup.sh</code> (如果是通过 Proxy 进行安装的则修改 <code>agent_setup_pro.sh</code> 方法同下)。</li>
+</ol>
+<div class="codehilite"><pre><span></span>vim /data/install/agent_setup/download#agent_setup_pro.sh   <span class="c1"># 使用 vim 搜索功能搜索 &quot;get_lan_ip&quot; 修改成如下</span>
+get_lan_ip <span class="o">()</span> <span class="o">{</span>
+    ip addr <span class="p">|</span> <span class="se">\</span>
+    awk <span class="s1">&#39;!/ lo/&#39;</span><span class="p">|</span> <span class="se">\</span>
+    awk -F <span class="s1">&#39;[ /]+&#39;</span> <span class="s1">&#39;/\s*inet.*global/{print$3}&#39;</span><span class="p">|</span> <span class="se">\</span>
+    head -1
+
+    <span class="k">return</span> <span class="nv">$?</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<ol>
+<li>重新获取环境变量。</li>
+</ol>
+<p><code>shell
+   source /data/install/utils.fc</code></p>
+<ol>
+<li>重新同步文件并安装 Nginx。</li>
+</ol>
+<p><code>shell
+   cd /data/install
+   ./bkce sync common
+   ./bkce stop nginx
+   ./bkce install nginx 1
+   ./bkce start nginx
+   ./bkce status nginx</code></p>
+<ol>
+<li>进入蓝鲸节点管理控制台，重新安装即可。</li>
+</ol><h1 id="gse">GSE 定时任务查看</h1>
+<ul>
+<li>
+<p>进入到节点管理的后台。在蓝鲸的工作台点击进入到节点管理的页面，然后在 URL 后面添加 <code>admin</code> 即可进入到节点管理的后台。</p>
+</li>
+<li>
+<p>点击 <code>Periodic tasks</code> 就可以查看现有的定时任务。</p>
+</li>
+</ul>
+<p><img alt="admin" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/admin-1560507964987.png" /></p>
+<ul>
+<li>可以看到第 3 条，就是 GSE 获取 Agent 状态的定时任务。</li>
+</ul>
+<p><img alt="task" src="F:\bkdoc\md_to_pdf/5.1/节点管理/assets/task.png" /></p>
+    </body>
+    </html>
+    
